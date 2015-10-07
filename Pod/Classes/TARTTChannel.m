@@ -103,9 +103,8 @@
 }
 -(BOOL)fileHasChangedOrIsMissing:(NSDictionary *)item
 {
-    NSString *lastFilePath = [self.lastPath  stringByAppendingPathComponent:[item objectForKey:@"dirname"]];
-    lastFilePath = [lastFilePath  stringByAppendingPathComponent:[item objectForKey:@"filename"]];    
-     
+    NSString *lastFilePath = [self.lastPath  stringByAppendingPathComponent:[self getPath:item]];
+    
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:lastFilePath];    
     if(fileExists){
         NSError* error = nil;  
@@ -119,7 +118,7 @@
                 DebugLog(@"*** Found matching File with MD5 %@",[fileD MD5]);
                 return NO;
             }else{
-                DebugLog(@"*** MD5 not matched %@ remote:%@ local:%@",[item objectForKey:@"filename"], [item objectForKey:@"md5"],[fileD MD5]);
+                DebugLog(@"*** MD5 not matched remote:%@ local:%@", [item objectForKey:@"md5"],[fileD MD5]);
                 return NO;
             }
         }
@@ -136,9 +135,7 @@
 
 -(BOOL)moveToNewLocation:(NSDictionary *)item
 {
-    NSString * relativeFilePath =[item objectForKey:@"dirname"];
-    relativeFilePath = [relativeFilePath stringByAppendingPathComponent:[item objectForKey:@"filename"]];    
-    
+    NSString * relativeFilePath = [self getPath:item];    
     NSString * originalPath = [self.lastPath stringByAppendingPathComponent:relativeFilePath];    
     NSString * movedPath =[self.currentPath stringByAppendingPathComponent:relativeFilePath];      
     
@@ -186,8 +183,7 @@
             continue;
         }        
         
-        NSString *filePath = [self.currentPath stringByAppendingPathComponent:[item objectForKey:@"dirname"]];
-        filePath = [filePath stringByAppendingPathComponent:[item objectForKey:@"filename"]];        
+        NSString *filePath = [self.currentPath stringByAppendingPathComponent:[self getPath:item]];   
         
         NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:[item objectForKey:@"url"]]];                
         AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];       
@@ -225,6 +221,10 @@
     }];
     [operationQueue addOperations:operations waitUntilFinished:YES];         
     
+}
+-(NSString *)getPath:(NSDictionary *)item
+{
+    return [[item objectForKey:@"dirname"] stringByAppendingPathComponent:[[item objectForKey:@"url"] lastPathComponent]];    
 }
 -(void)invokeChannelDownloadStart{
     [self.delegate channelStartedDownload];
