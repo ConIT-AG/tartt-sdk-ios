@@ -20,7 +20,6 @@
 		6003F5B1195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
 		6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5B8195388D20070C39A /* InfoPlist.strings */; };
-		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
 		8F12F4A568AF54436D088F81 /* Pods_TARTT_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5644D12CB6F8C2A3ED2ABD /* Pods_TARTT_Example.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F23CBB7A1BC2AB6E00BB8C0A /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F23CBB6D1BC2AB6E00BB8C0A /* Accelerate.framework */; };
@@ -39,6 +38,8 @@
 		F23CBB881BC2ABC600BB8C0A /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F23CBB871BC2ABC600BB8C0A /* libz.tbd */; };
 		F23CBB8A1BC2ABCE00BB8C0A /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F23CBB891BC2ABCE00BB8C0A /* libc++.tbd */; };
 		F23CBBF61BC3B7F300BB8C0A /* WikitudeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F23CBBF51BC3B7F300BB8C0A /* WikitudeSDK.framework */; settings = {ASSET_TAGS = (); }; };
+		F23CBC041BC5105C00BB8C0A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F23CBC031BC5105C00BB8C0A /* LaunchScreen.storyboard */; settings = {ASSET_TAGS = (); }; };
+		F23CBC0A1BC51CBC00BB8C0A /* TarttChannelManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F23CBC091BC51CBC00BB8C0A /* TarttChannelManagerTests.m */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,7 +72,6 @@
 		6003F5AF195388D20070C39A /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		6003F5B7195388D20070C39A /* Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Tests-Info.plist"; sourceTree = "<group>"; };
 		6003F5B9195388D20070C39A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		6003F5BB195388D20070C39A /* Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tests.m; sourceTree = "<group>"; };
 		606FC2411953D9B200FFA9A0 /* Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Prefix.pch"; sourceTree = "<group>"; };
 		7D5644D12CB6F8C2A3ED2ABD /* Pods_TARTT_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TARTT_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7EC9B890EF5FDAE32C5A9179 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
@@ -96,6 +96,8 @@
 		F23CBB871BC2ABC600BB8C0A /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		F23CBB891BC2ABCE00BB8C0A /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		F23CBBF51BC3B7F300BB8C0A /* WikitudeSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WikitudeSDK.framework; sourceTree = "<group>"; };
+		F23CBC031BC5105C00BB8C0A /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		F23CBC091BC51CBC00BB8C0A /* TarttChannelManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TarttChannelManagerTests.m; sourceTree = "<group>"; };
 		FA53FE949886E94A6EC3C58E /* Pods-TARTT_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TARTT_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TARTT_Example/Pods-TARTT_Example.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -194,6 +196,7 @@
 		6003F593195388D20070C39A /* Example for TARTT */ = {
 			isa = PBXGroup;
 			children = (
+				F23CBC031BC5105C00BB8C0A /* LaunchScreen.storyboard */,
 				6003F59C195388D20070C39A /* TarttAppDelegate.h */,
 				6003F59D195388D20070C39A /* TarttAppDelegate.m */,
 				873B8AEA1B1F5CCA007FD442 /* Main.storyboard */,
@@ -220,8 +223,8 @@
 		6003F5B5195388D20070C39A /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				6003F5BB195388D20070C39A /* Tests.m */,
 				6003F5B6195388D20070C39A /* Supporting Files */,
+				F23CBC091BC51CBC00BB8C0A /* TarttChannelManagerTests.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -311,6 +314,9 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = wh33ler;
 				TargetAttributes = {
+					6003F589195388D20070C39A = {
+						DevelopmentTeam = KY7SYK96X8;
+					};
 					6003F5AD195388D20070C39A = {
 						TestTargetID = 6003F589195388D20070C39A;
 					};
@@ -341,6 +347,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */,
+				F23CBC041BC5105C00BB8C0A /* LaunchScreen.storyboard in Resources */,
 				6003F5A9195388D20070C39A /* Images.xcassets in Resources */,
 				6003F598195388D20070C39A /* InfoPlist.strings in Resources */,
 			);
@@ -464,7 +471,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6003F5BC195388D20070C39A /* Tests.m in Sources */,
+				F23CBC0A1BC51CBC00BB8C0A /* TarttChannelManagerTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -576,6 +583,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -602,8 +611,12 @@
 					"\"SystemConfiguration\"",
 					"-framework",
 					"\"CoreMedia\"",
+					"-ObjC",
+					"-l\"sqlite3\"",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.takondi.tarttdev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -614,6 +627,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -640,8 +655,12 @@
 					"\"SystemConfiguration\"",
 					"-framework",
 					"\"CoreMedia\"",
+					"-ObjC",
+					"-l\"sqlite3\"",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.takondi.tarttdev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

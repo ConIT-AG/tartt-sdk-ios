@@ -8,7 +8,9 @@
 
 @import UIKit;
 #import <TARTT/TARTTChannel.h>
+#import <TARTT/TARTTChannelManager.h>
 #import <WikitudeSDK/WTArchitectView.h>
+#import <WikitudeSDK/WTNavigation.h>
 #import <WikitudeSDK/WTArchitectViewDebugDelegate.h>
 
 @interface TarttViewController : UIViewController<TARTTChannelDelegate, WTArchitectViewDelegate>

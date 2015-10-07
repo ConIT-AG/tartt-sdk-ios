@@ -34,7 +34,23 @@ Pod::Spec.new do |s|
   }
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
-
+  s.library = 'sqlite3','z'
   s.dependency 'AFNetworking', '~> 2.0'
+  s.dependency 'AWSDynamoDB', '~> 2.2.0'
+  s.dependency 'AWSCore'
+  s.dependency 'AWSAutoScaling'
+  s.dependency 'AWSCloudWatch'
   s.dependency 'AWSDynamoDB'
+  s.dependency 'AWSEC2'
+  s.dependency 'AWSElasticLoadBalancing'
+  s.dependency 'AWSKinesis'
+  s.dependency 'AWSLambda'
+  s.dependency 'AWSMachineLearning'
+  s.dependency 'AWSMobileAnalytics'
+  s.dependency 'AWSS3'
+  s.dependency 'AWSSES'
+  s.dependency 'AWSSimpleDB'
+  s.dependency 'AWSSNS'
+  s.dependency 'AWSSQS'
+  s.dependency 'AWSCognito'
 end

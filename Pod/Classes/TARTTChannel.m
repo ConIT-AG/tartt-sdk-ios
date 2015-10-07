@@ -10,6 +10,9 @@
 #import "AFNetworking.h"
 #import "NSData+MD5.h"
 #import "Debug.h"
+#import <AWSCore/AWSCore.h>
+#import <AWSDynamoDB/AWSDynamoDB.h>
+
 
 #define kCHANNELPATH @"TTARTChannelWorkingPath"
 
@@ -21,9 +24,6 @@
 @property (nonatomic, strong) NSMutableArray *downloadQueue;
 @property (nonatomic, strong) NSMutableArray *errors;
 
-@property (nonatomic, strong) NSString *lastPath;
-@property (nonatomic, strong) NSString *currentPath;
-
 @property (atomic) long bytesMax;
 @property (atomic) long bytesLoaded;
 @property (atomic) BOOL canceled;
@@ -34,18 +34,27 @@
 
 @implementation TARTTChannel
 
-- (instancetype)initWithKey:(NSString *)key andDelegate:(id<TARTTChannelDelegate>)delegate
+- (instancetype)initWithKey:(NSString *)key
 {
     self = [super init];
     if (self) {
         self.key = key;
-        self.delegate = delegate;
     }
     return self;
 }
 
--(void)startDownloadIfNeeded
+-(void)initChannelWithDelegate:(id<TARTTChannelDelegate>)delegate;
 {   
+    self.delegate = delegate;
+    
+    /*AWSCognitoCredentialsProvider *credentialsProvider = [[AWSCognitoCredentialsProvider alloc] initWithRegionType:AWSRegionEUWest1
+                                                                                                    identityPoolId:@"eu-west-1:99e5483a-51cf-4c6f-a8d3-b7a5cee36b98"];
+    AWSServiceConfiguration *configuration = [[AWSServiceConfiguration alloc] initWithRegion:AWSRegionEUWest1
+                                                                         credentialsProvider:credentialsProvider];
+    AWSServiceManager.defaultServiceManager.defaultServiceConfiguration = configuration;
+    */
+    
+    
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/plain"];
     [manager GET:[NSString stringWithFormat:@"%@",@"http://beta0815.appzapp.de/jsontest.txt"] 
@@ -54,7 +63,7 @@
          {             
              self.items = responseObject;             
              DebugLog(@"*** Downloaded Channel Config with %lu Items", [self.items count]);
-             [self setupCachePaths];             
+             
              [self downloadChangedOrMissingFiles];            
          } 
          failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -63,18 +72,18 @@
          }
      ];    
 }
--(void)setupCachePaths
-{
-    NSString *cacheDirectory = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
-    cacheDirectory = [cacheDirectory stringByAppendingString:@"/"];
-    self.currentPath = [cacheDirectory stringByAppendingString:[[NSUUID UUID] UUIDString]];
-    self.lastPath = [self getLastPath];
-}
+
 -(void)saveLastPath:(NSString *)lastPath{
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
     NSString *channelKey = [NSString stringWithFormat:@"%@-%@",self.key,kCHANNELPATH];
     [defaults setObject:lastPath forKey:channelKey];
     [defaults synchronize];
+}
+-(void)deleteLastPath:(NSString *)lastPath{
+    NSError *error;
+   [[NSFileManager defaultManager] removeItemAtPath:lastPath error:&error];
+    if(error != nil)
+        DebugLog(@"*** Could not delete old files... They might not be existent anymore - %@", error);
 }
 -(NSString *)getLastPath
 {
@@ -88,8 +97,7 @@
         DebugLog(@"*** Found Channel Path of an older download %@", filePath);
     }
     return filePath;
-}
-    
+}    
 -(void)downloadChangedOrMissingFiles
 {
     for (NSDictionary *item in self.items) {
@@ -214,6 +222,7 @@
             [self performSelectorOnMainThread:@selector(invokeChannelError:) withObject:error  waitUntilDone:NO];
             [self performSelectorOnMainThread:@selector(invokeChannelErrors) withObject:nil  waitUntilDone:NO];            
         }else{            
+            [self deleteLastPath:self.lastPath];
             [self saveLastPath:self.currentPath];
             [self performSelectorOnMainThread:@selector(invokeChannelFinishedSuccess) withObject:nil waitUntilDone:NO];
             DebugLog(@"*** Saved Current Path");

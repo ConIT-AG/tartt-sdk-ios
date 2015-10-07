@@ -25,8 +25,13 @@
 
 @interface TARTTChannel : NSObject
 
--(instancetype)initWithKey:(NSString *)key andDelegate:(id<TARTTChannelDelegate>)delegate;
+@property (nonatomic, strong) NSString *mainPath;
+@property (nonatomic, strong) NSString *currentPath;
+@property (nonatomic, strong) NSString *lastPath;
+@property (nonatomic, strong) NSString *tempPath;
 
--(void)startDownloadIfNeeded;
+-(instancetype)initWithKey:(NSString *)key;
+
+-(void)initChannelWithDelegate:(id<TARTTChannelDelegate>)delegate;
 
 @end

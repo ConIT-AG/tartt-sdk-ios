@@ -6,8 +6,5 @@ target 'TARTT_Example', :exclusive => true do
 end
 
 target 'TARTT_Tests', :exclusive => true do
-  pod "TARTT", :path => "../"
-
-  pod 'Specta'
-  pod 'Expecta'
+  pod "TARTT", :path => "../"  
 end
