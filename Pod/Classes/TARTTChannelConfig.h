@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 #import <AWSDynamoDB/AWSDynamoDB.h>
 
-@interface TARTChannelConfig : AWSDynamoDBObjectModel<AWSDynamoDBModeling>
+@interface TARTTChannelConfig : AWSDynamoDBObjectModel<AWSDynamoDBModeling>
 
 @property (nonatomic, strong) NSString *key;
 @property (nonatomic, strong) NSArray *language;

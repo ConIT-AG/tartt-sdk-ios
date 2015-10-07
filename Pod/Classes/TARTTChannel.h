@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TARTTChannelConfig.h"
 
 #define kERROR_FILEDOWNLOAD  100
 #define kERROR_SOMETHINGELSE  200
@@ -29,6 +30,7 @@
 @property (nonatomic, strong) NSString *currentPath;
 @property (nonatomic, strong) NSString *lastPath;
 @property (nonatomic, strong) NSString *tempPath;
+@property (nonatomic, strong) TARTTChannelConfig *config;
 
 -(instancetype)initWithKey:(NSString *)key;
 

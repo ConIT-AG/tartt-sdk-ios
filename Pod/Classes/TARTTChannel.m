@@ -46,31 +46,7 @@
 -(void)initChannelWithDelegate:(id<TARTTChannelDelegate>)delegate;
 {   
     self.delegate = delegate;
-    
-    /*AWSCognitoCredentialsProvider *credentialsProvider = [[AWSCognitoCredentialsProvider alloc] initWithRegionType:AWSRegionEUWest1
-                                                                                                    identityPoolId:@"eu-west-1:99e5483a-51cf-4c6f-a8d3-b7a5cee36b98"];
-    AWSServiceConfiguration *configuration = [[AWSServiceConfiguration alloc] initWithRegion:AWSRegionEUWest1
-                                                                         credentialsProvider:credentialsProvider];
-    AWSServiceManager.defaultServiceManager.defaultServiceConfiguration = configuration;
-    */
-    
-    
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/plain"];
-    [manager GET:[NSString stringWithFormat:@"%@",@"http://beta0815.appzapp.de/jsontest.txt"] 
-      parameters:nil 
-         success:^(AFHTTPRequestOperation *operation, NSArray* responseObject) 
-         {             
-             self.items = responseObject;             
-             DebugLog(@"*** Downloaded Channel Config with %lu Items", [self.items count]);
-             
-             [self downloadChangedOrMissingFiles];            
-         } 
-         failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-             DebugLog(@"Error: %@", error);
-             [self.delegate channelFinishedWithError:error];
-         }
-     ];    
+    [self downloadChangedOrMissingFiles];    
 }
 
 -(void)saveLastPath:(NSString *)lastPath{
@@ -100,7 +76,7 @@
 }    
 -(void)downloadChangedOrMissingFiles
 {
-    for (NSDictionary *item in self.items) {
+    for (NSDictionary *item in self.config.files) {
             
         if([self fileHasChangedOrIsMissing:item])
             [self addToQueue:item];

@@ -13,6 +13,10 @@
 
 @protocol TARTTChannelManagerDelegate <NSObject>
 
+-(void)finishedInitWithError:(NSError *)error;
+-(void)finishedWithMultipleChannels;
+-(void)finishedWithChannel:(TARTTChannel *)channel;
+
 @end
 
 @interface TARTTChannelManager : NSObject

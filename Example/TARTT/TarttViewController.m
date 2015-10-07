@@ -73,6 +73,14 @@
 }
 
 #pragma mark TARTT
+-(void)finishedInitWithError:(NSError *)error{
+}
+-(void)finishedWithMultipleChannels{
+    
+}
+-(void)finishedWithChannel:(TARTTChannel *)channel{
+    [channel initChannelWithDelegate:self];
+}
 -(void)channelStartedDownload
 {
     // Download Started

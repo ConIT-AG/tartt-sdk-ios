@@ -13,7 +13,7 @@
 #import <WikitudeSDK/WTNavigation.h>
 #import <WikitudeSDK/WTArchitectViewDebugDelegate.h>
 
-@interface TarttViewController : UIViewController<TARTTChannelDelegate, WTArchitectViewDelegate>
+@interface TarttViewController : UIViewController<TARTTChannelDelegate, TARTTChannelManagerDelegate, WTArchitectViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIProgressView *progressBar;
 

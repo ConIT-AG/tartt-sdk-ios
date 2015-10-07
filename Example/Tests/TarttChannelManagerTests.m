@@ -57,6 +57,9 @@
 -(void)testAWSConnection{
     [self.manager requestChannelSetupWithDelegate:self];
 }
+-(void)finishedWithChannel:(TARTTChannel *)channel{
+     XCTAssertNotNil(channel);
+}
 
 - (void)testPerformanceExample {
     // This is an example of a performance test case.

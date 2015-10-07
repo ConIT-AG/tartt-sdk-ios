@@ -9,7 +9,7 @@
 #import "TARTTChannelManager.h"
 #import <AWSCore/AWSCore.h>
 #import <AWSDynamoDB/AWSDynamoDB.h>
-#import "TARTChannelConfig.h"
+#import "TARTTChannelConfig.h"
 #import "Debug.h"
 
 #define kCHANNELBASEDIR @"TARTT/Channels"
@@ -49,21 +49,28 @@
     AWSDynamoDBObjectMapper *dynamoDBObjectMapper = [AWSDynamoDBObjectMapper defaultDynamoDBObjectMapper];
     
     AWSDynamoDBScanExpression *scanExpression = [AWSDynamoDBScanExpression new];
-    scanExpression.limit = @10;
+    scanExpression.limit = @100;
     
-    [[dynamoDBObjectMapper scan:[TARTChannelConfig class]
+    [[dynamoDBObjectMapper scan:[TARTTChannelConfig class]
                      expression:scanExpression]
      continueWithBlock:^id(AWSTask *task) {
          if (task.error) {
              DebugLog(@"The request failed. Error: [%@]", task.error);
+             [self.delegate finishedInitWithError:task.error];
          }
          if (task.exception) {
              DebugLog(@"The request failed. Exception: [%@]", task.exception);
          }
          if (task.result) {
              AWSDynamoDBPaginatedOutput *paginatedOutput = task.result;
-             for (TARTChannelConfig *config in paginatedOutput.items) {
-                 //Do something with book.
+             if([paginatedOutput.items count] > 1)
+             {
+                 [self.delegate finishedWithMultipleChannels];
+             }else{
+                 TARTTChannelConfig *config = [paginatedOutput.items firstObject];
+                 TARTTChannel *channel = [self getChannel:config.key];
+                 channel.config = config;
+                 [self.delegate finishedWithChannel:channel];
              }
          }
          return nil;

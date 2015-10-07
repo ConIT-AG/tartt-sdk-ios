@@ -6,9 +6,9 @@
 //
 //
 
-#import "TARTChannelConfig.h"
+#import "TARTTChannelConfig.h"
 
-@implementation TARTChannelConfig
+@implementation TARTTChannelConfig
 
 + (NSString *)dynamoDBTableName {
     return @"saturnde_ad93b7fe4c_channel";
