@@ -1,0 +1,49 @@
+PODS:
+  - AFNetworking (2.6.0):
+    - AFNetworking/NSURLConnection (= 2.6.0)
+    - AFNetworking/NSURLSession (= 2.6.0)
+    - AFNetworking/Reachability (= 2.6.0)
+    - AFNetworking/Security (= 2.6.0)
+    - AFNetworking/Serialization (= 2.6.0)
+    - AFNetworking/UIKit (= 2.6.0)
+  - AFNetworking/NSURLConnection (2.6.0):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.6.0):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.6.0)
+  - AFNetworking/Security (2.6.0)
+  - AFNetworking/Serialization (2.6.0)
+  - AFNetworking/UIKit (2.6.0):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+  - AWSCore (2.2.6)
+  - AWSDynamoDB (2.2.6):
+    - AWSCore (= 2.2.6)
+  - Expecta (1.0.3)
+  - Specta (1.0.4)
+  - TARTT (0.1.0):
+    - AFNetworking (~> 2.0)
+    - AWSDynamoDB
+
+DEPENDENCIES:
+  - Expecta
+  - Specta
+  - TARTT (from `../`)
+
+EXTERNAL SOURCES:
+  TARTT:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  AFNetworking: 79f7eb1a0fcfa7beb409332b2ca49afe9ce53b05
+  AWSCore: dd05203bf44d45b58b7667754ce4fa6f1bdb1c3e
+  AWSDynamoDB: d0eb38a6bcaaee5931e5168478c409a39b0a9066
+  Expecta: 9d1bff6c8b0eeee73a166a2ee898892478927a15
+  Specta: 69bb134672aae190a1379ff91df07dad8dd1f869
+  TARTT: 12a8c813ec491c84f40d24929dbf3074df995050
+
+COCOAPODS: 0.38.2
