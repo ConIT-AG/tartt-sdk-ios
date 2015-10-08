@@ -8,19 +8,12 @@
 
 #import "TarttAppDelegate.h"
 
-#import <TARTT/TarttManager.h>
-
 
 @implementation TarttAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
-    [[TarttManager sharedManager] startManager];
-    
-    [[TarttManager sharedManager] stopManager];
-    
-    
+    // Override point for customization after application launch.   
     return YES;
 }
 

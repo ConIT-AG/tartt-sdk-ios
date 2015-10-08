@@ -7,9 +7,9 @@
 //
 
 #import "TARTTChannelManager.h"
-#import <AWSCore/AWSCore.h>
-#import <AWSDynamoDB/AWSDynamoDB.h>
+#import "TARTTChannel.h"
 #import "TARTTChannelConfig.h"
+#import "TARTTHelper.h"
 #import "Debug.h"
 
 #define kCHANNELBASEDIR @"TARTT/Channels"
@@ -18,115 +18,83 @@
 @interface TARTTChannelManager ()
 
 @property (nonatomic) NSString *cacheDirectory;
-@property (nonatomic, assign) id<TARTTChannelManagerDelegate> delegate;
+@property (nonatomic) NSArray *configs;
 
 @end
 
-
-
 @implementation TARTTChannelManager
 
--(instancetype)init
-{
+-(instancetype)initWithConfig:(TARTTChannelConfig*) config{
     self = [super init];
     if (self) {
         self.cacheDirectory = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingString:@"/"];
+        self.configs = [NSArray arrayWithObject:config];
     }
     return self;
 }
--(void)requestChannelSetupWithDelegate:(id<TARTTChannelManagerDelegate>)delegate
-{
-    self.delegate = delegate;
-    AWSRegionType const CognitoRegionType = AWSRegionEUWest1; 
-    AWSRegionType const DefaultServiceRegionType = AWSRegionEUWest1; 
-    NSString *const CognitoIdentityPoolId = @"eu-west-1:99e5483a-51cf-4c6f-a8d3-b7a5cee36b98";
-    AWSCognitoCredentialsProvider *credentialsProvider = [[AWSCognitoCredentialsProvider alloc] initWithRegionType:CognitoRegionType
-                                                                                                    identityPoolId:CognitoIdentityPoolId];
-    AWSServiceConfiguration *configuration = [[AWSServiceConfiguration alloc] initWithRegion:DefaultServiceRegionType
-                                                                         credentialsProvider:credentialsProvider];
-    AWSServiceManager.defaultServiceManager.defaultServiceConfiguration = configuration;
-    
-    AWSDynamoDBObjectMapper *dynamoDBObjectMapper = [AWSDynamoDBObjectMapper defaultDynamoDBObjectMapper];
-    
-    AWSDynamoDBScanExpression *scanExpression = [AWSDynamoDBScanExpression new];
-    scanExpression.limit = @100;
-    
-    [[dynamoDBObjectMapper scan:[TARTTChannelConfig class]
-                     expression:scanExpression]
-     continueWithBlock:^id(AWSTask *task) {
-         if (task.error) {
-             DebugLog(@"The request failed. Error: [%@]", task.error);
-             [self.delegate finishedInitWithError:task.error];
-         }
-         if (task.exception) {
-             DebugLog(@"The request failed. Exception: [%@]", task.exception);
-         }
-         if (task.result) {
-             AWSDynamoDBPaginatedOutput *paginatedOutput = task.result;
-             if([paginatedOutput.items count] > 1)
-             {
-                 [self.delegate finishedWithMultipleChannels];
-             }else{
-                 TARTTChannelConfig *config = [paginatedOutput.items firstObject];
-                 TARTTChannel *channel = [self getChannel:config.key];
-                 channel.config = config;
-                 [self.delegate finishedWithChannel:channel];
-             }
-         }
-         return nil;
-     }];
-        
-    
-    
+-(instancetype)initWithMultipleConfigs:(NSArray *) configs{
+    self = [super init];
+    if (self) {
+        self.cacheDirectory = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingString:@"/"];
+        self.configs = configs;
+    }
+    return self;
 }
--(TARTTChannel *)getChannel:(NSString *)channelKey;{
-
-    TARTTChannel *channel = [[TARTTChannel alloc] initWithKey:channelKey]; 
-    channel.mainPath = [self getChannelPath:channelKey];
-    channel.currentPath = [self getChannelPath:channelKey];
-    channel.tempPath = [self getTempPath:channelKey];
-    channel.lastPath = [self getLastPath:channelKey];
-    return channel;
+-(TARTTChannel *)getChannelInstance{
+    TARTTChannelConfig * first = [self.configs firstObject];
+    return [self getChannelByKey:first.key];
+}
+-(TARTTChannel *)getChannelByKey:(NSString *)channelKey{
+    for (TARTTChannelConfig *conf in self.configs) {
+        if([conf.key isEqualToString:channelKey])
+        {
+            TARTTChannel *channel = [[TARTTChannel alloc] init]; 
+            channel.mainPath = [self getChannelPath:conf.key];
+            channel.currentPath = [self createNewChannelVersion:conf.key];
+            channel.tempPath = [self getTempPath:conf.key];
+            channel.lastPath = [TARTTHelper getLastPath:conf.key];
+            channel.config = conf;
+            return channel;
+        }
+    }
+    return nil;
 }
 
 -(NSString *)getChannelPath:(NSString *)channelKey
 {
     NSString *channelPath = [self.cacheDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",kCHANNELBASEDIR,channelKey]];    
-    if([self ensureDirExists:channelPath])
+    if([TARTTHelper ensureDirExists:channelPath])
         return channelPath;
     return nil; 
-}-(NSString *)getLastPath:(NSString *)channelKey
-{
-    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-    NSString *channelDictKey = [NSString stringWithFormat:@"%@-%@",channelKey,kCHANNELKEY];   
-    return [defaults objectForKey:channelDictKey];
 }
+
 -(NSString *)getTempPath:(NSString *)channelKey
 {
     NSString *temp = [self.cacheDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@/temp",kCHANNELBASEDIR,channelKey]];
-    if([self ensureDirExists:temp])
+    if([TARTTHelper ensureDirExists:temp])
         return temp;
     return nil;
 }
 -(NSString *)createNewChannelVersion:(NSString *)channelKey{
     NSString *channelPath = [self getChannelPath:channelKey];
     NSString *newVersionPath = [channelPath stringByAppendingString:[[NSUUID UUID] UUIDString]];
-    if([self ensureDirExists:newVersionPath])
+    if([TARTTHelper ensureDirExists:newVersionPath])
         return newVersionPath;
     return nil;
 }
-
--(BOOL)ensureDirExists:(NSString *)path
-{
+-(BOOL)cleanUpChannel:(TARTTChannel *)channel{
     NSError *error;
-    NSFileManager *fileManager = [NSFileManager defaultManager];    
-    if(![fileManager fileExistsAtPath:path]){
-        [fileManager createDirectoryAtPath:path
-               withIntermediateDirectories:YES
-                                attributes:nil
-                                     error:&error];
-    }
+    [[NSFileManager defaultManager]  removeItemAtPath:channel.tempPath error:&error];
+    if(error != nil)
+        DebugLog(@"error deleting temp directory %@",error);
+    return error == nil;
+
+}
+-(BOOL)deleteChannel:(TARTTChannel *)channel{
+    NSError *error;
+    [[NSFileManager defaultManager]  removeItemAtPath:channel.mainPath error:&error];
+    if(error != nil)
+        DebugLog(@"error deleting Channel directory %@",error);
     return error == nil;
 }
-
 @end

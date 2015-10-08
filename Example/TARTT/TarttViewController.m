@@ -11,10 +11,14 @@
 
 
 @interface TarttViewController ()
+
 @property (nonatomic, strong) WTArchitectView *architectView;    
 @property (nonatomic, weak) WTNavigation *architectWorldNavigation;
+
 @property (nonatomic, strong) TARTTChannel *channel;    
 @property (nonatomic, strong) TARTTChannelManager *channelManager;    
+@property (nonatomic, strong) TARTTChannelConfigRequest *configRequest;
+@property (nonatomic, strong) TARTTChannelDownloader *downloader;
 @end
 
 @implementation TarttViewController
@@ -25,7 +29,6 @@
     [super viewDidLoad];
     
     self.progressBar.hidden = YES;  
-    self.channelManager = [[TARTTChannelManager alloc]init];
     [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) 
     {        
         /* When the application starts for the first time, several UIAlert's might be shown to ask the user for camera and/or GPS access.
@@ -65,50 +68,66 @@
 
 - (IBAction)startChannel:(id)sender 
 {
-    // Start Loading a Channel
-    [self.channelManager requestChannelSetupWithDelegate:self];
-    
-    //self.channel = [[TARTTChannel alloc] initWithKey:@"SampleKey"];
-    //[self.channel initChannelWithDelegate:self];
+    // START LOADING CHANNEL SETUP
+    self.configRequest = [[TARTTChannelConfigRequest alloc] initWithPoolID:@"eu-west-1:99e5483a-51cf-4c6f-a8d3-b7a5cee36b98" 
+                                                                 andRegion:AWSRegionEUWest1 
+                                                                  andTable:@"saturnde_ad93b7fe4c_channel"];
+    [self.configRequest startRequestWithDelegate:self];
 }
 
-#pragma mark TARTT
--(void)finishedInitWithError:(NSError *)error{
+#pragma mark TARTTChannelConfigRequestDelegate
+
+-(void)finishedConfigRequestWithSuccess:(NSArray *)configs
+{
+    if([configs count] > 1){
+        // start handling mutliple Channels
+        // start the QR-Code Scanner to get the channel Key
+        
+    }else{
+        // Just one Channel is available so start the init process of this channel
+        self.channelManager = [[TARTTChannelManager alloc] initWithMultipleConfigs:configs];    
+        self.channel = [self.channelManager getChannelInstance];
+        self.downloader = [[TARTTChannelDownloader alloc] initWithChannel:self.channel];
+        [self.downloader startDownloadWithDelegate:self];
+    }
 }
--(void)finishedWithMultipleChannels{
-    
+-(void)finishedConfigRequestWithError:(NSError *)error
+{
+     NSLog(@"finishedConfigRequestWithError: %@", [error localizedDescription]);
 }
--(void)finishedWithChannel:(TARTTChannel *)channel{
-    [channel initChannelWithDelegate:self];
-}
--(void)channelStartedDownload
+
+#pragma mark TARTTChannelDelegate
+
+-(void)channelDownloadStarted
 {
     // Download Started
     self.progressBar.hidden = NO;
     self.progressBar.progress = 0;
 }
--(void)channelProgressLoadedBytes:(long)bytesLoaded ofTotal:(long)bytesTotal
+-(void)channelDownloadProgress:(long)bytesLoaded ofTotal:(long)bytesTotal
 {    
     self.progressBar.progress = (float)bytesLoaded/(float)bytesTotal;   
 }
--(void)channelFinishedWithSuccess
+-(void)channelDownloadFinishedWithSuccess:(TARTTChannel *)channel
 {
-    self.progressBar.hidden = YES;   
-    [self loadWikitudeWithChannel];    
+    self.progressBar.hidden = YES;  
+    [self.channelManager cleanUpChannel:channel];
+    [self loadWikitudeWithChannel:channel];    
 }
--(void)channelFinishedWithError:(NSError *)error
+-(void)channelDownloadFinishedForChannel:(TARTTChannel *)channel withError:(NSError *)error
 {
     self.progressBar.hidden = YES;
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];    
     [alert show];
 }
--(void)channelFinishedWithErrors:(NSArray *)errors{
+-(void)channelDownloadFinishedForChannel:(TARTTChannel *)channel withErrors:(NSArray *)errors
+{
     for (NSError *error  in errors) {
         NSLog(@"Error: %@",error);
     }
 }
 
--(void)loadWikitudeWithChannel{
+-(void)loadWikitudeWithChannel:(TARTTChannel *)channel{
     NSError *deviceNotSupportedError = nil;
     if ( [WTArchitectView isDeviceSupportedForRequiredFeatures:WTFeature_Geo | WTFeature_2DTracking error:&deviceNotSupportedError] ) 
     {
@@ -127,7 +146,7 @@
         
         
         // Path to Channel Data
-        NSURL *architectWorldURL = [NSURL URLWithString:[self.channel.currentPath stringByAppendingPathComponent:@"index.html"]];
+        NSURL *architectWorldURL = [NSURL URLWithString:[channel.currentPath stringByAppendingPathComponent:@"index.html"]];
         
         // Load Channel
         self.architectWorldNavigation =  [self.architectView loadArchitectWorldFromURL:architectWorldURL withRequiredFeatures:WTFeature_2DTracking];   

@@ -16,4 +16,5 @@
 @property (nonatomic, strong) NSArray *type;
 @property (nonatomic, strong) NSArray *files;
 
++ (void)setTable:(NSString *)table;
 @end

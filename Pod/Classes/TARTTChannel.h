@@ -9,21 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "TARTTChannelConfig.h"
 
-#define kERROR_FILEDOWNLOAD  100
-#define kERROR_SOMETHINGELSE  200
-
-@protocol TARTTChannelDelegate <NSObject>
-
-- (void) channelStartedDownload;
-- (void) channelFinishedWithError:(NSError *)error;
-- (void) channelFinishedWithErrors:(NSArray *)errors;
-- (void) channelFinishedWithSuccess;
-
-@optional
-- (void) channelProgressLoadedBytes:(long)bytesLoaded ofTotal:(long)bytesTotal;
-@end
-
-
 @interface TARTTChannel : NSObject
 
 @property (nonatomic, strong) NSString *mainPath;
@@ -31,9 +16,5 @@
 @property (nonatomic, strong) NSString *lastPath;
 @property (nonatomic, strong) NSString *tempPath;
 @property (nonatomic, strong) TARTTChannelConfig *config;
-
--(instancetype)initWithKey:(NSString *)key;
-
--(void)initChannelWithDelegate:(id<TARTTChannelDelegate>)delegate;
 
 @end

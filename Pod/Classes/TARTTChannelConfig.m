@@ -9,9 +9,14 @@
 #import "TARTTChannelConfig.h"
 
 @implementation TARTTChannelConfig
+NSString *constTableName;
+
++ (void)setTable:(NSString *)table {
+    constTableName = table;
+}
 
 + (NSString *)dynamoDBTableName {
-    return @"saturnde_ad93b7fe4c_channel";
+    return constTableName;
 }
 
 + (NSString *)hashKeyAttribute {

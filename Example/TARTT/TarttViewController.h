@@ -9,11 +9,13 @@
 @import UIKit;
 #import <TARTT/TARTTChannel.h>
 #import <TARTT/TARTTChannelManager.h>
+#import <TARTT/TARTTChannelConfigRequest.h>
+#import <TARTT/TARTTChannelDownloader.h>
 #import <WikitudeSDK/WTArchitectView.h>
 #import <WikitudeSDK/WTNavigation.h>
 #import <WikitudeSDK/WTArchitectViewDebugDelegate.h>
 
-@interface TarttViewController : UIViewController<TARTTChannelDelegate, TARTTChannelManagerDelegate, WTArchitectViewDelegate>
+@interface TarttViewController : UIViewController<TARTTChannelDownloaderDelegate, TARTTChannelConfigRequestDelegate, WTArchitectViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIProgressView *progressBar;
 

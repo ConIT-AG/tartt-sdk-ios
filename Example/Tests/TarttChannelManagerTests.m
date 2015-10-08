@@ -8,24 +8,22 @@
 
 #import <XCTest/XCTest.h>
 #import <TARTT/TARTTChannel.h>
+#import <TARTT/TARTTChannelConfig.h>
 #import <TARTT/TARTTChannelManager.h>
+#import <TARTT/TARTTHelper.h>
 
-@interface TarttChannelManagerTests : XCTestCase<TARTTChannelManagerDelegate>
-@property (nonatomic)TARTTChannelManager *manager;
+@interface TarttChannelManagerTests : XCTestCase
 @property (nonatomic) NSString *cacheDirectory;
 @end
 
 @implementation TarttChannelManagerTests
 
 - (void)setUp {
-    [super setUp];
-    self.manager = [[TARTTChannelManager alloc] init];    
+    [super setUp];   
+      
     self.cacheDirectory = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingString:@"/"];
-    NSString *channelKey = @"testKey";    
-    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-    NSString *channelDictKey = [NSString stringWithFormat:@"%@-%@",channelKey,kCHANNELKEY];
-    [defaults setObject:nil forKey:channelDictKey];
-    [defaults synchronize];
+    NSString *channelKey = @"ChannelKey1";      
+    [TARTTHelper saveLastPath:nil forChannel:channelKey];    
 }
 
 - (void)tearDown {
@@ -35,37 +33,57 @@
 
 - (void)testChannelDirs{    
     // given
-    NSString *channelKey = @"testKey";    
+    TARTTChannelConfig *config = [TARTTChannelConfig new];
+    config.key = @"ChannelKey1";   
+    TARTTChannelManager *manager = [[TARTTChannelManager alloc] initWithConfig:config];  
+    [[NSFileManager defaultManager] removeItemAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/"] error:nil];
+    
     // when
-    TARTTChannel *channel = [self.manager getChannel:channelKey];    
+    TARTTChannel *channel = [manager getChannelInstance];    
     // then
-    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/testKey"]]);
-    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/testKey/temp"]]);
+    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/ChannelKey1"]]);
+    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/ChannelKey1/temp"]]);
     XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:channel.currentPath]);
     XCTAssertNil(channel.lastPath);
 }
 -(void)testLastChannelDir{
     // given
-    NSString *channelKey = @"testKey";    
-    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-    NSString *channelDictKey = [NSString stringWithFormat:@"%@-%@",channelKey,kCHANNELKEY];
-    [defaults setObject:@"simpleTestPath/to/somewhere" forKey:channelDictKey];
-    [defaults synchronize];
-    TARTTChannel *channel = [self.manager getChannel:channelKey]; 
+    NSString *channelKey = @"ChannelKey1"; 
+    [TARTTHelper saveLastPath:@"simpleTestPath/to/somewhere" forChannel:channelKey];
+
+    TARTTChannelConfig *config = [TARTTChannelConfig new];
+    config.key = @"ChannelKey1";   
+    TARTTChannelManager *manager = [[TARTTChannelManager alloc] initWithConfig:config];    
+    
+    TARTTChannel *channel = [manager getChannelInstance]; 
     XCTAssertEqualObjects(channel.lastPath, @"simpleTestPath/to/somewhere");
 }
--(void)testAWSConnection{
-    [self.manager requestChannelSetupWithDelegate:self];
-}
--(void)finishedWithChannel:(TARTTChannel *)channel{
-     XCTAssertNotNil(channel);
-}
+-(void)testMultipleConfigs{
+    // given
+    [[NSFileManager defaultManager] removeItemAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/"] error:nil];
+    TARTTChannelConfig *config = [TARTTChannelConfig new];
+    config.key = @"ChannelKeyMulti1";   
+    TARTTChannelConfig *config2 = [TARTTChannelConfig new];
+    config2.key = @"ChannelKeyMulti2";   
 
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
+    TARTTChannelManager *manager = [[TARTTChannelManager alloc] initWithMultipleConfigs:[NSArray arrayWithObjects:config,config2, nil]];  
+    
+    // when
+    TARTTChannel *channel = [manager getChannelInstance];    
+    // then
+    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/ChannelKeyMulti1"]]);
+    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/ChannelKeyMulti1/temp"]]);
+    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:channel.currentPath]);
+    XCTAssertNil(channel.lastPath);
+    XCTAssertEqualObjects(channel.config, config);
+    
+    // when
+    channel = [manager getChannelByKey:@"ChannelKeyMulti2"];    
+    // then
+    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/ChannelKeyMulti2"]]);
+    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/ChannelKeyMulti2/temp"]]);
+    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:channel.currentPath]);
+    XCTAssertNil(channel.lastPath);
+    XCTAssertEqualObjects(channel.config, config2);
 }
-
 @end

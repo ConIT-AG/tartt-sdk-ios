@@ -40,6 +40,9 @@
 		F23CBBF61BC3B7F300BB8C0A /* WikitudeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F23CBBF51BC3B7F300BB8C0A /* WikitudeSDK.framework */; settings = {ASSET_TAGS = (); }; };
 		F23CBC041BC5105C00BB8C0A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F23CBC031BC5105C00BB8C0A /* LaunchScreen.storyboard */; settings = {ASSET_TAGS = (); }; };
 		F23CBC0A1BC51CBC00BB8C0A /* TarttChannelManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F23CBC091BC51CBC00BB8C0A /* TarttChannelManagerTests.m */; settings = {ASSET_TAGS = (); }; };
+		F23CBC331BC677F300BB8C0A /* TarttChannelConfigRequestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F23CBC321BC677F300BB8C0A /* TarttChannelConfigRequestTests.m */; settings = {ASSET_TAGS = (); }; };
+		F23CBC391BC68CF100BB8C0A /* TarttChannelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F23CBC381BC68CF100BB8C0A /* TarttChannelTests.m */; settings = {ASSET_TAGS = (); }; };
+		F23CBC3F1BC697D300BB8C0A /* TarttChannelDownloaderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F23CBC3E1BC697D300BB8C0A /* TarttChannelDownloaderTests.m */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -98,6 +101,9 @@
 		F23CBBF51BC3B7F300BB8C0A /* WikitudeSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WikitudeSDK.framework; sourceTree = "<group>"; };
 		F23CBC031BC5105C00BB8C0A /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F23CBC091BC51CBC00BB8C0A /* TarttChannelManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TarttChannelManagerTests.m; sourceTree = "<group>"; };
+		F23CBC321BC677F300BB8C0A /* TarttChannelConfigRequestTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TarttChannelConfigRequestTests.m; sourceTree = "<group>"; };
+		F23CBC381BC68CF100BB8C0A /* TarttChannelTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TarttChannelTests.m; sourceTree = "<group>"; };
+		F23CBC3E1BC697D300BB8C0A /* TarttChannelDownloaderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TarttChannelDownloaderTests.m; sourceTree = "<group>"; };
 		FA53FE949886E94A6EC3C58E /* Pods-TARTT_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TARTT_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TARTT_Example/Pods-TARTT_Example.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -225,6 +231,9 @@
 			children = (
 				6003F5B6195388D20070C39A /* Supporting Files */,
 				F23CBC091BC51CBC00BB8C0A /* TarttChannelManagerTests.m */,
+				F23CBC321BC677F300BB8C0A /* TarttChannelConfigRequestTests.m */,
+				F23CBC381BC68CF100BB8C0A /* TarttChannelTests.m */,
+				F23CBC3E1BC697D300BB8C0A /* TarttChannelDownloaderTests.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -471,6 +480,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F23CBC331BC677F300BB8C0A /* TarttChannelConfigRequestTests.m in Sources */,
+				F23CBC391BC68CF100BB8C0A /* TarttChannelTests.m in Sources */,
+				F23CBC3F1BC697D300BB8C0A /* TarttChannelDownloaderTests.m in Sources */,
 				F23CBC0A1BC51CBC00BB8C0A /* TarttChannelManagerTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -8,20 +8,16 @@
 
 #import <Foundation/Foundation.h>
 #import "TARTTChannel.h"
-
-#define kCHANNELKEY @"TTARTChannelCurrentVersion"
-
-@protocol TARTTChannelManagerDelegate <NSObject>
-
--(void)finishedInitWithError:(NSError *)error;
--(void)finishedWithMultipleChannels;
--(void)finishedWithChannel:(TARTTChannel *)channel;
-
-@end
+#import "TARTTChannelConfig.h"
 
 @interface TARTTChannelManager : NSObject
 
--(void)requestChannelSetupWithDelegate:(id<TARTTChannelManagerDelegate>)delegate;
+-(instancetype)initWithConfig:(TARTTChannelConfig*) config;
+-(instancetype)initWithMultipleConfigs:(NSArray *) configs;
 
--(TARTTChannel *)getChannel:(NSString *)channelKey;
+-(TARTTChannel *)getChannelInstance;
+-(TARTTChannel *)getChannelByKey:(NSString *)channelKey;
+-(BOOL)cleanUpChannel:(TARTTChannel *)channel;
+-(BOOL)deleteChannel:(TARTTChannel *)channel;
+
 @end
