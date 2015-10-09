@@ -146,6 +146,7 @@
     NSURL *architectWorldURL = [NSURL URLWithString:[channel.currentPath stringByAppendingPathComponent:@"index.html"]];
     // Load Channel
     self.architectWorldNavigation =  [self.architectView loadArchitectWorldFromURL:architectWorldURL withRequiredFeatures:WTFeature_2DTracking]; 
+    [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
     
 }
 -(void)channelDownloadFinishedForChannel:(TARTTChannel *)channel withError:(NSError *)error
