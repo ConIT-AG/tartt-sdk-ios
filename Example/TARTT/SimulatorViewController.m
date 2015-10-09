@@ -6,11 +6,9 @@
 //  Copyright (c) 2015 wh33ler. All rights reserved.
 //
 
-#import "TarttViewController.h"
+#import "SimulatorViewController.h"
 
-
-
-@interface TarttViewController ()
+@interface SimulatorViewController ()
 
 @property (nonatomic, strong) WTArchitectView *architectView;    
 @property (nonatomic, weak) WTNavigation *architectWorldNavigation;
@@ -21,13 +19,14 @@
 @property (nonatomic, strong) TARTTChannelDownloader *downloader;
 @end
 
-@implementation TarttViewController
+@implementation SimulatorViewController
 
 #pragma mark - View Lifecycle
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
+    self.navigationItem.title = @"Simulator";
     self.progressBar.hidden = YES;  
     [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) 
     {        
@@ -73,12 +72,14 @@
                                                                  andRegion:AWSRegionEUWest1 
                                                                   andTable:@"saturnde_ad93b7fe4c_channel"];
     [self.configRequest startRequestWithDelegate:self];
+    self.status.text = @"Request startet";
 }
 
 #pragma mark TARTTChannelConfigRequestDelegate
 
 -(void)finishedConfigRequestWithSuccess:(NSArray *)configs
 {
+    self.status.text = @"Request finished";
     if([configs count] > 1){
         // start handling mutliple Channels
         // start the QR-Code Scanner to get the channel Key
@@ -93,7 +94,9 @@
 }
 -(void)finishedConfigRequestWithError:(NSError *)error
 {
-     NSLog(@"finishedConfigRequestWithError: %@", [error localizedDescription]);
+    NSLog(@"finishedConfigRequestWithError: %@", [error localizedDescription]);
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];    
+    [alert show];
 }
 
 #pragma mark TARTTChannelDelegate
@@ -103,6 +106,7 @@
     // Download Started
     self.progressBar.hidden = NO;
     self.progressBar.progress = 0;
+    self.status.text = @"Download started";
 }
 -(void)channelDownloadProgress:(long)bytesLoaded ofTotal:(long)bytesTotal
 {    
@@ -110,12 +114,14 @@
 }
 -(void)channelDownloadFinishedWithSuccess:(TARTTChannel *)channel
 {
+    self.status.text = @"Download finished";
     self.progressBar.hidden = YES;  
     [self.channelManager cleanUpChannel:channel];
     [self loadWikitudeWithChannel:channel];    
 }
 -(void)channelDownloadFinishedForChannel:(TARTTChannel *)channel withError:(NSError *)error
 {
+    self.status.text = @"Error in Download";
     self.progressBar.hidden = YES;
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];    
     [alert show];
@@ -134,7 +140,13 @@
         // Setup View after Download
         self.architectView = [[WTArchitectView alloc] initWithFrame:self.view.bounds motionManager:nil];
         self.architectView.delegate = self;
-        [self.architectView setLicenseKey:@"otr/l3HJpaElIt8Bv36DNdxrVvywnXxhvMsMFReyvrL2Jlr54vetxIAYOi9V3PUgT7S9RaK0NC3fq+1Pkt+Twy6SjmQme9ginF30aixB+yDZLabipN3K421a3IzxP7f68pI76j+EbTz/B+O6fc1KKHJl8/CERXUScIEKhcp9XHBTYWx0ZWRfX0nZMIeLg6TgFJ4TrRDHDsuicw/ev3ghNBuwGKzJ1q29WCcOTv0dyKVFZDR2gE9lVULtncj3sckaZBayY6rbfO8oZMn1r/5lNFZjF1NjvuJlvp5q8GOS0siRRYs8tGzoAfR7X2xwNocrkmPMACMIsxWBYwn9IAa3vYCo+yRYeFprS9JAo6rkTdGmjB+tphyzmqr3vK8O/PBuWwhEecwNlkm1UFstX5ZEqd1QLbayWfCF8d33RuH5+LU4yDqead0z+9vhQ77nPGDrLJvO/k8ciIjUXl0Fc1tGlhL089fQ7Fwdl5hX1PTame58LpNrWtaPEtnYlZPdVbJNWTwEFXYc29NVZsNoTsNQ4tmKn4U8X2c4ml7FnzCiJpq2hHAMwLry57InRuyRTZbAIsvrOzUD8akU4vLti6igFUG1AK5/ivdcgObcOGxSEoWdMF/9AALI2A0LVJWKzK0k7etjtJ28vcpKJ2JyTFuEalzJYz63zJSUSmktW1R9/1vnSLTuymzFS5GRIC0EuJL3ct7B4YJOGu+0i3GmrNQ32BQmK3Wdk3uj3U2Xi+5iDXU="];             
+        [self.architectView setLicenseKey:@"otr/l3HJpaElIt8Bv36DNdxrVvywnXxhvMsMFReyvrL2Jlr54vetxIAYOi9V3PUgT7S9RaK0NC3fq+1Pkt+Twy6SjmQme9ginF30aixB+yDZLabipN3K421a3IzxP7f68pI76j+EbTz/B+O6fc1KKHJl8/CERXUScIEKhcp9XHBTYWx0ZWRfX0nZMIeLg6TgFJ4TrRDHDsuicw/ev3ghNBuwGKzJ1q29WCcOTv0dyKVFZDR2gE9lVULtncj3sckaZBayY6rbfO8oZMn1r/5lNFZjF1NjvuJlvp5q8GOS0siRRYs8tGzoAfR7X2xwNocrkmPMACMIsxWBYwn9IAa3vYCo+yRYeFprS9JAo6rkTdGmjB+tphyzmqr3vK8O/PBuWwhEecwNlkm1UFstX5ZEqd1QLbayWfCF8d33RuH5+LU4yDqead0z+9vhQ77nPGDrLJvO/k8ciIjUXl0Fc1tGlhL089fQ7Fwdl5hX1PTame58LpNrWtaPEtnYlZPdVbJNWTwEFXYc29NVZsNoTsNQ4tmKn4U8X2c4ml7FnzCiJpq2hHAMwLry57InRuyRTZbAIsvrOzUD8akU4vLti6igFUG1AK5/ivdcgObcOGxSEoWdMF/9AALI2A0LVJWKzK0k7etjtJ28vcpKJ2JyTFuEalzJYz63zJSUSmktW1R9/1vnSLTuymzFS5GRIC0EuJL3ct7B4YJOGu+0i3GmrNQ32BQmK3Wdk3uj3U2Xi+5iDXU="];      
+        
+        // Path to Channel Data
+        NSURL *architectWorldURL = [NSURL URLWithString:[channel.currentPath stringByAppendingPathComponent:@"index.html"]];
+        
+        // Load Channel
+        self.architectWorldNavigation =  [self.architectView loadArchitectWorldFromURL:architectWorldURL withRequiredFeatures:WTFeature_2DTracking]; 
         
         [self.view addSubview:self.architectView];
         self.architectView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -142,18 +154,13 @@
         // Constraints
         NSDictionary *views = NSDictionaryOfVariableBindings(_architectView);
         [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"|[_architectView]|" options:0 metrics:nil views:views] ];
-        [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_architectView]|" options:0 metrics:nil views:views] ];
-        
-        
-        // Path to Channel Data
-        NSURL *architectWorldURL = [NSURL URLWithString:[channel.currentPath stringByAppendingPathComponent:@"index.html"]];
-        
-        // Load Channel
-        self.architectWorldNavigation =  [self.architectView loadArchitectWorldFromURL:architectWorldURL withRequiredFeatures:WTFeature_2DTracking];   
-        
+        [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_architectView]|" options:0 metrics:nil views:views] ];    
+             
+        [self startWikitudeSDKRendering];
         
     } else {
         NSLog(@"device is not supported - reason: %@", [deviceNotSupportedError localizedDescription]);
+        self.status.text = @"Device not supported";
     }
 }
 

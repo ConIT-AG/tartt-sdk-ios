@@ -15,4 +15,6 @@
 +(NSString *)getLastPath:(NSString *)channelKey;
 +(void)saveLastPath:(NSString *)lastPath forChannel:(NSString *)channelKey;
 +(NSString *)getRelativePathOfItem:(NSDictionary *)item;
++(NSString *)getDummyChannelPath;
++(NSDictionary *)URLParameterFromURL:(NSURL *)URL;
 @end

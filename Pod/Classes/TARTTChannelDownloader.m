@@ -43,6 +43,7 @@
 -(void)startDownloadWithDelegate:(id<TARTTChannelDownloaderDelegate>)delegate
 {
     self.delegate = delegate;
+    
     for (NSDictionary *item in self.channel.config.files) {
         // look for file in old first
         if([self fileExistsAtPath:self.channel.lastPath forItem:item]){
@@ -122,6 +123,7 @@
         [self performSelectorOnMainThread:@selector(invokeChannelDownloadStart) withObject:nil waitUntilDone:NO];
     
     self.errors = [NSMutableArray array];   
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     NSMutableArray *mutableOperations = [NSMutableArray array];
     for (NSDictionary *item in self.downloadQueue) 
     {    
@@ -174,6 +176,7 @@
     NSOperationQueue* operationQueue = [[NSOperationQueue alloc] init];
     [operationQueue setMaxConcurrentOperationCount:1]; 
     [operationQueue addOperations:operations waitUntilFinished:YES];  
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 }
 -(void)moveDownloadedFilesToCurrent{
     

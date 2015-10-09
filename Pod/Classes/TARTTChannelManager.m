@@ -12,9 +12,6 @@
 #import "TARTTHelper.h"
 #import "Debug.h"
 
-#define kCHANNELBASEDIR @"TARTT/Channels"
-
-
 @interface TARTTChannelManager ()
 
 @property (nonatomic) NSString *cacheDirectory;
@@ -59,7 +56,6 @@
     }
     return nil;
 }
-
 -(NSString *)getChannelPath:(NSString *)channelKey
 {
     NSString *channelPath = [self.cacheDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",kCHANNELBASEDIR,channelKey]];    
@@ -76,7 +72,7 @@
     return nil;
 }
 -(NSString *)createNewChannelVersion:(NSString *)channelKey{
-    NSString *channelPath = [self getChannelPath:channelKey];
+    NSString *channelPath = [[self getChannelPath:channelKey] stringByAppendingString:@"/"];
     NSString *newVersionPath = [channelPath stringByAppendingString:[[NSUUID UUID] UUIDString]];
     if([TARTTHelper ensureDirExists:newVersionPath])
         return newVersionPath;
@@ -84,9 +80,28 @@
 }
 -(BOOL)cleanUpChannel:(TARTTChannel *)channel{
     NSError *error;
-    [[NSFileManager defaultManager]  removeItemAtPath:channel.tempPath error:&error];
+    NSFileManager *filemanager = [NSFileManager defaultManager];
+    [filemanager  removeItemAtPath:channel.tempPath error:&error];
     if(error != nil)
         DebugLog(@"error deleting temp directory %@",error);
+    NSDirectoryEnumerator *dirEnum = [filemanager enumeratorAtPath:channel.mainPath];    
+    NSString *file;
+    while ((file = [dirEnum nextObject])) 
+    {
+        BOOL isDir;
+        file = [channel.mainPath stringByAppendingPathComponent:file];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:file
+                                                 isDirectory:&isDir] && isDir)
+        {
+            [dirEnum skipDescendants];
+            if(![file isEqualToString:channel.currentPath]){
+                [filemanager removeItemAtPath:file error:&error];
+                if(error != nil)
+                    DebugLog(@"error deleting old version directory %@",error);
+
+            }
+        }
+    }   
     return error == nil;
 
 }

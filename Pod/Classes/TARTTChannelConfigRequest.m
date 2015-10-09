@@ -33,6 +33,7 @@
 -(void)startRequestWithDelegate:(id<TARTTChannelConfigRequestDelegate>)delegate{
     self.delegate = delegate;     
 
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     AWSCognitoCredentialsProvider *credentialsProvider = [[AWSCognitoCredentialsProvider alloc] initWithRegionType:self.region 
                                                                                                     identityPoolId:self.poolID];
     AWSServiceConfiguration *configuration = [[AWSServiceConfiguration alloc] initWithRegion:self.region
@@ -57,6 +58,7 @@
              DebugLog(@"*** DynamoDB Call received with %lu configs",[paginatedOutput.items count]);
              [self.delegate finishedConfigRequestWithSuccess:paginatedOutput.items];             
          }
+         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
          return nil;
      }];   
 }

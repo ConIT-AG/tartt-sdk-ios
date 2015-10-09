@@ -81,7 +81,53 @@
     XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[channel.currentPath stringByAppendingString:@"/js/converter.js"]]);
     
     [manager deleteChannel:channel];
+    XCTAssertFalse([[NSFileManager defaultManager] fileExistsAtPath:channel.mainPath]);
 }
+- (void)testChannelCleanupOlderVersions{
+    // given
+    
+    NSMutableDictionary *file1 = [NSMutableDictionary dictionary];
+    [file1 setObject:@"/assets/images" forKey:@"dirname"];
+    [file1 setObject:@"http://manorplus.dev.takondi-hosting.com/tests/jsonfortartt/world/studio/assets/images/social-media-youtube.png" forKey:@"url"];
+    [file1 setObject:[NSNumber numberWithInt:12438] forKey:@"filesize"];
+    [file1 setObject:@"6308ce9badf1c3b9dd5e2a0217e23879" forKey:@"md5"];   
+    
+    TARTTChannelConfig *config = [TARTTChannelConfig new];
+    config.key = @"channelDownloadTest"; 
+    config.files = [NSArray arrayWithObjects:file1, nil];
+    
+    TARTTChannelManager *manager = [[TARTTChannelManager alloc] initWithConfig:config];
+    TARTTChannel *channel  = [manager getChannelInstance];
+    
+    [[NSFileManager defaultManager] removeItemAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/"] error:nil];
+    
+    TARTTChannelDownloader *downloader = [[TARTTChannelDownloader alloc] initWithChannel:channel];
+    [downloader startDownloadWithDelegate:self];    
+    
+    self.isDone = NO;
+    NSDate *untilDate;
+    while(!self.isDone){
+        untilDate = [NSDate dateWithTimeIntervalSinceNow:1.0];
+        [[NSRunLoop currentRunLoop] runUntilDate:untilDate];
+        NSLog(@"poll...");
+    }       
+    NSString *currenPath = channel.currentPath;
+    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:currenPath]);
+    [manager cleanUpChannel:channel];   
+    
+    channel  = [manager getChannelInstance];    
+    downloader = [[TARTTChannelDownloader alloc] initWithChannel:channel];
+    [downloader startDownloadWithDelegate:self];   
+    self.isDone = NO;    
+    while(!self.isDone){
+        untilDate = [NSDate dateWithTimeIntervalSinceNow:1.0];
+        [[NSRunLoop currentRunLoop] runUntilDate:untilDate];
+        NSLog(@"poll...");
+    }
+    [manager cleanUpChannel:channel];    
+    XCTAssertFalse([[NSFileManager defaultManager] fileExistsAtPath:currenPath]);
+}
+
 
 
 - (void)testChannelDownloadFailes {

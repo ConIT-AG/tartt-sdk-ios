@@ -10,6 +10,8 @@
 #import "TARTTChannel.h"
 #import "TARTTChannelConfig.h"
 
+#define kCHANNELBASEDIR @"TARTT/Channels"
+
 @interface TARTTChannelManager : NSObject
 
 -(instancetype)initWithConfig:(TARTTChannelConfig*) config;
@@ -19,5 +21,7 @@
 -(TARTTChannel *)getChannelByKey:(NSString *)channelKey;
 -(BOOL)cleanUpChannel:(TARTTChannel *)channel;
 -(BOOL)deleteChannel:(TARTTChannel *)channel;
+
+
 
 @end
