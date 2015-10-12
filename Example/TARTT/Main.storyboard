@@ -83,6 +83,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZNA-LU-58f" customClass="WTArchitectView">
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <animations/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                             <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vOl-YI-Aom">
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <animations/>
@@ -92,7 +97,7 @@
                                 <rect key="frame" x="290" y="290" width="20" height="20"/>
                                 <animations/>
                             </activityIndicatorView>
-                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progressViewStyle="bar" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="JZE-Jg-gbE">
+                            <progressView hidden="YES" opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progressViewStyle="bar" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="JZE-Jg-gbE">
                                 <rect key="frame" x="190" y="333" width="221" height="3"/>
                                 <animations/>
                                 <constraints>
@@ -112,21 +117,26 @@
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="ZNA-LU-58f" firstAttribute="leading" secondItem="vOl-YI-Aom" secondAttribute="leading" id="104-59-bdy"/>
                             <constraint firstItem="JZE-Jg-gbE" firstAttribute="top" secondItem="c7u-CL-rZ8" secondAttribute="bottom" constant="23" id="1LD-yh-ezk"/>
+                            <constraint firstItem="ZNA-LU-58f" firstAttribute="top" secondItem="vOl-YI-Aom" secondAttribute="top" id="7XL-jN-Xc8"/>
                             <constraint firstItem="c7u-CL-rZ8" firstAttribute="centerX" secondItem="68C-yQ-3xz" secondAttribute="centerX" id="Lgs-hA-45k"/>
                             <constraint firstItem="vOl-YI-Aom" firstAttribute="centerX" secondItem="JZE-Jg-gbE" secondAttribute="centerX" id="M1u-fT-5my"/>
                             <constraint firstItem="zsU-bX-Hqf" firstAttribute="centerY" secondItem="vOl-YI-Aom" secondAttribute="centerY" id="Mcf-7e-S58"/>
                             <constraint firstItem="vOl-YI-Aom" firstAttribute="top" secondItem="FuP-0K-8fa" secondAttribute="bottom" id="P93-aJ-YWR"/>
                             <constraint firstItem="JZE-Jg-gbE" firstAttribute="centerX" secondItem="c7u-CL-rZ8" secondAttribute="centerX" id="UcR-gF-5n1"/>
+                            <constraint firstItem="ZNA-LU-58f" firstAttribute="trailing" secondItem="vOl-YI-Aom" secondAttribute="trailing" id="WHB-Zp-puD"/>
                             <constraint firstItem="vOl-YI-Aom" firstAttribute="bottom" secondItem="QMU-oz-zf8" secondAttribute="top" id="e1U-sa-2XX"/>
                             <constraint firstItem="zsU-bX-Hqf" firstAttribute="centerX" secondItem="JZE-Jg-gbE" secondAttribute="centerX" id="efi-Za-vWP"/>
                             <constraint firstItem="zsU-bX-Hqf" firstAttribute="leading" secondItem="68C-yQ-3xz" secondAttribute="leadingMargin" id="fXZ-c5-Cik"/>
+                            <constraint firstItem="ZNA-LU-58f" firstAttribute="bottom" secondItem="QMU-oz-zf8" secondAttribute="top" id="ggU-gB-RKf"/>
                             <constraint firstItem="c7u-CL-rZ8" firstAttribute="centerY" secondItem="68C-yQ-3xz" secondAttribute="centerY" id="nWX-X3-OlV"/>
                             <constraint firstItem="vOl-YI-Aom" firstAttribute="leading" secondItem="68C-yQ-3xz" secondAttribute="leading" id="sXI-m4-xeu"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="alphaView" destination="vOl-YI-Aom" id="s6O-Hm-bBt"/>
+                        <outlet property="architectView" destination="ZNA-LU-58f" id="5In-UR-mN1"/>
                         <outlet property="loadingIndicator" destination="c7u-CL-rZ8" id="Q0h-RY-Gnj"/>
                         <outlet property="progressBar" destination="JZE-Jg-gbE" id="xMe-Ib-bFU"/>
                         <outlet property="scanHint" destination="zsU-bX-Hqf" id="om4-9F-IYc"/>
@@ -136,10 +146,45 @@
             </objects>
             <point key="canvasLocation" x="338" y="1540"/>
         </scene>
+        <!--Mutliple Channels View Controller-->
+        <scene sceneID="UZW-Vh-O7d">
+            <objects>
+                <viewController id="Qcs-lM-onK" customClass="MutlipleChannelsViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="a5j-lp-4j9"/>
+                        <viewControllerLayoutGuide type="bottom" id="JVR-rK-qYa"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="PNl-NU-Aiu">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r3o-qB-ffL" customClass="WTArchitectView">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <animations/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="r3o-qB-ffL" firstAttribute="top" secondItem="PNl-NU-Aiu" secondAttribute="top" id="LnU-Yv-LgU"/>
+                            <constraint firstItem="r3o-qB-ffL" firstAttribute="leading" secondItem="PNl-NU-Aiu" secondAttribute="leading" id="Xkj-mq-oWM"/>
+                            <constraint firstItem="r3o-qB-ffL" firstAttribute="bottom" secondItem="JVR-rK-qYa" secondAttribute="top" id="g2s-Ij-1oW"/>
+                            <constraint firstAttribute="trailing" secondItem="r3o-qB-ffL" secondAttribute="trailing" id="lnG-pZ-cAo"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="architectView" destination="r3o-qB-ffL" id="CnB-WH-cu8"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Zwq-7Y-hQO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="993" y="1540"/>
+        </scene>
         <!--TARTT Examples-->
         <scene sceneID="cFc-5I-OgE">
             <objects>
-                <tableViewController id="lob-Dy-NHn" customClass="MainTableViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="multiple" id="lob-Dy-NHn" customClass="MainTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="FhP-68-JUR">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -176,6 +221,7 @@
                     <connections>
                         <segue destination="whP-gf-Uak" kind="show" identifier="simulator" id="Udc-VO-fXF"/>
                         <segue destination="wdx-ez-57d" kind="show" identifier="default" id="bS6-Ct-yLQ"/>
+                        <segue destination="Qcs-lM-onK" kind="show" identifier="multiple" id="eN5-2r-Fbs"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6j0-oK-dOg" userLabel="First Responder" sceneMemberID="firstResponder"/>

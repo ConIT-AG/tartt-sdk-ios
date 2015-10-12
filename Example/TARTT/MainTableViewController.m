@@ -55,6 +55,10 @@
     {
         [self performSegueWithIdentifier:@"default" sender:self];
     }
+    else if(indexPath.row == 2)
+    {
+        [self performSegueWithIdentifier:@"multiple" sender:self];
+    }
 
 }
 @end

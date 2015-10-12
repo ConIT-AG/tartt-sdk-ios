@@ -57,7 +57,9 @@
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];    
     /* WTArchitectView rendering is stopped once the view controllers view did disappear */
-    [self stopWikitudeSDKRendering];
+    [self.configRequest cancel];
+    [self.downloader cancel];    
+    [self stopWikitudeSDKRendering];  
 }
 - (void)didReceiveMemoryWarning
 {

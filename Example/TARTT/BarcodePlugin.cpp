@@ -31,7 +31,10 @@ BarcodePlugin::~BarcodePlugin()
 
 void BarcodePlugin::initialize() {
 #ifndef SIMULATOR_BUILD
-    _imageScanner.set_config(zbar::ZBAR_NONE, zbar::ZBAR_CFG_ENABLE, 1);
+    // DISABLE ALL MODES FIRST
+    _imageScanner.set_config(zbar::ZBAR_NONE, zbar::ZBAR_CFG_ENABLE, 0);
+    // ENABLE ONLY QR FOR PERFROMANCE
+    _imageScanner.set_config(zbar::ZBAR_QRCODE, zbar::ZBAR_CFG_ENABLE, 1);
 #endif
 }
 
@@ -52,12 +55,12 @@ void BarcodePlugin::cameraFrameAvailable(const wikitude::sdk::Frame& cameraFrame
     if ( n != _worldNeedsUpdate ) {
         if ( n ) {
             std::ostringstream javaScript;
-            javaScript << "document.getElementById('loadingMessage').innerHTML = 'Code Content: ";
+            javaScript << "performBarcodeRequest('";
 
             zbar::Image::SymbolIterator symbol = _image.symbol_begin();
             javaScript << symbol->get_data();
 
-            javaScript << "';";
+            javaScript << "');";
             
             addToJavaScriptQueue(javaScript.str());
         }

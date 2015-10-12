@@ -51,7 +51,7 @@
     if ( [WTArchitectView isDeviceSupportedForRequiredFeatures:WTFeature_Geo | WTFeature_2DTracking error:&deviceNotSupportedError] ) 
     {
         // Setup View after Download
-        self.architectView = [[WTArchitectView alloc] initWithFrame:self.view.bounds motionManager:nil];
+        //self.architectView = [[WTArchitectView alloc] initWithFrame:self.view.bounds motionManager:nil];
         self.architectView.delegate = self;
         self.architectView.debugDelegate = self;
         [self.architectView setLicenseKey:@"otr/l3HJpaElIt8Bv36DNdxrVvywnXxhvMsMFReyvrL2Jlr54vetxIAYOi9V3PUgT7S9RaK0NC3fq+1Pkt+Twy6SjmQme9ginF30aixB+yDZLabipN3K421a3IzxP7f68pI76j+EbTz/B+O6fc1KKHJl8/CERXUScIEKhcp9XHBTYWx0ZWRfX0nZMIeLg6TgFJ4TrRDHDsuicw/ev3ghNBuwGKzJ1q29WCcOTv0dyKVFZDR2gE9lVULtncj3sckaZBayY6rbfO8oZMn1r/5lNFZjF1NjvuJlvp5q8GOS0siRRYs8tGzoAfR7X2xwNocrkmPMACMIsxWBYwn9IAa3vYCo+yRYeFprS9JAo6rkTdGmjB+tphyzmqr3vK8O/PBuWwhEecwNlkm1UFstX5ZEqd1QLbayWfCF8d33RuH5+LU4yDqead0z+9vhQ77nPGDrLJvO/k8ciIjUXl0Fc1tGlhL089fQ7Fwdl5hX1PTame58LpNrWtaPEtnYlZPdVbJNWTwEFXYc29NVZsNoTsNQ4tmKn4U8X2c4ml7FnzCiJpq2hHAMwLry57InRuyRTZbAIsvrOzUD8akU4vLti6igFUG1AK5/ivdcgObcOGxSEoWdMF/9AALI2A0LVJWKzK0k7etjtJ28vcpKJ2JyTFuEalzJYz63zJSUSmktW1R9/1vnSLTuymzFS5GRIC0EuJL3ct7B4YJOGu+0i3GmrNQ32BQmK3Wdk3uj3U2Xi+5iDXU="];             
@@ -62,13 +62,8 @@
         // Load Channel
         [self.architectView loadArchitectWorldFromURL:architectWorldURL withRequiredFeatures:WTFeature_2DTracking]; 
         
-        [self.view addSubview:self.architectView];
-        self.architectView.translatesAutoresizingMaskIntoConstraints = NO;       
-
-        // Constraints
-        NSDictionary *views = NSDictionaryOfVariableBindings(_architectView);
-        [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"|[_architectView]|" options:0 metrics:nil views:views] ];
-        [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_architectView]|" options:0 metrics:nil views:views] ];           
+      //  [self.view addSubview:self.architectView];
+        self.architectView.translatesAutoresizingMaskIntoConstraints = NO;                   
         
         [self startWikitudeSDKRendering];
         [self startTARTT];
@@ -85,13 +80,9 @@
 
     }    
 }
-
 -(void)startTARTT
 {
-    [self.loadingIndicator startAnimating];
-    [self.view bringSubviewToFront:self.alphaView];
-    [self.view bringSubviewToFront:self.loadingIndicator];
-    
+    [self.loadingIndicator startAnimating];   
     
     
     // START LOADING CHANNEL SETUP
@@ -145,9 +136,7 @@
     // Path to Channel Data
     NSURL *architectWorldURL = [NSURL URLWithString:[channel.currentPath stringByAppendingPathComponent:@"index.html"]];
     // Load Channel
-    self.architectWorldNavigation =  [self.architectView loadArchitectWorldFromURL:architectWorldURL withRequiredFeatures:WTFeature_2DTracking]; 
-    [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
-    
+    self.architectWorldNavigation =  [self.architectView loadArchitectWorldFromURL:architectWorldURL withRequiredFeatures:WTFeature_2DTracking];     
 }
 -(void)channelDownloadFinishedForChannel:(TARTTChannel *)channel withError:(NSError *)error
 {    
@@ -212,18 +201,20 @@
     if ( [[URL absoluteString] hasPrefix:@"architectsdk://targetsLoaded"] )
     {
         [self.loadingIndicator stopAnimating];  
+        [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
         self.progressBar.hidden = YES;
         self.alphaView.hidden = YES;
     }else if ( [[URL absoluteString] hasPrefix:@"architectsdk://augmentationsOnEnterFieldOfVision"])
     {
         self.alphaView.hidden = YES;
         self.scanHint.hidden =  YES;
+        [self stopNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
     }
     else if ( [[URL absoluteString] hasPrefix:@"architectsdk://augmentationsOnExitFieldOfVision"])
     {
         self.alphaView.hidden = NO;
         self.scanHint.hidden = NO;
-        [self.view bringSubviewToFront:self.scanHint];
+        [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
     }
 }
 - (void)architectView:(WTArchitectView *)architectView didFinishLoadArchitectWorldNavigation:(WTNavigation *)navigation {

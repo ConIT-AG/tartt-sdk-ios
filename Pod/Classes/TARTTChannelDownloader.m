@@ -20,10 +20,12 @@
 
 @property (nonatomic, strong) NSMutableArray *downloadQueue;
 @property (nonatomic, strong) NSMutableArray *errors;
+@property (nonatomic, strong) NSOperationQueue* operationQueue;
 
 @property (atomic) long bytesMax;
 @property (atomic) long bytesLoaded;
 @property (atomic) BOOL canceled;
+@property (atomic) BOOL downloadError;
 
 @end
 
@@ -38,6 +40,14 @@
         self.errors = [NSMutableArray new];
     }
     return self;    
+}
+-(void)cancel
+{
+    self.canceled = YES;
+    if(self.operationQueue != nil){
+        [self.operationQueue cancelAllOperations];
+         DebugLog(@"*** Canceled operations");
+    }
 }
 
 -(void)startDownloadWithDelegate:(id<TARTTChannelDownloaderDelegate>)delegate
@@ -58,7 +68,10 @@
             } 
         }
     }    
-    [self performSelectorInBackground:@selector(handleMissingDownloads) withObject:nil];
+    if(!self.canceled)
+        [self performSelectorInBackground:@selector(handleMissingDownloads) withObject:nil];
+    else
+        DebugLog(@"*** Download Canceled before handlemissing");
 }
 
 -(BOOL)fileExistsAtPath:(NSString *)path forItem:(NSDictionary *)item
@@ -133,8 +146,11 @@
             continue;
         }        
         NSString *filePath = [self.channel.tempPath stringByAppendingPathComponent:[TARTTHelper getRelativePathOfItem:item]];  
+        NSString *url = [item objectForKey:@"url"];
+      //  if([url hasSuffix:@"project.js"])
+        //    url = @"http://beta0815.appzapp.de/arworld/js/project.js";          
         
-        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:[item objectForKey:@"url"]]];                
+        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];                
         AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];       
         operation.outputStream = [NSOutputStream outputStreamToFileAtPath:filePath append:NO];
         [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
@@ -144,12 +160,15 @@
             }
         }];        
         [operation setCompletionBlockWithSuccess:nil failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
-            self.canceled = YES;
+            self.downloadError = YES;
             [self.errors addObject:error];
         }];
         [mutableOperations addObject:operation];
     } 
-    [self startOperation:mutableOperations]; 
+    if(!self.canceled)
+        [self startOperation:mutableOperations]; 
+    else
+        DebugLog(@"*** Download Canceled before download started");    
 }
 
 -(void)startOperation:(NSArray *)requests
@@ -161,8 +180,12 @@
    } 
    completionBlock:^(NSArray *operations) 
    {
-       DebugLog(@"*** All operations in Batch completed");
        if(self.canceled){
+           DebugLog(@"*** Download Canceled after batch complete");
+           return;
+       }
+       DebugLog(@"*** All operations in Batch completed");
+       if(self.downloadError){
            NSMutableDictionary *errorDetail = [NSMutableDictionary dictionary];
            [errorDetail setValue:@"Download Incomplete" forKey:NSLocalizedDescriptionKey];
            NSError *error = [NSError errorWithDomain:@"TARTT" code:kERROR_FILEDOWNLOAD userInfo:errorDetail];            
@@ -173,9 +196,9 @@
            [self moveDownloadedFilesToCurrent];
        }
    }];
-    NSOperationQueue* operationQueue = [[NSOperationQueue alloc] init];
-    [operationQueue setMaxConcurrentOperationCount:1]; 
-    [operationQueue addOperations:operations waitUntilFinished:YES];  
+    self.operationQueue = [[NSOperationQueue alloc] init];
+    [self.operationQueue setMaxConcurrentOperationCount:3]; 
+    [self.operationQueue addOperations:operations waitUntilFinished:YES];  
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 }
 -(void)moveDownloadedFilesToCurrent{

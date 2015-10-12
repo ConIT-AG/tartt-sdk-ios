@@ -161,6 +161,40 @@
     }    
     XCTAssertTrue(self.isError);
 }
+-(void)testChannelDownloadCancel{
+    // given    
+    NSMutableDictionary *file1 = [NSMutableDictionary dictionary];
+    [file1 setObject:@"/assets/images" forKey:@"dirname"];
+    [file1 setObject:@"http://manorplus.dev.takondi-hosting.com/tests/jsonfortartt/world/studio/assets/images/social-media-youtube.png" forKey:@"url"];
+    [file1 setObject:[NSNumber numberWithInt:12438] forKey:@"filesize"];
+    [file1 setObject:@"6308ce9badf1c3b9dd5e2a0217e23879" forKey:@"md5"];     
+    
+    TARTTChannelConfig *config = [TARTTChannelConfig new];
+    config.key = @"channelDownloadTest"; 
+    config.files = [NSArray arrayWithObjects:file1, nil];
+    
+    TARTTChannelManager *manager = [[TARTTChannelManager alloc] initWithConfig:config];
+    TARTTChannel *channel  = [manager getChannelInstance];
+    
+    [[NSFileManager defaultManager] removeItemAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/"] error:nil];    
+
+    
+    self.isDone = NO;
+    self.isError = NO;
+
+    
+    TARTTChannelDownloader *downloader = [[TARTTChannelDownloader alloc] initWithChannel:channel];
+    [downloader startDownloadWithDelegate:self];    
+    
+    [downloader cancel];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.0]];
+
+    
+    XCTAssertFalse([[NSFileManager defaultManager] fileExistsAtPath:[channel.tempPath stringByAppendingString:@"/assets/images/social-media-youtube.png"]]);
+    XCTAssertFalse([[NSFileManager defaultManager] fileExistsAtPath:[channel.currentPath stringByAppendingString:@"/assets/images/social-media-youtube.png"]]);
+    
+    
+}
 
 
 -(void)channelDownloadStarted{

@@ -14,6 +14,7 @@
 @interface TARTTChannelConfigRequest()
 
 @property (nonatomic) NSString *poolID;
+@property (nonatomic) BOOL canceled;
 @property (nonatomic) AWSRegionType region;
 @property (nonatomic, assign) id<TARTTChannelConfigRequestDelegate> delegate;
 @end
@@ -28,6 +29,10 @@
         [TARTTChannelConfig setTable:table];
     }
     return self;
+}
+-(void)cancel
+{
+    self.canceled = YES;    
 }
 
 -(void)startRequestWithDelegate:(id<TARTTChannelConfigRequestDelegate>)delegate{
@@ -46,6 +51,10 @@
     [[dynamoDBObjectMapper scan:[TARTTChannelConfig class]
                      expression:scanExpression]
      continueWithBlock:^id(AWSTask *task) {
+         if(self.canceled){
+             DebugLog(@"*** Config Request Canceled");
+             return nil;
+         }
          if (task.error) {
              DebugLog(@"*** The request failed. Error: [%@]", task.error);
              [self.delegate finishedConfigRequestWithError:task.error];

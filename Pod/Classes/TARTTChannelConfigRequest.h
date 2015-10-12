@@ -20,5 +20,6 @@
 
 -(instancetype)initWithPoolID:(NSString*)poolID andRegion:(AWSRegionType)region andTable:(NSString *)table;
 -(void)startRequestWithDelegate:(id<TARTTChannelConfigRequestDelegate>)delegate;
+-(void)cancel;
 
 @end

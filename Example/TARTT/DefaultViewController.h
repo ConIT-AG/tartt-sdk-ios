@@ -24,8 +24,8 @@
                                                         WTArchitectViewDelegate, 
                                                         WTArchitectViewDebugDelegate>
 
-@property (nonatomic, strong) WTArchitectView *architectView;    
 
+@property (weak, nonatomic) IBOutlet WTArchitectView *architectView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;
 @property (weak, nonatomic) IBOutlet UIProgressView *progressBar;
 @property (weak, nonatomic) IBOutlet UIView *alphaView;

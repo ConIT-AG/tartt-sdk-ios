@@ -38,4 +38,5 @@ Pod::Spec.new do |s|
   s.dependency 'AFNetworking', '~> 2.0'
   s.dependency 'AWSDynamoDB', '~> 2.2.0'
   s.dependency 'AWSCore'
+#  s.dependency 'ZBarSDK'
 end

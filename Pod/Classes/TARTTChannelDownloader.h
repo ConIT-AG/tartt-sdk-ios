@@ -29,5 +29,6 @@
 -(instancetype)initWithChannel:(TARTTChannel *)config;
 
 -(void)startDownloadWithDelegate:(id<TARTTChannelDownloaderDelegate>)delegate;
+-(void)cancel;
 
 @end
