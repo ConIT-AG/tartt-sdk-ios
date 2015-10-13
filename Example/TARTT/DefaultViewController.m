@@ -224,8 +224,9 @@
 
 
 #pragma mark WTArchitectViewDelegate
--(void)architectView:(WTArchitectView *)architectView invokedURL:(NSURL *)URL{
-   // NSLog(@"InvokedURL from within the World: %@",URL);
+-(void)architectView:(WTArchitectView *)architectView invokedURL:(NSURL *)URL
+{
+    NSLog(@"InvokedURL from within the World: %@",URL);
     if ( [[URL absoluteString] hasPrefix:@"architectsdk://targetsLoaded"] )
     {
         NSLog(@"##EVENT:%@",URL);
@@ -242,12 +243,14 @@
         NSLog(@"##EVENT:%@",URL);
         [self setGuiForState:TARTTGuiStateScan];  
         [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
-    }else if([[URL absoluteString] hasPrefix:@"architectsdk://barcodeTrigger"])
+    }else if([[URL absoluteString] hasPrefix:@"architectsdk://qrCodeTrigger"])
     {
         NSLog(@"##EVENT:%@",URL);
         NSDictionary *parameters = [TARTTHelper URLParameterFromURL:URL];
-        NSString *channelKey = [parameters objectForKey:@"channelKey"];
-        
+        NSString *code = [parameters objectForKey:@"code"];
+        NSString *decoded = [code stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        parameters = [TARTTHelper URLParameterFromURL:[NSURL URLWithString:decoded]];        
+        NSString *channelKey = [parameters objectForKey:@"channelKey"];        
         if([channelKey isEqualToString:self.channel.config.channelKey])
         {
             NSLog(@"Ignoring QR-Code because its already loaded or still loading");
@@ -255,10 +258,12 @@
         }                
         [self setGuiForState:TARTTGuiStateLoading];  
         [self stopNamedPlugin:kWTPluginIdentifier_BarcodePlugin];        
+        NSLog(@"Channel %@ selected", channelKey);
         [self.configRequest selectChannel:channelKey andDelegate:self];
     }else if( [[URL absoluteString] hasPrefix:@"architectsdk://readyForExecution"])
     {
-        [self.architectView callJavaScript:@"]
+         NSLog(@"##EVENT:%@",URL);
+        [self.architectView callJavaScript:@"startWorld('')"];
     }
 }
 - (void)architectView:(WTArchitectView *)architectView didFinishLoadArchitectWorldNavigation:(WTNavigation *)navigation {
