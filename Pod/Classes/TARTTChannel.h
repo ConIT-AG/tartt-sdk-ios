@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TARTTChannelConfig.h"
 
 @interface TARTTChannel : NSObject
 
@@ -15,6 +14,6 @@
 @property (nonatomic, strong) NSString *currentPath;
 @property (nonatomic, strong) NSString *lastPath;
 @property (nonatomic, strong) NSString *tempPath;
-@property (nonatomic, strong) TARTTChannelConfig *config;
+@property (nonatomic, strong) NSDictionary *config;
 
 @end

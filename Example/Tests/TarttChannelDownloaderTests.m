@@ -8,7 +8,6 @@
 
 #import <XCTest/XCTest.h>
 #import <TARTT/TARTTChannel.h>
-#import <TARTT/TARTTChannelConfig.h>
 #import <TARTT/TARTTChannelManager.h>
 #import <TARTT/TARTTChannelDownloader.h>
 
@@ -46,9 +45,10 @@
     [file2 setObject:@"3a1648b4daa5e16861789a7621a5a18c" forKey:@"md5"];
     
     
-    TARTTChannelConfig *config = [TARTTChannelConfig new];
-    config.key = @"channelDownloadTest"; 
-    config.files = [NSArray arrayWithObjects:file1, file2, nil];
+    NSMutableDictionary *config = [NSMutableDictionary new];
+    [config setObject:@"channelDownloadTest" forKey:@"channelKey"];
+    [config setObject:[NSDictionary dictionaryWithObjects:@[[NSArray arrayWithObjects:file1, file2, nil]] forKeys: @[@"files"]] forKey:@"content"];
+
     
     TARTTChannelManager *manager = [[TARTTChannelManager alloc] initWithConfig:config];
     TARTTChannel *channel  = [manager getChannelInstance];
@@ -92,9 +92,10 @@
     [file1 setObject:[NSNumber numberWithInt:12438] forKey:@"filesize"];
     [file1 setObject:@"6308ce9badf1c3b9dd5e2a0217e23879" forKey:@"md5"];   
     
-    TARTTChannelConfig *config = [TARTTChannelConfig new];
-    config.key = @"channelDownloadTest"; 
-    config.files = [NSArray arrayWithObjects:file1, nil];
+    NSMutableDictionary *config = [NSMutableDictionary new];
+    [config setObject:@"channelDownloadTest" forKey:@"channelKey"];
+    [config setObject:[NSDictionary dictionaryWithObjects:@[[NSArray arrayWithObjects:file1,nil]] forKeys: @[@"files"]] forKey:@"content"];
+
     
     TARTTChannelManager *manager = [[TARTTChannelManager alloc] initWithConfig:config];
     TARTTChannel *channel  = [manager getChannelInstance];
@@ -139,9 +140,10 @@
     [file1 setObject:@"6308ce9badf1c3b9dd5e2a0217e23879" forKey:@"md5"]; 
     
     
-    TARTTChannelConfig *config = [TARTTChannelConfig new];
-    config.key = @"channelDownloadTest"; 
-    config.files = [NSArray arrayWithObjects:file1, nil];
+    NSMutableDictionary *config = [NSMutableDictionary new];
+    [config setObject:@"channelDownloadTest" forKey:@"channelKey"];
+    [config setObject:[NSDictionary dictionaryWithObjects:@[[NSArray arrayWithObjects:file1,nil]] forKeys: @[@"files"]] forKey:@"content"];
+
     
     TARTTChannelManager *manager = [[TARTTChannelManager alloc] initWithConfig:config];
     TARTTChannel *channel  = [manager getChannelInstance];
@@ -169,9 +171,10 @@
     [file1 setObject:[NSNumber numberWithInt:12438] forKey:@"filesize"];
     [file1 setObject:@"6308ce9badf1c3b9dd5e2a0217e23879" forKey:@"md5"];     
     
-    TARTTChannelConfig *config = [TARTTChannelConfig new];
-    config.key = @"channelDownloadTest"; 
-    config.files = [NSArray arrayWithObjects:file1, nil];
+    NSMutableDictionary *config = [NSMutableDictionary new];
+    [config setObject:@"channelDownloadTest" forKey:@"channelKey"];
+    [config setObject:[NSDictionary dictionaryWithObjects:@[[NSArray arrayWithObjects:file1,nil]] forKeys: @[@"files"]] forKey:@"content"];
+
     
     TARTTChannelManager *manager = [[TARTTChannelManager alloc] initWithConfig:config];
     TARTTChannel *channel  = [manager getChannelInstance];

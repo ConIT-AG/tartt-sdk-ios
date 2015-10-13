@@ -8,7 +8,6 @@
 
 #import "TARTTChannelManager.h"
 #import "TARTTChannel.h"
-#import "TARTTChannelConfig.h"
 #import "TARTTHelper.h"
 #import "Debug.h"
 
@@ -21,7 +20,7 @@
 
 @implementation TARTTChannelManager
 
--(instancetype)initWithConfig:(TARTTChannelConfig*) config{
+-(instancetype)initWithConfig:(NSDictionary*) config{
     self = [super init];
     if (self) {
         self.cacheDirectory = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingString:@"/"];
@@ -38,18 +37,19 @@
     return self;
 }
 -(TARTTChannel *)getChannelInstance{
-    TARTTChannelConfig * first = [self.configs firstObject];
-    return [self getChannelByKey:first.key];
+    NSDictionary * first = [self.configs firstObject];
+    return [self getChannelByKey:[first objectForKey:@"channelKey"]];
 }
 -(TARTTChannel *)getChannelByKey:(NSString *)channelKey{
-    for (TARTTChannelConfig *conf in self.configs) {
-        if([conf.key isEqualToString:channelKey])
+    for (NSDictionary *conf in self.configs) {
+        NSString *curChannelKey = [conf objectForKey:@"channelKey"];
+        if([curChannelKey isEqualToString:channelKey])
         {
             TARTTChannel *channel = [[TARTTChannel alloc] init]; 
-            channel.mainPath = [self getChannelPath:conf.key];
-            channel.currentPath = [self createNewChannelVersion:conf.key];
-            channel.tempPath = [self getTempPath:conf.key];
-            channel.lastPath = [TARTTHelper getLastPath:conf.key];
+            channel.mainPath = [self getChannelPath:channelKey];
+            channel.currentPath = [self createNewChannelVersion:channelKey];
+            channel.tempPath = [self getTempPath:channelKey];
+            channel.lastPath = [TARTTHelper getLastPath:channelKey];
             channel.config = conf;
             return channel;
         }

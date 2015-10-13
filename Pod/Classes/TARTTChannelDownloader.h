@@ -9,8 +9,10 @@
 #import <Foundation/Foundation.h>
 #import "TARTTChannel.h"
 
-#define kERROR_FILEDOWNLOAD  100
-#define kERROR_SOMETHINGELSE  200
+FOUNDATION_EXPORT NSString *const TARTTChannelDownloaderErrorDomain;
+typedef NS_ENUM(NSInteger, TARTTChannelDownloaderErrorType) {
+    TARTTChannelDownloaderErrorDownloadIncomplete
+};
 
 @protocol TARTTChannelDownloaderDelegate <NSObject>
 

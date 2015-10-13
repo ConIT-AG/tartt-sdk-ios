@@ -20,13 +20,12 @@ PODS:
   - AFNetworking/UIKit (2.6.0):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - AWSCore (2.2.6)
-  - AWSDynamoDB (2.2.6):
-    - AWSCore (= 2.2.6)
+  - Bolts/Tasks (1.3.0)
+  - Parse (1.9.0):
+    - Bolts/Tasks (>= 1.3.0)
   - TARTT (0.1.0):
     - AFNetworking (~> 2.0)
-    - AWSCore
-    - AWSDynamoDB (~> 2.2.0)
+    - Parse
 
 DEPENDENCIES:
   - TARTT (from `../`)
@@ -37,8 +36,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: 79f7eb1a0fcfa7beb409332b2ca49afe9ce53b05
-  AWSCore: dd05203bf44d45b58b7667754ce4fa6f1bdb1c3e
-  AWSDynamoDB: d0eb38a6bcaaee5931e5168478c409a39b0a9066
-  TARTT: b32dc82d00a3a569d02399ad6f4467756f0ffd14
+  Bolts: 805a4a87413e49d4a0c2b7d469084cbc46b09342
+  Parse: 712efbc476d4f47b0f96b70db7e53101575753aa
+  TARTT: dd1ab2a2ad821bc250c9429933063ff993aa7f9d
 
 COCOAPODS: 0.38.2

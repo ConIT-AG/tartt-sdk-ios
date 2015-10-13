@@ -151,6 +151,7 @@
 		F26F38431BCBC7DA002E49FA /* zbar-samples.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zbar-samples.png"; sourceTree = "<group>"; };
 		F26F384D1BCBD7BF002E49FA /* MutlipleChannelsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MutlipleChannelsViewController.h; sourceTree = "<group>"; };
 		F26F384E1BCBD7BF002E49FA /* MutlipleChannelsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MutlipleChannelsViewController.m; sourceTree = "<group>"; };
+		F26F38501BCCF9B7002E49FA /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		FA53FE949886E94A6EC3C58E /* Pods-TARTT_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TARTT_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TARTT_Example/Pods-TARTT_Example.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -254,6 +255,7 @@
 			children = (
 				F26F38261BCBC7DA002E49FA /* ZBarSDK */,
 				F26F38491BCBD37F002E49FA /* Controller */,
+				F26F38501BCCF9B7002E49FA /* Constants.h */,
 				F23CBC031BC5105C00BB8C0A /* LaunchScreen.storyboard */,
 				6003F59C195388D20070C39A /* TarttAppDelegate.h */,
 				6003F59D195388D20070C39A /* TarttAppDelegate.m */,

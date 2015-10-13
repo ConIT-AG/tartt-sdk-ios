@@ -9,9 +9,14 @@
 #import <XCTest/XCTest.h>
 #import <TARTT/TARTTChannelConfigRequest.h>
 
+#define kParseApplicationKey  @"iFGXKDe3ty3HKhmoAiWG7j2L6xm79z0YYz6ytIWo"
+#define kParseClientKey @"k9J9eSSQuDus0bzORM0NA2glNn4FFmvY4XHyj9IC"
+
 @interface TarttChannelConfigRequestTests : XCTestCase<TARTTChannelConfigRequestDelegate>
 @property (nonatomic) BOOL isDone;
-@property (nonatomic) NSArray *configs;
+@property (nonatomic) BOOL isMulti;
+@property (nonatomic) NSDictionary *channel;
+@property (nonatomic) NSError *error;
 @end
 
 @implementation TarttChannelConfigRequestTests
@@ -25,37 +30,81 @@
     [super tearDown];
 }
 
-- (void)testAWSConfig {    
-    
-    TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithPoolID:@"eu-west-1:99e5483a-51cf-4c6f-a8d3-b7a5cee36b98" 
-                                                                                 andRegion:AWSRegionEUWest1 
-                                                                                  andTable:@"saturnde_ad93b7fe4c_channel"];
+- (void)testParseMultipleConfigs 
+{   
+    TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey];
     [request startRequestWithDelegate:self];
     
     self.isDone = NO;
+    self.isMulti = NO;
      NSDate *untilDate;
     while(!self.isDone){
         untilDate = [NSDate dateWithTimeIntervalSinceNow:1.0];
         [[NSRunLoop currentRunLoop] runUntilDate:untilDate];
     }
-    XCTAssertNotNil(self.configs);
-    XCTAssertEqual([self.configs count], 1);
-
+    XCTAssertNil(self.channel);
+    XCTAssertEqual(self.isMulti, YES);
 }
--(void)testAWSConfigCancel{
-    TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithPoolID:@"eu-west-1:99e5483a-51cf-4c6f-a8d3-b7a5cee36b98" 
-                                                                                 andRegion:AWSRegionEUWest1 
-                                                                                  andTable:@"saturnde_ad93b7fe4c_channel"];
+
+
+-(void)testParseConfigCancel
+{
+    TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey];
+    self.isDone = NO;
+    self.isMulti = NO;
     [request startRequestWithDelegate:self];
     [request cancel];
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.5]];
-    XCTAssertNil(self.configs);
+    XCTAssertNil(self.channel);
+    XCTAssertEqual(self.isMulti, NO);
 }
--(void)finishedConfigRequestWithSuccess:(NSArray *)configs{
-    self.configs = configs;
+
+-(void)testParseConfigNoChannels{
+    TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey];
+    [request setOptions:@{TARTTChannelConfigRequestOptionLanguage : @[@"fr"]}];
+    [request startRequestWithDelegate:self];
+    
+    self.isDone = NO;
+    NSDate *untilDate;
+    while(!self.isDone){
+        untilDate = [NSDate dateWithTimeIntervalSinceNow:1.0];
+        [[NSRunLoop currentRunLoop] runUntilDate:untilDate];
+    }    
+    XCTAssertEqual(self.error.domain, TARTTChannelConfigRequestErrorDomain);
+    XCTAssertEqual(self.error.code, TARTTChannelConfigRequestErrorNoChannels);
+}
+-(void)testParseOptions{
+    TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey];
+    NSDictionary *options = @{TARTTChannelConfigRequestOptionLanguage : @[@"de"],
+                              TARTTChannelConfigRequestOptionEnvironment : @[@"test"],
+                              TARTTChannelConfigRequestOptionTargetAPI : @[[NSNumber numberWithInt:3]],
+                              TARTTChannelConfigRequestOptionTargetType : @[@"mainanddetail"],
+                              TARTTChannelConfigRequestOptionTargetState : [NSNumber numberWithInt:1]};
+    [request setOptions:options];
+    [request startRequestWithDelegate:self];
+    
+    self.isDone = NO;
+    NSDate *untilDate;
+    while(!self.isDone){
+        untilDate = [NSDate dateWithTimeIntervalSinceNow:1.0];
+        [[NSRunLoop currentRunLoop] runUntilDate:untilDate];
+    }    
+    XCTAssertNotNil(self.channel);
+    NSDictionary *content = [self.channel objectForKey:@"content"];
+    XCTAssertNotNil(content);
+    XCTAssertGreaterThan([[content objectForKey:@"files"] count], 2);
+
+}
+-(void)finishedConfigRequestWithSuccess:(NSDictionary *)channel{
     self.isDone = YES;
+    self.channel = channel;
 }
 -(void)finishedConfigRequestWithError:(NSError *)error{
     self.isDone = YES;    
+    self.error = error;
+}
+-(void)finishedConfigRequestWithMultipleChannels{
+    self.isDone = YES;    
+    self.isMulti = YES;
 }
 @end

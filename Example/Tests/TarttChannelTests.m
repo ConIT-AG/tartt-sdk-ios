@@ -8,7 +8,6 @@
 
 #import <XCTest/XCTest.h>
 #import <TARTT/TARTTChannel.h>
-#import <TARTT/TARTTChannelConfig.h>
 #import <TARTT/TARTTChannelManager.h>
 
 @interface TarttChannelTests : XCTestCase
@@ -27,14 +26,7 @@
     [super tearDown];
 }
 
-- (void)testDownload {
-    // given
-    TARTTChannelConfig *config = [TARTTChannelConfig new];
-    config.key = @"ChannelKey1";   
-    TARTTChannelManager *manager = [[TARTTChannelManager alloc] initWithConfig:config];      
-    // when
-    TARTTChannel *channel = [manager getChannelInstance];    
-}
+
 
 - (void)testPerformanceExample {
     // This is an example of a performance test case.

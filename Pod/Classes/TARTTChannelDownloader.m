@@ -13,6 +13,8 @@
 #import "TARTTChannelManager.h"
 #import "TARTTHelper.h"
 
+NSString *const TARTTChannelDownloaderErrorDomain = @"com.takondi.TARTTChannelDownloaderErrorDomain";
+
 @interface TARTTChannelDownloader()
 
 @property (nonatomic) TARTTChannel* channel;
@@ -52,9 +54,9 @@
 
 -(void)startDownloadWithDelegate:(id<TARTTChannelDownloaderDelegate>)delegate
 {
-    self.delegate = delegate;
-    
-    for (NSDictionary *item in self.channel.config.files) {
+    self.delegate = delegate;  
+    NSDictionary *content = [self.channel.config objectForKey:@"content"];
+    for (NSDictionary *item in [content objectForKey:@"files"]) {
         // look for file in old first
         if([self fileExistsAtPath:self.channel.lastPath forItem:item]){
             [self copyFromPath:self.channel.lastPath forItem:item];           
@@ -82,8 +84,7 @@
     NSFileManager *fileManager = [NSFileManager defaultManager];
     BOOL fileExists = [fileManager fileExistsAtPath:originalPath];    
     if(!fileExists)
-        return NO;  
-    
+        return NO;      
     NSError* error = nil;  
     NSData *fileData = [NSData dataWithContentsOfFile:originalPath options:0 error: &error];
     if (fileData == nil)
@@ -94,7 +95,6 @@
     {
         if ([[fileData MD5] isEqualToString:[item objectForKey:@"md5"]]) 
         {
-
             DebugLog(@"*** Found matching File with MD5 %@ at %@",[fileData MD5], path);            
             return YES;
         }else{
@@ -174,10 +174,8 @@
 -(void)startOperation:(NSArray *)requests
 {
     NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:requests 
-                                                               progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations) 
-   {
-       //DebugLog(@"*** Operation %lu of %lu complete", numberOfFinishedOperations, totalNumberOfOperations);       
-   } 
+                                                               progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations){}    
+    
    completionBlock:^(NSArray *operations) 
    {
        if(self.canceled){
@@ -185,11 +183,13 @@
            return;
        }
        DebugLog(@"*** All operations in Batch completed");
-       if(self.downloadError){
-           NSMutableDictionary *errorDetail = [NSMutableDictionary dictionary];
-           [errorDetail setValue:@"Download Incomplete" forKey:NSLocalizedDescriptionKey];
-           NSError *error = [NSError errorWithDomain:@"TARTT" code:kERROR_FILEDOWNLOAD userInfo:errorDetail];            
-           [self performSelectorOnMainThread:@selector(invokeChannelError:) withObject:error  waitUntilDone:NO];
+       if(self.downloadError)
+       {   
+           [self performSelectorOnMainThread:@selector(invokeChannelError:) 
+                                  withObject:[NSError errorWithDomain:TARTTChannelDownloaderErrorDomain
+                                                                 code:TARTTChannelDownloaderErrorDownloadIncomplete
+                                                             userInfo:@{NSLocalizedDescriptionKey: @"Download Incomplete"}] 
+                               waitUntilDone:NO];
            [self performSelectorOnMainThread:@selector(invokeChannelErrors) withObject:nil  waitUntilDone:NO];            
        }else
        {          
@@ -208,7 +208,7 @@
         [self copyFromPath:self.channel.tempPath forItem:item]; 
     }   
     DebugLog(@"*** Saved New Path as Current Path %@", self.channel.currentPath);           
-    [TARTTHelper saveLastPath:self.channel.currentPath forChannel:self.channel.config.key];                      
+    [TARTTHelper saveLastPath:self.channel.currentPath forChannel:[self.channel.config objectForKey:@"channelKey"]];                      
     [self performSelectorOnMainThread:@selector(invokeChannelFinishedSuccess) withObject:nil waitUntilDone:NO];         
 }
 -(void)invokeChannelDownloadStart{

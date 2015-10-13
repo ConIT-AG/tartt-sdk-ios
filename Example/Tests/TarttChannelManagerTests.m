@@ -8,7 +8,6 @@
 
 #import <XCTest/XCTest.h>
 #import <TARTT/TARTTChannel.h>
-#import <TARTT/TARTTChannelConfig.h>
 #import <TARTT/TARTTChannelManager.h>
 #import <TARTT/TARTTHelper.h>
 
@@ -33,8 +32,8 @@
 
 - (void)testChannelDirs{    
     // given
-    TARTTChannelConfig *config = [TARTTChannelConfig new];
-    config.key = @"ChannelKey1";   
+    NSMutableDictionary *config = [NSMutableDictionary new];
+    [config setObject:@"ChannelKey1" forKey:@"channelKey"];
     TARTTChannelManager *manager = [[TARTTChannelManager alloc] initWithConfig:config];  
     [[NSFileManager defaultManager] removeItemAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/"] error:nil];
     
@@ -51,8 +50,8 @@
     NSString *channelKey = @"ChannelKey1"; 
     [TARTTHelper saveLastPath:@"simpleTestPath/to/somewhere" forChannel:channelKey];
 
-    TARTTChannelConfig *config = [TARTTChannelConfig new];
-    config.key = @"ChannelKey1";   
+    NSMutableDictionary *config = [NSMutableDictionary new];
+    [config setObject:@"ChannelKey1" forKey:@"channelKey"]; 
     TARTTChannelManager *manager = [[TARTTChannelManager alloc] initWithConfig:config];    
     
     TARTTChannel *channel = [manager getChannelInstance]; 
@@ -61,10 +60,10 @@
 -(void)testMultipleConfigs{
     // given
     [[NSFileManager defaultManager] removeItemAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/"] error:nil];
-    TARTTChannelConfig *config = [TARTTChannelConfig new];
-    config.key = @"ChannelKeyMulti1";   
-    TARTTChannelConfig *config2 = [TARTTChannelConfig new];
-    config2.key = @"ChannelKeyMulti2";   
+    NSMutableDictionary *config = [NSMutableDictionary new];
+    [config setObject:@"ChannelKeyMulti1" forKey:@"channelKey"];
+    NSMutableDictionary *config2 = [NSMutableDictionary new];
+    [config2 setObject:@"ChannelKeyMulti2" forKey:@"channelKey"];
 
     TARTTChannelManager *manager = [[TARTTChannelManager alloc] initWithMultipleConfigs:[NSArray arrayWithObjects:config,config2, nil]];  
     

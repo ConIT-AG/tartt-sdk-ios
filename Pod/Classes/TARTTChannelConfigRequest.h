@@ -9,16 +9,34 @@
 #import <Foundation/Foundation.h>
 #import "TARTTChannel.h"
 
+
+FOUNDATION_EXPORT NSString *const TARTTChannelConfigRequestErrorDomain;
+typedef NS_ENUM(NSInteger, TARTTChannelConfigRequestErrorType) {
+    TARTTChannelConfigRequestErrorNoChannels
+};
+
+
+FOUNDATION_EXPORT NSString *const TARTTChannelConfigRequestOptionLanguage;
+FOUNDATION_EXPORT NSString *const TARTTChannelConfigRequestOptionEnvironment;
+FOUNDATION_EXPORT NSString *const TARTTChannelConfigRequestOptionTargetAPI;
+FOUNDATION_EXPORT NSString *const TARTTChannelConfigRequestOptionTargetType;
+FOUNDATION_EXPORT NSString *const TARTTChannelConfigRequestOptionTargetState;
+
+
+
 @protocol TARTTChannelConfigRequestDelegate <NSObject>
 
 -(void)finishedConfigRequestWithError:(NSError *)error;
--(void)finishedConfigRequestWithSuccess:(NSArray *)configs;
-
+-(void)finishedConfigRequestWithMultipleChannels;
+-(void)finishedConfigRequestWithSuccess:(NSDictionary *)channel;
 @end
+
 
 @interface TARTTChannelConfigRequest : NSObject
 
--(instancetype)initWithPoolID:(NSString*)poolID andRegion:(AWSRegionType)region andTable:(NSString *)table;
+@property (nonatomic) NSDictionary *options;
+
+-(instancetype)initWithApplicationID:(NSString*)applicationID andClientKey:(NSString *)clientKey;
 -(void)startRequestWithDelegate:(id<TARTTChannelConfigRequestDelegate>)delegate;
 -(void)cancel;
 

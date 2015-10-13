@@ -8,6 +8,7 @@
 
 #import "DefaultViewController.h"
 #import "DefaultViewController+PluginLoading.h"
+#import "Constants.h"
 
 @interface DefaultViewController ()
 
@@ -86,9 +87,7 @@
     
     
     // START LOADING CHANNEL SETUP
-    self.configRequest = [[TARTTChannelConfigRequest alloc] initWithPoolID:@"eu-west-1:99e5483a-51cf-4c6f-a8d3-b7a5cee36b98" 
-                                                                 andRegion:AWSRegionEUWest1 
-                                                                  andTable:@"saturnde_ad93b7fe4c_channel"];
+    self.configRequest = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey];
     [self.configRequest startRequestWithDelegate:self];
 }
 
