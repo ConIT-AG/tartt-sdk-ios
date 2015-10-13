@@ -98,7 +98,7 @@ NSString *const TARTTChannelDownloaderErrorDomain = @"com.takondi.TARTTChannelDo
             DebugLog(@"*** Found matching File with MD5 %@ at %@",[fileData MD5], path);            
             return YES;
         }else{
-            DebugLog(@"*** MD5 at Path %@ not matched remote:%@ local:%@",path, [item objectForKey:@"md5"],[fileData MD5]);
+            DebugLog(@"*** MD5 at Path %@ not matched remote:%@ local:%@",originalPath, [item objectForKey:@"md5"],[fileData MD5]);
             return NO;
         }
     }      
@@ -146,10 +146,7 @@ NSString *const TARTTChannelDownloaderErrorDomain = @"com.takondi.TARTTChannelDo
             continue;
         }        
         NSString *filePath = [self.channel.tempPath stringByAppendingPathComponent:[TARTTHelper getRelativePathOfItem:item]];  
-        NSString *url = [item objectForKey:@"url"];
-      //  if([url hasSuffix:@"project.js"])
-        //    url = @"http://beta0815.appzapp.de/arworld/js/project.js";          
-        
+        NSString *url = [item objectForKey:@"url"];        
         NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];                
         AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];       
         operation.outputStream = [NSOutputStream outputStreamToFileAtPath:filePath append:NO];

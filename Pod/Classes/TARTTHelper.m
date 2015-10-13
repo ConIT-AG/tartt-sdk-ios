@@ -50,13 +50,30 @@
 {
     NSString *channelPath = [[[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingString:@"/"] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",kCHANNELBASEDIR,@"Dummy"]];   
     
-    if([TARTTHelper ensureDirExists:channelPath]){
-        NSString *defaultFile = [channelPath stringByAppendingString:@"/index.html"];
-        NSString *html = @"<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\"><html><head></head><body></body></html>";
-        [[NSFileManager defaultManager] createFileAtPath:defaultFile contents:[html dataUsingEncoding:NSUTF8StringEncoding] attributes:nil];
-        return defaultFile;
+    if([TARTTHelper ensureDirExists:channelPath])
+    {       
+        [TARTTHelper copyFromBunde:@"index" withType:@"html" andDestination:[channelPath stringByAppendingString:@"/index.html"]];
+        [TARTTHelper copyFromBunde:@"ade" withType:@"js" andDestination:[channelPath stringByAppendingString:@"/ade.js"]];
+        [TARTTHelper copyFromBunde:@"qr" withType:@"js" andDestination:[channelPath stringByAppendingString:@"/qr.js"]];       
+        [TARTTHelper copyFromBunde:@"project" withType:@"js" andDestination:[channelPath stringByAppendingString:@"/project.js"]];       
+        return [channelPath stringByAppendingString:@"/index.html"];
     }
     return nil;
+}
++(BOOL)copyFromBunde:(NSString *)name withType:(NSString *)type andDestination:(NSString *)destPath
+{
+    NSURL *bundleURL = [[NSBundle bundleForClass:[self class]] URLForResource:@"TARTT" withExtension:@"bundle"];
+    NSBundle *bundle = [NSBundle bundleWithURL:bundleURL];
+    NSString *bundlePath = [bundle pathForResource:name ofType:type];
+    NSError *error;
+    if([[NSFileManager defaultManager] fileExistsAtPath:destPath])
+        [[NSFileManager defaultManager] removeItemAtPath:destPath error:&error];
+    [[NSFileManager defaultManager] copyItemAtPath:bundlePath toPath:destPath error:&error];
+    if(error) {
+        DebugLog(@"Error %@",[error localizedDescription]);
+        return NO;
+    }       
+    return YES;
 }
 +(NSDictionary *)URLParameterFromURL:(NSURL *)URL
 {

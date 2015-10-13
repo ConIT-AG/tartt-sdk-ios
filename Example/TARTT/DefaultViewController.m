@@ -72,9 +72,7 @@
     } else {
         NSLog(@"device is not supported - reason: %@", [deviceNotSupportedError localizedDescription]);
         
-        [self.loadingIndicator stopAnimating];  
-        self.progressBar.hidden = YES;
-        self.alphaView.hidden = YES;        
+        [self setGuiForState:TARTTGuiStateHide];        
         
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:deviceNotSupportedError.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];    
         [alert show];
@@ -83,13 +81,52 @@
 }
 -(void)startTARTT
 {
-    [self.loadingIndicator startAnimating];   
-    
+    [self.loadingIndicator startAnimating];      
     
     // START LOADING CHANNEL SETUP
     self.configRequest = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey];
     [self.configRequest startRequestWithDelegate:self];
 }
+
+-(void)setGuiForState:(TARTTGuiStateType)state{   
+    switch (state) {
+        case TARTTGuiStateHide:            
+            self.progressBar.hidden = YES;
+            self.alphaView.hidden = YES;
+            self.scanHint.hidden = YES;
+            self.loadingIndicator.hidden = YES;
+            break;            
+        case TARTTGuiStateLoading:
+            self.alphaView.hidden = NO;
+            self.progressBar.hidden = YES; 
+            self.scanHint.hidden = YES;
+            self.loadingIndicator.hidden = NO; 
+            [self.loadingIndicator startAnimating];
+            break;
+        case TARTTGuiStateProgress:
+            self.alphaView.hidden = NO;
+            self.progressBar.hidden = NO;
+            self.loadingIndicator.hidden = NO; 
+            self.scanHint.hidden = YES;
+            [self.loadingIndicator startAnimating];
+            break;
+        case TARTTGuiStateScan:
+            self.progressBar.hidden = YES;
+            self.loadingIndicator.hidden = YES;
+            self.alphaView.hidden = NO;
+            self.scanHint.hidden =  NO;
+            self.scanHint.text = @"Bitte Seite scannen";
+            break;
+        case TARTTGuiStateScanQR:
+            self.progressBar.hidden = YES;
+            self.loadingIndicator.hidden = YES;
+            self.alphaView.hidden = NO;
+            self.scanHint.hidden =  NO;
+            self.scanHint.text = @"Bitte QR Code scannen";
+            break;    
+    }
+}
+
 
 #pragma mark TARTTChannelConfigRequestDelegate
 -(void)finishedConfigRequestWithSuccess:(TARTTConfig *)config
@@ -100,8 +137,10 @@
     [self.downloader startDownloadWithDelegate:self];
         
 }
--(void)finishedConfigRequestWithMultipleChannels{
-    
+-(void)finishedConfigRequestWithMultipleChannels
+{
+    [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
+    [self setGuiForState:TARTTGuiStateScanQR];
 }
 -(void)finishedConfigRequestWithError:(NSError *)error
 {
@@ -114,9 +153,8 @@
 
 -(void)channelDownloadStarted
 {
-    [self.view bringSubviewToFront:self.progressBar];
-    self.progressBar.hidden = NO;
-    self.progressBar.progress = 0;   
+    [self setGuiForState:TARTTGuiStateProgress];
+    self.progressBar.progress = 0;
 }
 -(void)channelDownloadProgress:(long)bytesLoaded ofTotal:(long)bytesTotal
 {    
@@ -125,7 +163,7 @@
 -(void)channelDownloadFinishedWithSuccess:(TARTTChannel *)channel
 {    
    [self.channelManager cleanUpChannel:channel];   
-    self.progressBar.hidden = YES;
+    [self setGuiForState:TARTTGuiStateLoading];
     
     // Path to Channel Data
     NSURL *architectWorldURL = [NSURL URLWithString:[channel.currentPath stringByAppendingPathComponent:@"index.html"]];
@@ -134,10 +172,7 @@
 }
 -(void)channelDownloadFinishedForChannel:(TARTTChannel *)channel withError:(NSError *)error
 {    
-    [self.loadingIndicator stopAnimating];  
-    self.progressBar.hidden = YES;
-    self.alphaView.hidden = YES;
-    
+    [self setGuiForState:TARTTGuiStateHide];   
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];    
     [alert show];
@@ -190,25 +225,40 @@
 
 #pragma mark WTArchitectViewDelegate
 -(void)architectView:(WTArchitectView *)architectView invokedURL:(NSURL *)URL{
-    NSLog(@"InvokedURL from within the World: %@",URL);
-//    NSDictionary *parameters = [TARTTHelper URLParameterFromURL:URL];
+   // NSLog(@"InvokedURL from within the World: %@",URL);
     if ( [[URL absoluteString] hasPrefix:@"architectsdk://targetsLoaded"] )
     {
-        [self.loadingIndicator stopAnimating];  
+        NSLog(@"##EVENT:%@",URL);
         [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
-        self.progressBar.hidden = YES;
-        self.alphaView.hidden = YES;
+        [self setGuiForState:TARTTGuiStateScan];  
     }else if ( [[URL absoluteString] hasPrefix:@"architectsdk://augmentationsOnEnterFieldOfVision"])
     {
-        self.alphaView.hidden = YES;
-        self.scanHint.hidden =  YES;
+        NSLog(@"##EVENT:%@",URL);
+        [self setGuiForState:TARTTGuiStateHide];  
         [self stopNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
     }
     else if ( [[URL absoluteString] hasPrefix:@"architectsdk://augmentationsOnExitFieldOfVision"])
     {
-        self.alphaView.hidden = NO;
-        self.scanHint.hidden = NO;
+        NSLog(@"##EVENT:%@",URL);
+        [self setGuiForState:TARTTGuiStateScan];  
         [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
+    }else if([[URL absoluteString] hasPrefix:@"architectsdk://barcodeTrigger"])
+    {
+        NSLog(@"##EVENT:%@",URL);
+        NSDictionary *parameters = [TARTTHelper URLParameterFromURL:URL];
+        NSString *channelKey = [parameters objectForKey:@"channelKey"];
+        
+        if([channelKey isEqualToString:self.channel.config.channelKey])
+        {
+            NSLog(@"Ignoring QR-Code because its already loaded or still loading");
+            return;
+        }                
+        [self setGuiForState:TARTTGuiStateLoading];  
+        [self stopNamedPlugin:kWTPluginIdentifier_BarcodePlugin];        
+        [self.configRequest selectChannel:channelKey andDelegate:self];
+    }else if( [[URL absoluteString] hasPrefix:@"architectsdk://readyForExecution"])
+    {
+        [self.architectView callJavaScript:@"]
     }
 }
 - (void)architectView:(WTArchitectView *)architectView didFinishLoadArchitectWorldNavigation:(WTNavigation *)navigation {

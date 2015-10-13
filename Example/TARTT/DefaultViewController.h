@@ -18,6 +18,14 @@
 #import <WikitudeSDK/WTNavigation.h>
 #import <WikitudeSDK/WTArchitectViewDebugDelegate.h>
 
+typedef NS_ENUM(NSInteger, TARTTGuiStateType) {
+    TARTTGuiStateLoading,
+    TARTTGuiStateProgress,
+    TARTTGuiStateScan,
+    TARTTGuiStateScanQR,
+    TARTTGuiStateHide    
+};
+
 
 @interface DefaultViewController : UIViewController<TARTTChannelDownloaderDelegate, 
                                                         TARTTChannelConfigRequestDelegate, 

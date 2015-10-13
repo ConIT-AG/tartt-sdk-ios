@@ -47,7 +47,7 @@ NSString *const TARTTChannelConfigRequestOptionTargetState= @"com.takondi.State"
     
     PFQuery *query = [PFQuery queryWithClassName:@"world"];
     [query selectKeys:@[@"channelKey"]];
-    [self addOptionsToQuery:query];
+    query = [self addOptionsToQuery:query];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         if(self.canceled)
@@ -82,7 +82,7 @@ NSString *const TARTTChannelConfigRequestOptionTargetState= @"com.takondi.State"
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     PFQuery *query = [PFQuery queryWithClassName:@"world"];
     [query whereKey:@"channelKey" equalTo:channelKey];
-    [self addOptionsToQuery:query];
+    query = [self addOptionsToQuery:query];
     [query selectKeys:@[@"channelKey",@"content"]];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
@@ -108,8 +108,8 @@ NSString *const TARTTChannelConfigRequestOptionTargetState= @"com.takondi.State"
         }
     }];    
 }
--(void)addOptionsToQuery:(PFQuery *)query{
-    [query whereKey:@"state" equalTo:[NSNumber numberWithInt:1]];
+-(PFQuery *)addOptionsToQuery:(PFQuery *)query
+{
     for (NSString* key in self.options) {
         if([key isEqualToString:TARTTChannelConfigRequestOptionLanguage]){
             [query whereKey:@"language" containedIn:[self.options objectForKey:TARTTChannelConfigRequestOptionLanguage]];                
@@ -123,6 +123,8 @@ NSString *const TARTTChannelConfigRequestOptionTargetState= @"com.takondi.State"
             [query whereKey:@"state" equalTo:[self.options objectForKey:TARTTChannelConfigRequestOptionTargetState]];                
         }       
     }
+    [query orderByDescending:@"updatedAt"];
+    return query;
 }
 
 @end
