@@ -39,22 +39,7 @@ NSString *const TARTTChannelConfigRequestOptionTargetState= @"com.takondi.State"
 {
     self.canceled = YES;    
 }
--(void)addOptionsToQuery:(PFQuery *)query{
-    [query whereKey:@"state" equalTo:[NSNumber numberWithInt:1]];
-    for (NSString* key in self.options) {
-        if([key isEqualToString:TARTTChannelConfigRequestOptionLanguage]){
-            [query whereKey:@"language" containedIn:[self.options objectForKey:TARTTChannelConfigRequestOptionLanguage]];                
-        }else if([key isEqualToString:TARTTChannelConfigRequestOptionEnvironment]){
-            [query whereKey:@"envType" containedIn:[self.options objectForKey:TARTTChannelConfigRequestOptionEnvironment]];                
-        }else if([key isEqualToString:TARTTChannelConfigRequestOptionTargetAPI]){
-            [query whereKey:@"targetApi" containedIn:[self.options objectForKey:TARTTChannelConfigRequestOptionTargetAPI]];                
-        }else if([key isEqualToString:TARTTChannelConfigRequestOptionTargetType]){
-            [query whereKey:@"targetType" containedIn:[self.options objectForKey:TARTTChannelConfigRequestOptionTargetType]];                
-        }else if([key isEqualToString:TARTTChannelConfigRequestOptionTargetState]){
-            [query whereKey:@"state" equalTo:[self.options objectForKey:TARTTChannelConfigRequestOptionTargetState]];                
-        }       
-    }
-}
+
 
 -(void)startRequestWithDelegate:(id<TARTTChannelConfigRequestDelegate>)delegate{
     self.delegate = delegate; 
@@ -98,7 +83,7 @@ NSString *const TARTTChannelConfigRequestOptionTargetState= @"com.takondi.State"
     PFQuery *query = [PFQuery queryWithClassName:@"world"];
     [query whereKey:@"channelKey" equalTo:channelKey];
     [self addOptionsToQuery:query];
-    [query selectKeys:@[@"content"]];
+    [query selectKeys:@[@"channelKey",@"content"]];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         if(self.canceled)
@@ -112,8 +97,8 @@ NSString *const TARTTChannelConfigRequestOptionTargetState= @"com.takondi.State"
                                                                               userInfo:@{NSLocalizedDescriptionKey: @"No Channels available"}]];
             }
             else{
-                PFObject *channel = [objects firstObject];
-                [self.delegate finishedConfigRequestWithSuccess:channel];         
+                TARTTConfig *config = [objects firstObject];
+                [self.delegate finishedConfigRequestWithSuccess:config];         
             }
         } 
         else {
@@ -121,9 +106,23 @@ NSString *const TARTTChannelConfigRequestOptionTargetState= @"com.takondi.State"
             DebugLog(@"*** Error: %@ %@", error, [error userInfo]);
             [self.delegate finishedConfigRequestWithError:error];
         }
-    }];
-
-    
+    }];    
+}
+-(void)addOptionsToQuery:(PFQuery *)query{
+    [query whereKey:@"state" equalTo:[NSNumber numberWithInt:1]];
+    for (NSString* key in self.options) {
+        if([key isEqualToString:TARTTChannelConfigRequestOptionLanguage]){
+            [query whereKey:@"language" containedIn:[self.options objectForKey:TARTTChannelConfigRequestOptionLanguage]];                
+        }else if([key isEqualToString:TARTTChannelConfigRequestOptionEnvironment]){
+            [query whereKey:@"envType" containedIn:[self.options objectForKey:TARTTChannelConfigRequestOptionEnvironment]];                
+        }else if([key isEqualToString:TARTTChannelConfigRequestOptionTargetAPI]){
+            [query whereKey:@"targetApi" containedIn:[self.options objectForKey:TARTTChannelConfigRequestOptionTargetAPI]];                
+        }else if([key isEqualToString:TARTTChannelConfigRequestOptionTargetType]){
+            [query whereKey:@"targetType" containedIn:[self.options objectForKey:TARTTChannelConfigRequestOptionTargetType]];                
+        }else if([key isEqualToString:TARTTChannelConfigRequestOptionTargetState]){
+            [query whereKey:@"state" equalTo:[self.options objectForKey:TARTTChannelConfigRequestOptionTargetState]];                
+        }       
+    }
 }
 
 @end

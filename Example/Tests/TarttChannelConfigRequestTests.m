@@ -15,7 +15,7 @@
 @interface TarttChannelConfigRequestTests : XCTestCase<TARTTChannelConfigRequestDelegate>
 @property (nonatomic) BOOL isDone;
 @property (nonatomic) BOOL isMulti;
-@property (nonatomic) NSDictionary *channel;
+@property (nonatomic) TARTTConfig *channel;
 @property (nonatomic) NSError *error;
 @end
 
@@ -95,9 +95,9 @@
     XCTAssertGreaterThan([[content objectForKey:@"files"] count], 2);
 
 }
--(void)finishedConfigRequestWithSuccess:(NSDictionary *)channel{
+-(void)finishedConfigRequestWithSuccess:(TARTTConfig *)config{
     self.isDone = YES;
-    self.channel = channel;
+    self.channel = config;
 }
 -(void)finishedConfigRequestWithError:(NSError *)error{
     self.isDone = YES;    

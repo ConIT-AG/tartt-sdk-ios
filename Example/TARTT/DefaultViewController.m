@@ -92,21 +92,16 @@
 }
 
 #pragma mark TARTTChannelConfigRequestDelegate
-
--(void)finishedConfigRequestWithSuccess:(NSArray *)configs
-{
-      
-    if([configs count] > 1){
-        // start handling mutliple Channels
-        // start the QR-Code Scanner to get the channel Key
+-(void)finishedConfigRequestWithSuccess:(TARTTConfig *)config
+{   
+    self.channelManager = [[TARTTChannelManager alloc] initWithConfig:config];    
+    self.channel = [self.channelManager getChannelInstance];
+    self.downloader = [[TARTTChannelDownloader alloc] initWithChannel:self.channel];
+    [self.downloader startDownloadWithDelegate:self];
         
-    }else{
-        // Just one Channel is available so start the init process of this channel
-        self.channelManager = [[TARTTChannelManager alloc] initWithMultipleConfigs:configs];    
-        self.channel = [self.channelManager getChannelInstance];
-        self.downloader = [[TARTTChannelDownloader alloc] initWithChannel:self.channel];
-        [self.downloader startDownloadWithDelegate:self];
-    }
+}
+-(void)finishedConfigRequestWithMultipleChannels{
+    
 }
 -(void)finishedConfigRequestWithError:(NSError *)error
 {

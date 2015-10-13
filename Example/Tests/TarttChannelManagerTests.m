@@ -8,6 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import <TARTT/TARTTChannel.h>
+#import <TARTT/TARTTConfig.h>
 #import <TARTT/TARTTChannelManager.h>
 #import <TARTT/TARTTHelper.h>
 
@@ -32,8 +33,8 @@
 
 - (void)testChannelDirs{    
     // given
-    NSMutableDictionary *config = [NSMutableDictionary new];
-    [config setObject:@"ChannelKey1" forKey:@"channelKey"];
+    TARTTConfig *config = [TARTTConfig new];
+    config.channelKey = @"ChannelKey1";
     TARTTChannelManager *manager = [[TARTTChannelManager alloc] initWithConfig:config];  
     [[NSFileManager defaultManager] removeItemAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/"] error:nil];
     
@@ -50,39 +51,11 @@
     NSString *channelKey = @"ChannelKey1"; 
     [TARTTHelper saveLastPath:@"simpleTestPath/to/somewhere" forChannel:channelKey];
 
-    NSMutableDictionary *config = [NSMutableDictionary new];
-    [config setObject:@"ChannelKey1" forKey:@"channelKey"]; 
+    TARTTConfig *config = [TARTTConfig new];
+    config.channelKey = @"ChannelKey1"; 
     TARTTChannelManager *manager = [[TARTTChannelManager alloc] initWithConfig:config];    
     
     TARTTChannel *channel = [manager getChannelInstance]; 
     XCTAssertEqualObjects(channel.lastPath, @"simpleTestPath/to/somewhere");
-}
--(void)testMultipleConfigs{
-    // given
-    [[NSFileManager defaultManager] removeItemAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/"] error:nil];
-    NSMutableDictionary *config = [NSMutableDictionary new];
-    [config setObject:@"ChannelKeyMulti1" forKey:@"channelKey"];
-    NSMutableDictionary *config2 = [NSMutableDictionary new];
-    [config2 setObject:@"ChannelKeyMulti2" forKey:@"channelKey"];
-
-    TARTTChannelManager *manager = [[TARTTChannelManager alloc] initWithMultipleConfigs:[NSArray arrayWithObjects:config,config2, nil]];  
-    
-    // when
-    TARTTChannel *channel = [manager getChannelInstance];    
-    // then
-    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/ChannelKeyMulti1"]]);
-    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/ChannelKeyMulti1/temp"]]);
-    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:channel.currentPath]);
-    XCTAssertNil(channel.lastPath);
-    XCTAssertEqualObjects(channel.config, config);
-    
-    // when
-    channel = [manager getChannelByKey:@"ChannelKeyMulti2"];    
-    // then
-    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/ChannelKeyMulti2"]]);
-    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/ChannelKeyMulti2/temp"]]);
-    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:channel.currentPath]);
-    XCTAssertNil(channel.lastPath);
-    XCTAssertEqualObjects(channel.config, config2);
 }
 @end

@@ -14,48 +14,31 @@
 @interface TARTTChannelManager ()
 
 @property (nonatomic) NSString *cacheDirectory;
-@property (nonatomic) NSArray *configs;
+@property (nonatomic) TARTTConfig *config;
 
 @end
 
 @implementation TARTTChannelManager
 
--(instancetype)initWithConfig:(NSDictionary*) config{
+-(instancetype)initWithConfig:(TARTTConfig*) config{
     self = [super init];
     if (self) {
         self.cacheDirectory = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingString:@"/"];
-        self.configs = [NSArray arrayWithObject:config];
-    }
-    return self;
-}
--(instancetype)initWithMultipleConfigs:(NSArray *) configs{
-    self = [super init];
-    if (self) {
-        self.cacheDirectory = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingString:@"/"];
-        self.configs = configs;
+        self.config = config;
     }
     return self;
 }
 -(TARTTChannel *)getChannelInstance{
-    NSDictionary * first = [self.configs firstObject];
-    return [self getChannelByKey:[first objectForKey:@"channelKey"]];
+    NSString *channelKey = self.config.channelKey;
+    TARTTChannel *channel = [[TARTTChannel alloc] init]; 
+    channel.mainPath = [self getChannelPath:channelKey];
+    channel.currentPath = [self createNewChannelVersion:channelKey];
+    channel.tempPath = [self getTempPath:channelKey];
+    channel.lastPath = [TARTTHelper getLastPath:channelKey];
+    channel.config = self.config;
+    return channel;
 }
--(TARTTChannel *)getChannelByKey:(NSString *)channelKey{
-    for (NSDictionary *conf in self.configs) {
-        NSString *curChannelKey = [conf objectForKey:@"channelKey"];
-        if([curChannelKey isEqualToString:channelKey])
-        {
-            TARTTChannel *channel = [[TARTTChannel alloc] init]; 
-            channel.mainPath = [self getChannelPath:channelKey];
-            channel.currentPath = [self createNewChannelVersion:channelKey];
-            channel.tempPath = [self getTempPath:channelKey];
-            channel.lastPath = [TARTTHelper getLastPath:channelKey];
-            channel.config = conf;
-            return channel;
-        }
-    }
-    return nil;
-}
+
 -(NSString *)getChannelPath:(NSString *)channelKey
 {
     NSString *channelPath = [self.cacheDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",kCHANNELBASEDIR,channelKey]];    
