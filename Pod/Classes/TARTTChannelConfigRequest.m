@@ -71,8 +71,8 @@
                 [self selectChannel:[channel objectForKey:@"channelKey"] andDelegate:self.delegate];
             }
         } 
-        else {
-            // Log details of the failure
+        else 
+        {
             DebugLog(@"*** Error: %@ %@", error, [error userInfo]);
             [self performSelectorOnMainThread:@selector(invokeFinishedConfigRequestWithError:) withObject:error waitUntilDone:YES];
         }
@@ -106,8 +106,8 @@
                 [self performSelectorOnMainThread:@selector(invokeFinishedConfigRequestWithSuccess:) withObject:config waitUntilDone:YES];
             }
         } 
-        else {
-            // Log details of the failure
+        else 
+        {        
             DebugLog(@"*** Error: %@ %@", error, [error userInfo]);
             [self performSelectorOnMainThread:@selector(invokeFinishedConfigRequestWithError:) withObject:error waitUntilDone:YES];
         }
