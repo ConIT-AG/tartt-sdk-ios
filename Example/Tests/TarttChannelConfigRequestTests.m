@@ -31,12 +31,20 @@
 }
 
 - (void)testParseMultipleConfigs 
-{   
-    TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey andOptions:nil];
-    [request startRequestWithDelegate:self];
-    
+{  
     self.isDone = NO;
     self.isMulti = NO;
+    
+    TARTTRequestOptions *options = [TARTTRequestOptions new];
+    [options addLanguage:@"de"];
+    [options addEnvironment:@"production"];
+    [options addTargetApi:[NSNumber numberWithInt:3]];
+    [options addTargetType:@"mainanddetail"];
+    [options changeState:[NSNumber numberWithInt:1]];
+    
+    TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey andOptions:options];
+    [request startRequestWithDelegate:self];    
+   
      NSDate *untilDate;
     while(!self.isDone){
         untilDate = [NSDate dateWithTimeIntervalSinceNow:1.0];
@@ -49,7 +57,14 @@
 
 -(void)testParseConfigCancel
 {
-    TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey andOptions:nil];
+    TARTTRequestOptions *options = [TARTTRequestOptions new];
+    [options addLanguage:@"de"];
+    [options addEnvironment:@"production"];
+    [options addTargetApi:[NSNumber numberWithInt:3]];
+    [options addTargetType:@"mainanddetail"];
+    [options changeState:[NSNumber numberWithInt:1]];
+
+    TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey andOptions:options];
     self.isDone = NO;
     self.isMulti = NO;
     [request startRequestWithDelegate:self];
@@ -62,6 +77,10 @@
 -(void)testParseConfigNoChannels{
     TARTTRequestOptions *options = [TARTTRequestOptions new];
     [options addLanguage:@"fr"];
+    [options addEnvironment:@"test"];
+    [options addTargetApi:[NSNumber numberWithInt:3]];
+    [options addTargetType:@"mainanddetail"];
+    [options changeState:[NSNumber numberWithInt:1]];
     TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey andOptions:options];
     [request startRequestWithDelegate:self];
     

@@ -23,4 +23,6 @@
 -(NSArray *)getTargetType;
 -(NSNumber *)getState;
 -(NSString *)getChannelKey;
+
+-(BOOL)isValid;
 @end

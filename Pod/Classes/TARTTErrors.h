@@ -14,4 +14,5 @@ typedef NS_ENUM(NSInteger, TARTTErrorType) {
     TARTTErrorNoChannelsAvailable,
     TARTTErrorDownloadIncomplete,
     TARTTErrorCache,
+    TARTTErrorMissingArguments
 };

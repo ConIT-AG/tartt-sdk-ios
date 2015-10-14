@@ -47,8 +47,7 @@ void BarcodePlugin::destroy() {
 void BarcodePlugin::cameraFrameAvailable(const wikitude::sdk::Frame& cameraFrame_) {
 #ifndef SIMULATOR_BUILD
     int frameWidth = cameraFrame_.getSize().width;
-    int frameHeight = cameraFrame_.getSize().height;
-    
+    int frameHeight = cameraFrame_.getSize().height;    
     _image.set_data(cameraFrame_.getLuminanceData(), frameWidth * frameHeight);
     int n = _imageScanner.scan(_image);
 
@@ -56,16 +55,12 @@ void BarcodePlugin::cameraFrameAvailable(const wikitude::sdk::Frame& cameraFrame
         if ( n ) {
             std::ostringstream javaScript;
             javaScript << "performBarcodeRequest('";
-
             zbar::Image::SymbolIterator symbol = _image.symbol_begin();
             javaScript << symbol->get_data();
-
-            javaScript << "');";
-            
+            javaScript << "');";            
             addToJavaScriptQueue(javaScript.str());
         }
-    }
-    
+    }    
     _worldNeedsUpdate = n;
 #endif    
 }

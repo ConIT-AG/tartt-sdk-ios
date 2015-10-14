@@ -7,6 +7,7 @@
 //
 
 #import "TARTTRequestOptions.h"
+#import "TARTTErrors.h"
 
 @interface TARTTRequestOptions()
 @property (nonatomic, strong) NSMutableArray *languages;
@@ -68,4 +69,12 @@
 -(NSString *)getChannelKey{
     return self.channelKey;
 }
+-(BOOL)isValid{
+    return ([self.languages count] > 0 &&
+       [self.environment count] > 0 &&
+       [self.targetApi count] > 0 &&
+       [self.targetType count] > 0 &&
+            self.state != nil);        
+}
+
 @end

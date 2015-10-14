@@ -34,8 +34,17 @@
 
 -(void)startRequestWithDelegate:(id<TARTTChannelConfigRequestDelegate>)delegate{
     self.delegate = delegate; 
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    if(![self.options isValid])
+    {
+        [self performSelectorOnMainThread:@selector(invokeFinishedConfigRequestWithError:) 
+                               withObject:[NSError errorWithDomain:TARTTErrorDomain
+                                                              code:TARTTErrorMissingArguments
+                                                          userInfo:@{NSLocalizedDescriptionKey: @"Missing crutial options for request"}] 
+                            waitUntilDone:YES];
+        return;
+    }
     
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];    
     PFQuery *query = [PFQuery queryWithClassName:@"world"];
     [query selectKeys:@[@"channelKey"]];
     query = [self addOptionsToQuery:query];
@@ -47,12 +56,15 @@
         {
             DebugLog(@"*** received %lu worlds", [objects count]);
             if([objects count] == 0){
-                [self.delegate finishedConfigRequestWithError:[NSError errorWithDomain:TARTTErrorDomain
-                                                                                  code:TARTTErrorNoChannelsAvailable
-                                                                              userInfo:@{NSLocalizedDescriptionKey: @"No Channels available"}]];
+                [self performSelectorOnMainThread:@selector(invokeFinishedConfigRequestWithError:) 
+                                       withObject:[NSError errorWithDomain:TARTTErrorDomain
+                                                                      code:TARTTErrorNoChannelsAvailable
+                                                                  userInfo:@{NSLocalizedDescriptionKey: @"No Channels available"}] 
+                                    waitUntilDone:YES];
+                
             }else if([objects count] > 1)
             {
-                [self.delegate finishedConfigRequestWithMultipleChannels];
+                [self performSelectorOnMainThread:@selector(invokeFinishedConfigRequestMultipleChannels) withObject:nil waitUntilDone:YES];
             }
             else{
                 PFObject *channel = [objects firstObject];
@@ -62,7 +74,7 @@
         else {
             // Log details of the failure
             DebugLog(@"*** Error: %@ %@", error, [error userInfo]);
-            [self.delegate finishedConfigRequestWithError:error];
+            [self performSelectorOnMainThread:@selector(invokeFinishedConfigRequestWithError:) withObject:error waitUntilDone:YES];
         }
     }];    
 }
@@ -83,19 +95,21 @@
         {
             DebugLog(@"*** received %lu worlds", [objects count]);
             if([objects count] == 0){
-                [self.delegate finishedConfigRequestWithError:[NSError errorWithDomain:TARTTErrorDomain
-                                                                                  code:TARTTErrorNoChannelsAvailable
-                                                                              userInfo:@{NSLocalizedDescriptionKey: @"No Channels available"}]];
+                [self performSelectorOnMainThread:@selector(invokeFinishedConfigRequestWithError:) 
+                                       withObject:[NSError errorWithDomain:TARTTErrorDomain
+                                                                      code:TARTTErrorNoChannelsAvailable
+                                                                  userInfo:@{NSLocalizedDescriptionKey: @"No Channels available"}] 
+                                    waitUntilDone:YES];
             }
             else{
                 TARTTConfig *config = [objects firstObject];
-                [self.delegate finishedConfigRequestWithSuccess:config];         
+                [self performSelectorOnMainThread:@selector(invokeFinishedConfigRequestWithSuccess:) withObject:config waitUntilDone:YES];
             }
         } 
         else {
             // Log details of the failure
             DebugLog(@"*** Error: %@ %@", error, [error userInfo]);
-            [self.delegate finishedConfigRequestWithError:error];
+            [self performSelectorOnMainThread:@selector(invokeFinishedConfigRequestWithError:) withObject:error waitUntilDone:YES];
         }
     }];    
 }
@@ -112,4 +126,13 @@
     return query;
 }
 
+-(void)invokeFinishedConfigRequestWithSuccess:(TARTTConfig *)config{
+    [self.delegate finishedConfigRequestWithSuccess:config];
+}
+-(void)invokeFinishedConfigRequestWithError:(NSError *)error{
+    [self.delegate finishedConfigRequestWithError:error];
+}
+-(void)invokeFinishedConfigRequestMultipleChannels{
+    [self.delegate finishedConfigRequestWithMultipleChannels];
+}
 @end
