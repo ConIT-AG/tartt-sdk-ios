@@ -121,9 +121,15 @@
 {
     [self setGuiForState:TARTTGuiStateLoading];
     // START LOADING CHANNEL SETUP
+    TARTTRequestOptions *options = [TARTTRequestOptions new];
+    [options addLanguage:@"de"];
+    [options addEnvironment:@"production"];
+    [options addTargetApi:[NSNumber numberWithInt:3]];
+    [options addTargetType:@"mainanddetail"];
+    [options changeState:[NSNumber numberWithInt:1]];
     self.configRequest = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey 
                                                                      andClientKey:kParseClientKey 
-                                                                       andOptions:nil];
+                                                                       andOptions:options];
     [self.configRequest startRequestWithDelegate:self];
 }
 
@@ -273,6 +279,20 @@
 - (void)architectView:(WTArchitectView *)architectView didFailToLoadArchitectWorldNavigation:(WTNavigation *)navigation withError:(NSError *)error {
     
     NSLog(@"Architect World from URL '%@' could not be loaded. Reason: %@", @"URL", [error localizedDescription]);
+}
+
+#pragma mark - View Rotation
+- (BOOL)shouldAutorotate {    
+    return YES;
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations{    
+    return UIInterfaceOrientationMaskAll;
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {    
+    /* When the device orientation changes, specify if the WTArchitectView object should rotate as well */
+    [self.architectView setShouldRotate:YES toInterfaceOrientation:toInterfaceOrientation];
 }
 
 /* The debug delegate can be used to respond to internal issues, e.g. the user declined camera or GPS access.

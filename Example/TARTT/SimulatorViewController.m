@@ -227,6 +227,20 @@
     NSLog(@"Architect World from URL '%@' could not be loaded. Reason: %@", @"URL", [error localizedDescription]);
 }
 
+#pragma mark - View Rotation
+- (BOOL)shouldAutorotate {    
+    return YES;
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations{    
+    return UIInterfaceOrientationMaskAll;
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {    
+    /* When the device orientation changes, specify if the WTArchitectView object should rotate as well */
+    [self.architectView setShouldRotate:YES toInterfaceOrientation:toInterfaceOrientation];
+}
+
 /* The debug delegate can be used to respond to internal issues, e.g. the user declined camera or GPS access.
  
  NOTE: The debug delegate method -architectView:didEncounterInternalWarning is currently not used.
