@@ -15,7 +15,6 @@
 @property (nonatomic, weak) WTNavigation *architectWorldNavigation;
 
 @property (nonatomic, strong) TARTTChannel *channel;    
-@property (nonatomic, strong) TARTTChannelManager *channelManager;    
 @property (nonatomic, strong) TARTTChannelConfigRequest *configRequest;
 @property (nonatomic, strong) TARTTChannelDownloader *downloader;
 @end
@@ -70,14 +69,19 @@
 
 - (IBAction)startChannel:(id)sender 
 {
-    // START LOADING CHANNEL SETUP
-    self.configRequest = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey];
-    NSDictionary *options = @{TARTTChannelConfigRequestOptionLanguage : @[@"de"],
-                              TARTTChannelConfigRequestOptionEnvironment : @[@"test"],
-                              TARTTChannelConfigRequestOptionTargetAPI : @[[NSNumber numberWithInt:3]],
-                              TARTTChannelConfigRequestOptionTargetType : @[@"mainanddetail"],
-                              TARTTChannelConfigRequestOptionTargetState : [NSNumber numberWithInt:1]};
-    [self.configRequest setOptions:options];
+    // START LOADING CHANNEL SETUP   
+    
+    TARTTRequestOptions *options = [TARTTRequestOptions new];
+    [options addLanguage:@"de"];
+    [options addEnvironment:@"test"];
+    [options addTargetApi:[NSNumber numberWithInt:3]];
+    [options addTargetType:@"mainanddetail"];
+    [options changeState:[NSNumber numberWithInt:1]];
+    
+    self.configRequest = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey 
+                                                                     andClientKey:kParseClientKey 
+                                                                       andOptions:options];   
+   
     [self.configRequest startRequestWithDelegate:self];
     self.status.text = @"Request startet";
 }
@@ -88,8 +92,8 @@
 {
     self.status.text = @"Request finished";   
         // Just one Channel is available so start the init process of this channel
-    self.channelManager = [[TARTTChannelManager alloc] initWithConfig:config];    
-    self.channel = [self.channelManager getChannelInstance];
+    NSError *error;
+    self.channel = [[TARTTChannelManager defaultManager] prepareChannelWithConfig:config error:&error];
     self.downloader = [[TARTTChannelDownloader alloc] initWithChannel:self.channel];
     [self.downloader startDownloadWithDelegate:self];
 
@@ -121,7 +125,8 @@
 {
     self.status.text = @"Download finished";
     self.progressBar.hidden = YES;  
-    [self.channelManager cleanUpChannel:channel];
+    NSError *error;
+    [[TARTTChannelManager defaultManager] cleanUpChannel:channel error:&error];
     [self loadWikitudeWithChannel:channel];    
 }
 -(void)channelDownloadFinishedForChannel:(TARTTChannel *)channel withError:(NSError *)error

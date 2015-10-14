@@ -8,11 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <TARTT/TARTTChannel.h>
-#import <TARTT/TARTTHelper.h>
-#import <TARTT/TARTTChannelManager.h>
-#import <TARTT/TARTTChannelConfigRequest.h>
-#import <TARTT/TARTTChannelDownloader.h>
+#import <TARTT/TARTT.h>
 
 #import <WikitudeSDK/WTArchitectView.h>
 #import <WikitudeSDK/WTNavigation.h>

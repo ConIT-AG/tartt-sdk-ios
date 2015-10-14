@@ -2,7 +2,6 @@
 //  TARTTHelper.h
 //  Pods
 //
-//  Created by Thomas Opiolka on 08.10.15.
 //
 //
 
@@ -12,8 +11,6 @@
 
 
 +(BOOL)ensureDirExists:(NSString *)path;
-+(NSString *)getLastPath:(NSString *)channelKey;
-+(void)saveLastPath:(NSString *)lastPath forChannel:(NSString *)channelKey;
 +(NSString *)getRelativePathOfItem:(NSDictionary *)item;
 +(NSString *)getDummyChannelPath;
 +(NSDictionary *)URLParameterFromURL:(NSURL *)URL;

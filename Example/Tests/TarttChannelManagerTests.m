@@ -10,7 +10,7 @@
 #import <TARTT/TARTTChannel.h>
 #import <TARTT/TARTTConfig.h>
 #import <TARTT/TARTTChannelManager.h>
-#import <TARTT/TARTTHelper.h>
+
 
 @interface TarttChannelManagerTests : XCTestCase
 @property (nonatomic) NSString *cacheDirectory;
@@ -23,7 +23,7 @@
       
     self.cacheDirectory = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject] stringByAppendingString:@"/"];
     NSString *channelKey = @"ChannelKey1";      
-    [TARTTHelper saveLastPath:nil forChannel:channelKey];    
+    [[TARTTChannelManager defaultManager] saveLastPath:nil forChannel:channelKey];    
 }
 
 - (void)tearDown {
@@ -35,11 +35,11 @@
     // given
     TARTTConfig *config = [TARTTConfig new];
     config.channelKey = @"ChannelKey1";
-    TARTTChannelManager *manager = [[TARTTChannelManager alloc] initWithConfig:config];  
     [[NSFileManager defaultManager] removeItemAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/"] error:nil];
     
     // when
-    TARTTChannel *channel = [manager getChannelInstance];    
+    NSError *error;
+    TARTTChannel *channel = [[TARTTChannelManager defaultManager] prepareChannelWithConfig:config error:&error];    
     // then
     XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/ChannelKey1"]]);
     XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/ChannelKey1/temp"]]);
@@ -49,13 +49,13 @@
 -(void)testLastChannelDir{
     // given
     NSString *channelKey = @"ChannelKey1"; 
-    [TARTTHelper saveLastPath:@"simpleTestPath/to/somewhere" forChannel:channelKey];
+    [[TARTTChannelManager defaultManager] saveLastPath:@"simpleTestPath/to/somewhere" forChannel:channelKey];
 
     TARTTConfig *config = [TARTTConfig new];
-    config.channelKey = @"ChannelKey1"; 
-    TARTTChannelManager *manager = [[TARTTChannelManager alloc] initWithConfig:config];    
+    config.channelKey = @"ChannelKey1";     
     
-    TARTTChannel *channel = [manager getChannelInstance]; 
+    NSError *error;
+    TARTTChannel *channel = [[TARTTChannelManager defaultManager] prepareChannelWithConfig:config error:&error];   
     XCTAssertEqualObjects(channel.lastPath, @"simpleTestPath/to/somewhere");
 }
 @end

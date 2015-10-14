@@ -7,7 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
-#import <TARTT/TARTTChannelConfigRequest.h>
+#import <TARTT/TARTT.h>
 
 #define kParseApplicationKey  @"iFGXKDe3ty3HKhmoAiWG7j2L6xm79z0YYz6ytIWo"
 #define kParseClientKey @"k9J9eSSQuDus0bzORM0NA2glNn4FFmvY4XHyj9IC"
@@ -32,7 +32,7 @@
 
 - (void)testParseMultipleConfigs 
 {   
-    TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey];
+    TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey andOptions:nil];
     [request startRequestWithDelegate:self];
     
     self.isDone = NO;
@@ -49,7 +49,7 @@
 
 -(void)testParseConfigCancel
 {
-    TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey];
+    TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey andOptions:nil];
     self.isDone = NO;
     self.isMulti = NO;
     [request startRequestWithDelegate:self];
@@ -60,8 +60,9 @@
 }
 
 -(void)testParseConfigNoChannels{
-    TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey];
-    [request setOptions:@{TARTTChannelConfigRequestOptionLanguage : @[@"fr"]}];
+    TARTTRequestOptions *options = [TARTTRequestOptions new];
+    [options addLanguage:@"fr"];
+    TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey andOptions:options];
     [request startRequestWithDelegate:self];
     
     self.isDone = NO;
@@ -70,18 +71,24 @@
         untilDate = [NSDate dateWithTimeIntervalSinceNow:1.0];
         [[NSRunLoop currentRunLoop] runUntilDate:untilDate];
     }    
-    XCTAssertEqual(self.error.domain, TARTTChannelConfigRequestErrorDomain);
-    XCTAssertEqual(self.error.code, TARTTChannelConfigRequestErrorNoChannels);
+    XCTAssertEqual(self.error.domain, TARTTErrorDomain);
+    XCTAssertEqual(self.error.code, TARTTErrorNoChannelsAvailable);
 }
--(void)testParseOptions{
-    TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey];
-    NSDictionary *options = @{TARTTChannelConfigRequestOptionLanguage : @[@"de"],
-                              TARTTChannelConfigRequestOptionEnvironment : @[@"test"],
-                              TARTTChannelConfigRequestOptionTargetAPI : @[[NSNumber numberWithInt:3]],
-                              TARTTChannelConfigRequestOptionTargetType : @[@"mainanddetail"],
-                              TARTTChannelConfigRequestOptionTargetState : [NSNumber numberWithInt:1]};
-    [request setOptions:options];
-    [request startRequestWithDelegate:self];
+-(void)testParseOptions
+{ 
+    
+    TARTTRequestOptions *options = [TARTTRequestOptions new];
+    [options addLanguage:@"de"];
+    [options addEnvironment:@"test"];
+    [options addTargetApi:[NSNumber numberWithInt:3]];
+    [options addTargetType:@"mainanddetail"];
+    [options changeState:[NSNumber numberWithInt:1]];
+    
+    
+    TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey 
+                                                                                     andClientKey:kParseClientKey 
+                                                                                       andOptions:options];  
+   [request startRequestWithDelegate:self];
     
     self.isDone = NO;
     NSDate *untilDate;

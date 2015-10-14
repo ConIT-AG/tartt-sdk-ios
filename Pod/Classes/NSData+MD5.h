@@ -1,6 +1,4 @@
-//
-//  Copyright iOSDeveloperTips.com All rights reserved.
-//
+
 
 #import "NSData+MD5.h"
  

@@ -2,17 +2,13 @@
 //  TARTTChannelDownloader.h
 //  Pods
 //
-//  Created by Thomas Opiolka on 08.10.15.
 //
 //
 
 #import <Foundation/Foundation.h>
 #import "TARTTChannel.h"
 
-FOUNDATION_EXPORT NSString *const TARTTChannelDownloaderErrorDomain;
-typedef NS_ENUM(NSInteger, TARTTChannelDownloaderErrorType) {
-    TARTTChannelDownloaderErrorDownloadIncomplete
-};
+
 
 @protocol TARTTChannelDownloaderDelegate <NSObject>
 

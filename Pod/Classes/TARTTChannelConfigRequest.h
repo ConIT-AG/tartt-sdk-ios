@@ -2,25 +2,14 @@
 //  TARTTChannelConfigManager.h
 //  Pods
 //
-//  Created by Thomas Opiolka on 08.10.15.
 //
 //
 
 #import <Foundation/Foundation.h>
 #import "TARTTChannel.h"
 #import "TARTTConfig.h"
-
-FOUNDATION_EXPORT NSString *const TARTTChannelConfigRequestErrorDomain;
-typedef NS_ENUM(NSInteger, TARTTChannelConfigRequestErrorType) {
-    TARTTChannelConfigRequestErrorNoChannels
-};
-
-FOUNDATION_EXPORT NSString *const TARTTChannelConfigRequestOptionLanguage;
-FOUNDATION_EXPORT NSString *const TARTTChannelConfigRequestOptionEnvironment;
-FOUNDATION_EXPORT NSString *const TARTTChannelConfigRequestOptionTargetAPI;
-FOUNDATION_EXPORT NSString *const TARTTChannelConfigRequestOptionTargetType;
-FOUNDATION_EXPORT NSString *const TARTTChannelConfigRequestOptionTargetState;
-
+#import "TARTTErrors.h"
+#import "TARTTRequestOptions.h"
 
 @protocol TARTTChannelConfigRequestDelegate <NSObject>
 
@@ -32,9 +21,7 @@ FOUNDATION_EXPORT NSString *const TARTTChannelConfigRequestOptionTargetState;
 
 @interface TARTTChannelConfigRequest : NSObject
 
-@property (nonatomic) NSDictionary *options;
-
--(instancetype)initWithApplicationID:(NSString*)applicationID andClientKey:(NSString *)clientKey;
+-(instancetype)initWithApplicationID:(NSString*)applicationID andClientKey:(NSString *)clientKey andOptions:(TARTTRequestOptions *)options;
 
 -(void)startRequestWithDelegate:(id<TARTTChannelConfigRequestDelegate>)delegate;
 -(void)selectChannel:(NSString *)channelKey andDelegate:(id<TARTTChannelConfigRequestDelegate>)delegate;

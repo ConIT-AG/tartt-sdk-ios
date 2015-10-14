@@ -14,8 +14,7 @@
 
 @property (nonatomic, weak) WTNavigation *architectWorldNavigation;
 
-@property (nonatomic, strong) TARTTChannel *channel;    
-@property (nonatomic, strong) TARTTChannelManager *channelManager;    
+@property (nonatomic, strong) TARTTChannel *channel;     
 @property (nonatomic, strong) TARTTChannelConfigRequest *configRequest;
 @property (nonatomic, strong) TARTTChannelDownloader *downloader;
 
@@ -25,9 +24,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationItem.title = @"Default";
-    self.channelManager = [[TARTTChannelManager alloc] init];
-    
+    self.navigationItem.title = @"Default";    
     
     [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) 
      {        
@@ -79,14 +76,6 @@
 
     }    
 }
--(void)startTARTT
-{
-    [self.loadingIndicator startAnimating];      
-    
-    // START LOADING CHANNEL SETUP
-    self.configRequest = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey];
-    [self.configRequest startRequestWithDelegate:self];
-}
 
 -(void)setGuiForState:(TARTTGuiStateType)state{   
     switch (state) {
@@ -128,11 +117,22 @@
 }
 
 
+-(void)startTARTT
+{
+    [self setGuiForState:TARTTGuiStateLoading];
+    // START LOADING CHANNEL SETUP
+    self.configRequest = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey 
+                                                                     andClientKey:kParseClientKey 
+                                                                       andOptions:nil];
+    [self.configRequest startRequestWithDelegate:self];
+}
+
+
 #pragma mark TARTTChannelConfigRequestDelegate
 -(void)finishedConfigRequestWithSuccess:(TARTTConfig *)config
 {   
-    self.channelManager = [[TARTTChannelManager alloc] initWithConfig:config];    
-    self.channel = [self.channelManager getChannelInstance];
+    NSError *error;
+    self.channel = [[TARTTChannelManager defaultManager] prepareChannelWithConfig:config error:&error];   
     self.downloader = [[TARTTChannelDownloader alloc] initWithChannel:self.channel];
     [self.downloader startDownloadWithDelegate:self];
         
@@ -162,7 +162,8 @@
 }
 -(void)channelDownloadFinishedWithSuccess:(TARTTChannel *)channel
 {    
-   [self.channelManager cleanUpChannel:channel];   
+    NSError *error;
+   [[TARTTChannelManager defaultManager] cleanUpChannel:channel error:&error];   
     [self setGuiForState:TARTTGuiStateLoading];
     
     // Path to Channel Data
@@ -183,8 +184,6 @@
         NSLog(@"Error: %@",error);
     }
 }
-
-
 
 #pragma mark - Private Methods
 /* Convenience methods to manage WTArchitectView rendering. */

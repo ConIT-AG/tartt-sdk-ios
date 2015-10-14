@@ -2,15 +2,12 @@
 //  TARTTHelper.m
 //  Pods
 //
-//  Created by Thomas Opiolka on 08.10.15.
 //
 //
 
 #import "TARTTHelper.h"
 #import "Debug.h"
 #import "TARTTChannelManager.H"
-
-#define kCHANNELKEY @"TTARTChannelCurrentVersion"
 
 @implementation TARTTHelper
 
@@ -29,19 +26,7 @@
     return error == nil;
 }
 
-+(NSString *)getLastPath:(NSString *)channelKey
-{
-    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-    NSString *channelDictKey = [NSString stringWithFormat:@"%@-%@",channelKey,kCHANNELKEY];   
-    return [defaults objectForKey:channelDictKey];
-}
-+(void)saveLastPath:(NSString *)lastPath forChannel:(NSString *)channelKey
-{
-    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-    NSString *channelDictKey = [NSString stringWithFormat:@"%@-%@",channelKey,kCHANNELKEY];
-    [defaults setObject:lastPath forKey:channelDictKey];
-    [defaults synchronize];
-}
+
 +(NSString *)getRelativePathOfItem:(NSDictionary *)item
 {
     return [[item objectForKey:@"dirname"] stringByAppendingPathComponent:[[item objectForKey:@"url"] lastPathComponent]];    
@@ -95,9 +80,7 @@
                 [urlParameters setObject:value forKey:key];
             }
         }
-    }
-    
+    }    
     return urlParameters;
 }
-
 @end

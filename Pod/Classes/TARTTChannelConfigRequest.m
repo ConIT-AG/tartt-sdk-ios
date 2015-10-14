@@ -2,7 +2,6 @@
 //  TARTTChannelConfigManager.m
 //  Pods
 //
-//  Created by Thomas Opiolka on 08.10.15.
 //
 //
 
@@ -10,28 +9,20 @@
 #import "Debug.h"
 #import <Parse/Parse.h>
 
-
-NSString *const TARTTChannelConfigRequestErrorDomain = @"com.takondi.TARTTChannelConfigRequestErrorDomain";
-NSString *const TARTTChannelConfigRequestOptionLanguage = @"com.takondi.Language";
-NSString *const TARTTChannelConfigRequestOptionEnvironment = @"com.takondi.Environment";
-NSString *const TARTTChannelConfigRequestOptionTargetAPI = @"com.takondi.TargetAPI";
-NSString *const TARTTChannelConfigRequestOptionTargetType= @"com.takondi.TargetType";
-NSString *const TARTTChannelConfigRequestOptionTargetState= @"com.takondi.State";
-
 @interface TARTTChannelConfigRequest()
-
 
 @property (nonatomic) BOOL canceled;
 @property (nonatomic, assign) id<TARTTChannelConfigRequestDelegate> delegate;
+@property (nonatomic) TARTTRequestOptions *options;
 @end
 
 @implementation TARTTChannelConfigRequest
 
--(instancetype)initWithApplicationID:(NSString*)applicationID andClientKey:(NSString *)clientKey{
+-(instancetype)initWithApplicationID:(NSString*)applicationID andClientKey:(NSString *)clientKey andOptions:(TARTTRequestOptions *)options{
     self = [super init];
     if (self) {
         [Parse setApplicationId:applicationID  clientKey:clientKey];
-        self.options = [NSDictionary new];
+        self.options = options;
     }
     return self;
 }
@@ -56,8 +47,8 @@ NSString *const TARTTChannelConfigRequestOptionTargetState= @"com.takondi.State"
         {
             DebugLog(@"*** received %lu worlds", [objects count]);
             if([objects count] == 0){
-                [self.delegate finishedConfigRequestWithError:[NSError errorWithDomain:TARTTChannelConfigRequestErrorDomain
-                                                                                  code:TARTTChannelConfigRequestErrorNoChannels
+                [self.delegate finishedConfigRequestWithError:[NSError errorWithDomain:TARTTErrorDomain
+                                                                                  code:TARTTErrorNoChannelsAvailable
                                                                               userInfo:@{NSLocalizedDescriptionKey: @"No Channels available"}]];
             }else if([objects count] > 1)
             {
@@ -92,8 +83,8 @@ NSString *const TARTTChannelConfigRequestOptionTargetState= @"com.takondi.State"
         {
             DebugLog(@"*** received %lu worlds", [objects count]);
             if([objects count] == 0){
-                [self.delegate finishedConfigRequestWithError:[NSError errorWithDomain:TARTTChannelConfigRequestErrorDomain
-                                                                                  code:TARTTChannelConfigRequestErrorNoChannels
+                [self.delegate finishedConfigRequestWithError:[NSError errorWithDomain:TARTTErrorDomain
+                                                                                  code:TARTTErrorNoChannelsAvailable
                                                                               userInfo:@{NSLocalizedDescriptionKey: @"No Channels available"}]];
             }
             else{
@@ -110,19 +101,13 @@ NSString *const TARTTChannelConfigRequestOptionTargetState= @"com.takondi.State"
 }
 -(PFQuery *)addOptionsToQuery:(PFQuery *)query
 {
-    for (NSString* key in self.options) {
-        if([key isEqualToString:TARTTChannelConfigRequestOptionLanguage]){
-            [query whereKey:@"language" containedIn:[self.options objectForKey:TARTTChannelConfigRequestOptionLanguage]];                
-        }else if([key isEqualToString:TARTTChannelConfigRequestOptionEnvironment]){
-            [query whereKey:@"envType" containedIn:[self.options objectForKey:TARTTChannelConfigRequestOptionEnvironment]];                
-        }else if([key isEqualToString:TARTTChannelConfigRequestOptionTargetAPI]){
-            [query whereKey:@"targetApi" containedIn:[self.options objectForKey:TARTTChannelConfigRequestOptionTargetAPI]];                
-        }else if([key isEqualToString:TARTTChannelConfigRequestOptionTargetType]){
-            [query whereKey:@"targetType" containedIn:[self.options objectForKey:TARTTChannelConfigRequestOptionTargetType]];                
-        }else if([key isEqualToString:TARTTChannelConfigRequestOptionTargetState]){
-            [query whereKey:@"state" equalTo:[self.options objectForKey:TARTTChannelConfigRequestOptionTargetState]];                
-        }       
-    }
+    if(self.options == nil)
+        return query;
+    [query whereKey:@"language" containedIn:[self.options getLanguage]];                
+    [query whereKey:@"envType" containedIn:[self.options getEnvironment]];
+    [query whereKey:@"targetApi" containedIn:[self.options getTargetApi]];    
+    [query whereKey:@"targetType" containedIn:[self.options getTargetType]];  
+    [query whereKey:@"state" equalTo:[self.options getState]];                 
     [query orderByDescending:@"updatedAt"];
     return query;
 }

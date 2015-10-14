@@ -2,7 +2,6 @@
 //  TARTTConfig.m
 //  Pods
 //
-//  Created by Thomas Opiolka on 13.10.15.
 //
 //
 

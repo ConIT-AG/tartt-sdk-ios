@@ -2,7 +2,6 @@
 //  TARTTChannelDownloader.m
 //  Pods
 //
-//  Created by Thomas Opiolka on 08.10.15.
 //
 //
 
@@ -12,8 +11,7 @@
 #import "AFNetworking.h"
 #import "TARTTChannelManager.h"
 #import "TARTTHelper.h"
-
-NSString *const TARTTChannelDownloaderErrorDomain = @"com.takondi.TARTTChannelDownloaderErrorDomain";
+#import "TARTTErrors.h"
 
 @interface TARTTChannelDownloader()
 
@@ -184,8 +182,8 @@ NSString *const TARTTChannelDownloaderErrorDomain = @"com.takondi.TARTTChannelDo
        if(self.downloadError)
        {   
            [self performSelectorOnMainThread:@selector(invokeChannelError:) 
-                                  withObject:[NSError errorWithDomain:TARTTChannelDownloaderErrorDomain
-                                                                 code:TARTTChannelDownloaderErrorDownloadIncomplete
+                                  withObject:[NSError errorWithDomain:TARTTErrorDomain
+                                                                 code:TARTTErrorDownloadIncomplete
                                                              userInfo:@{NSLocalizedDescriptionKey: @"Download Incomplete"}] 
                                waitUntilDone:NO];
            [self performSelectorOnMainThread:@selector(invokeChannelErrors) withObject:nil  waitUntilDone:NO];            
@@ -206,7 +204,7 @@ NSString *const TARTTChannelDownloaderErrorDomain = @"com.takondi.TARTTChannelDo
         [self copyFromPath:self.channel.tempPath forItem:item]; 
     }   
     DebugLog(@"*** Saved New Path as Current Path %@", self.channel.currentPath);           
-    [TARTTHelper saveLastPath:self.channel.currentPath forChannel:[self.channel.config objectForKey:@"channelKey"]];                      
+    [[TARTTChannelManager defaultManager] saveLastPath:self.channel.currentPath forChannel:[self.channel.config objectForKey:@"channelKey"]];                      
     [self performSelectorOnMainThread:@selector(invokeChannelFinishedSuccess) withObject:nil waitUntilDone:NO];         
 }
 -(void)invokeChannelDownloadStart{

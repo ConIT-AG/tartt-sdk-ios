@@ -51,9 +51,8 @@
     config.content = [NSDictionary dictionaryWithObjects:@[[NSArray arrayWithObjects:file1, file2, nil]] forKeys: @[@"files"]];
     
 
-    
-    TARTTChannelManager *manager = [[TARTTChannelManager alloc] initWithConfig:config];
-    TARTTChannel *channel  = [manager getChannelInstance];
+    NSError *error;
+    TARTTChannel *channel  = [[TARTTChannelManager defaultManager] prepareChannelWithConfig:config error:&error];
     
    [[NSFileManager defaultManager] removeItemAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/"] error:nil];
     
@@ -73,7 +72,7 @@
     XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[channel.currentPath stringByAppendingString:@"/assets/images/social-media-youtube.png"]]);
     XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[channel.currentPath stringByAppendingString:@"/js/converter.js"]]);
     
-    [manager cleanUpChannel:channel];
+    [[TARTTChannelManager defaultManager] cleanUpChannel:channel error:&error];
     
     XCTAssertFalse([[NSFileManager defaultManager] fileExistsAtPath:[channel.tempPath stringByAppendingString:@"/assets/images/social-media-youtube.png"]]);
     XCTAssertFalse([[NSFileManager defaultManager] fileExistsAtPath:[channel.tempPath stringByAppendingString:@"/js/converter.js"]]);
@@ -82,8 +81,9 @@
     XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[channel.currentPath stringByAppendingString:@"/assets/images/social-media-youtube.png"]]);
     XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:[channel.currentPath stringByAppendingString:@"/js/converter.js"]]);
     
-    [manager deleteChannel:channel];
+    [[TARTTChannelManager defaultManager] deleteChannel:channel error:&error];
     XCTAssertFalse([[NSFileManager defaultManager] fileExistsAtPath:channel.mainPath]);
+    XCTAssertNil(error);
 }
 - (void)testChannelCleanupOlderVersions{
     // given
@@ -100,8 +100,8 @@
 
 
     
-    TARTTChannelManager *manager = [[TARTTChannelManager alloc] initWithConfig:config];
-    TARTTChannel *channel  = [manager getChannelInstance];
+    NSError *error;
+    TARTTChannel *channel  = [[TARTTChannelManager defaultManager] prepareChannelWithConfig:config error:&error];
     
     [[NSFileManager defaultManager] removeItemAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/"] error:nil];
     
@@ -117,9 +117,9 @@
     }       
     NSString *currenPath = channel.currentPath;
     XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:currenPath]);
-    [manager cleanUpChannel:channel];   
+    [[TARTTChannelManager defaultManager] cleanUpChannel:channel error:&error];   
     
-    channel  = [manager getChannelInstance];    
+    channel  = [[TARTTChannelManager defaultManager] prepareChannelWithConfig:config error:&error];    
     downloader = [[TARTTChannelDownloader alloc] initWithChannel:channel];
     [downloader startDownloadWithDelegate:self];   
     self.isDone = NO;    
@@ -128,8 +128,9 @@
         [[NSRunLoop currentRunLoop] runUntilDate:untilDate];
         NSLog(@"poll...");
     }
-    [manager cleanUpChannel:channel];    
+    [[TARTTChannelManager defaultManager] cleanUpChannel:channel error:&error];    
     XCTAssertFalse([[NSFileManager defaultManager] fileExistsAtPath:currenPath]);
+    XCTAssertNil(error);
 }
 
 
@@ -148,8 +149,8 @@
     config.content = [NSDictionary dictionaryWithObjects:@[[NSArray arrayWithObjects:file1,  nil]] forKeys: @[@"files"]];
 
     
-    TARTTChannelManager *manager = [[TARTTChannelManager alloc] initWithConfig:config];
-    TARTTChannel *channel  = [manager getChannelInstance];
+    NSError *error;
+    TARTTChannel *channel  = [[TARTTChannelManager defaultManager] prepareChannelWithConfig:config error:&error];
     
     [[NSFileManager defaultManager] removeItemAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/"] error:nil];    
     
@@ -179,8 +180,8 @@
     config.content = [NSDictionary dictionaryWithObjects:@[[NSArray arrayWithObjects:file1,  nil]] forKeys: @[@"files"]];
 
     
-    TARTTChannelManager *manager = [[TARTTChannelManager alloc] initWithConfig:config];
-    TARTTChannel *channel  = [manager getChannelInstance];
+    NSError *error;
+    TARTTChannel *channel  = [[TARTTChannelManager defaultManager] prepareChannelWithConfig:config error:&error];
     
     [[NSFileManager defaultManager] removeItemAtPath:[self.cacheDirectory stringByAppendingString:@"TARTT/Channels/"] error:nil];    
 

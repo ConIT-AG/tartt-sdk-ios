@@ -2,7 +2,6 @@
 //  TARTTChannelManager.h
 //  Pods
 //
-//  Created by Thomas Opiolka on 07.10.15.
 //
 //
 
@@ -14,9 +13,11 @@
 
 @interface TARTTChannelManager : NSObject
 
--(instancetype)initWithConfig:(TARTTConfig*) config;
+-(TARTTChannel *)prepareChannelWithConfig:(TARTTConfig *)config error:(NSError **)error;
+-(BOOL)cleanUpChannel:(TARTTChannel *)channel error:(NSError **)error;
+-(BOOL)deleteChannel:(TARTTChannel *)channel error:(NSError **)error;
 
--(TARTTChannel *)getChannelInstance;
--(BOOL)cleanUpChannel:(TARTTChannel *)channel;
--(BOOL)deleteChannel:(TARTTChannel *)channel;
+-(void)saveLastPath:(NSString *)lastPath forChannel:(NSString *)channelKey;
+
++(TARTTChannelManager *)defaultManager;
 @end

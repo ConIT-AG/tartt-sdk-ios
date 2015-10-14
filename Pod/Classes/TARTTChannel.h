@@ -2,7 +2,6 @@
 //  TARTTChannel.h
 //  Pods
 //
-//  Created by Thomas Opiolka on 06.10.15.
 //
 //
 
