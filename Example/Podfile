@@ -7,4 +7,5 @@ end
 
 target 'TARTT_Tests', :exclusive => true do
   pod "TARTT", :path => "../"  
+  pod "Kiwi"
 end

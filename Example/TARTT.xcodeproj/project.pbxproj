@@ -54,6 +54,7 @@
 		F26F38471BCBC7DA002E49FA /* zbar-helpicons.png in Resources */ = {isa = PBXBuildFile; fileRef = F26F38421BCBC7DA002E49FA /* zbar-helpicons.png */; settings = {ASSET_TAGS = (); }; };
 		F26F38481BCBC7DA002E49FA /* zbar-samples.png in Resources */ = {isa = PBXBuildFile; fileRef = F26F38431BCBC7DA002E49FA /* zbar-samples.png */; settings = {ASSET_TAGS = (); }; };
 		F26F384F1BCBD7BF002E49FA /* MutlipleChannelsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F26F384E1BCBD7BF002E49FA /* MutlipleChannelsViewController.m */; settings = {ASSET_TAGS = (); }; };
+		F26F392B1BCF810C002E49FA /* ChannelManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26F392A1BCF810C002E49FA /* ChannelManagerTests.m */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -152,6 +153,7 @@
 		F26F384D1BCBD7BF002E49FA /* MutlipleChannelsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MutlipleChannelsViewController.h; sourceTree = "<group>"; };
 		F26F384E1BCBD7BF002E49FA /* MutlipleChannelsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MutlipleChannelsViewController.m; sourceTree = "<group>"; };
 		F26F38501BCCF9B7002E49FA /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		F26F392A1BCF810C002E49FA /* ChannelManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChannelManagerTests.m; sourceTree = "<group>"; };
 		FA53FE949886E94A6EC3C58E /* Pods-TARTT_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TARTT_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TARTT_Example/Pods-TARTT_Example.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -288,6 +290,7 @@
 				F23CBC321BC677F300BB8C0A /* TarttChannelConfigRequestTests.m */,
 				F23CBC381BC68CF100BB8C0A /* TarttChannelTests.m */,
 				F23CBC3E1BC697D300BB8C0A /* TarttChannelDownloaderTests.m */,
+				F26F392A1BCF810C002E49FA /* ChannelManagerTests.m */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -648,6 +651,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F26F392B1BCF810C002E49FA /* ChannelManagerTests.m in Sources */,
 				F23CBC331BC677F300BB8C0A /* TarttChannelConfigRequestTests.m in Sources */,
 				F23CBC391BC68CF100BB8C0A /* TarttChannelTests.m in Sources */,
 				F23CBC3F1BC697D300BB8C0A /* TarttChannelDownloaderTests.m in Sources */,

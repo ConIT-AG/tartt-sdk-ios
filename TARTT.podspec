@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
   s.homepage         = "https://github.com/takondi/tartt-sdk-ios"
   # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
   s.license          = 'MIT'
-  s.author           = { "wh33ler" => "opiolka.thomas@googlemail.com" }
+  s.author           = { "takondi" => "info@takondi.com" }
   s.source           = { :git => "https://github.com/takondi/tartt-sdk-ios.git", :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
@@ -37,9 +37,4 @@ Pod::Spec.new do |s|
   s.library = 'sqlite3','z'
   s.dependency 'AFNetworking', '~> 2.0'
   s.dependency 'Parse'
-
-
-#  s.dependency 'AWSDynamoDB', '~> 2.2.0'
-#  s.dependency 'AWSCore'
-#  s.dependency 'ZBarSDK'
 end
