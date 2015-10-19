@@ -14,4 +14,5 @@
 +(NSString *)getRelativePathOfItem:(NSDictionary *)item;
 +(NSString *)getDummyChannelPath;
 +(NSDictionary *)URLParameterFromURL:(NSURL *)URL;
++(NSString *)convertToJson:(NSDictionary *)dict;
 @end

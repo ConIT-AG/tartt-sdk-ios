@@ -83,4 +83,18 @@
     }    
     return urlParameters;
 }
++(NSString *)convertToJson:(NSDictionary *)dict
+{
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict
+                                                       options:(NSJSONWritingOptions)(NSJSONWritingPrettyPrinted)
+                                                         error:&error];
+    if (! jsonData)
+    {
+        DebugLog(@"Error in convertToJson %@",[error localizedDescription]);
+        return @"{}";
+    } else {
+        return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+}
 @end

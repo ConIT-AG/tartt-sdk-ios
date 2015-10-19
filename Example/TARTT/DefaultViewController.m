@@ -123,10 +123,9 @@
     // START LOADING CHANNEL SETUP
     TARTTRequestOptions *options = [TARTTRequestOptions new];
     [options addLanguage:@"de"];
-    [options addEnvironment:@"production"];
+    [options addEnvironment:TARTTEnvironmentProduction];
     [options addTargetApi:[NSNumber numberWithInt:3]];
-    [options addTargetType:@"mainanddetail"];
-    [options changeState:[NSNumber numberWithInt:1]];
+    [options addTargetType:TARTTTargetTypeMainAndDetail];
     self.configRequest = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey 
                                                                      andClientKey:kParseClientKey 
                                                                        andOptions:options];
@@ -268,7 +267,9 @@
     }else if( [[URL absoluteString] hasPrefix:@"architectsdk://readyForExecution"])
     {
          NSLog(@"##EVENT:%@",URL);
-        [self.architectView callJavaScript:@"startWorld('')"];
+        NSDictionary *worldConfig = @{ @"Key1": @"Val1" };
+        NSString *json = [TARTTHelper convertToJson:worldConfig];
+        [self.architectView callJavaScript:[NSString stringWithFormat:@"startWorld('%@')",json]];
     }
 }
 - (void)architectView:(WTArchitectView *)architectView didFinishLoadArchitectWorldNavigation:(WTNavigation *)navigation {

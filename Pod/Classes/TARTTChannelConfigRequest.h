@@ -21,6 +21,8 @@
 
 @interface TARTTChannelConfigRequest : NSObject
 
+@property (nonatomic) NSString * table;
+
 -(instancetype)initWithApplicationID:(NSString*)applicationID andClientKey:(NSString *)clientKey andOptions:(TARTTRequestOptions *)options;
 
 -(void)startRequestWithDelegate:(id<TARTTChannelConfigRequestDelegate>)delegate;

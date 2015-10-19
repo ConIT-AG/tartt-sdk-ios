@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3E481AC7B3BBCD0E0B813134 /* Pods_TARTT_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D187124B061F98F0D837AA53 /* Pods_TARTT_Tests.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		3E481AC7B3BBCD0E0B813134 /* Pods_TARTT_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D187124B061F98F0D837AA53 /* Pods_TARTT_Tests.framework */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
@@ -21,7 +21,7 @@
 		6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
 		6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5B8195388D20070C39A /* InfoPlist.strings */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
-		8F12F4A568AF54436D088F81 /* Pods_TARTT_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5644D12CB6F8C2A3ED2ABD /* Pods_TARTT_Example.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		8F12F4A568AF54436D088F81 /* Pods_TARTT_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5644D12CB6F8C2A3ED2ABD /* Pods_TARTT_Example.framework */; };
 		F23CBB7A1BC2AB6E00BB8C0A /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F23CBB6D1BC2AB6E00BB8C0A /* Accelerate.framework */; };
 		F23CBB7B1BC2AB6E00BB8C0A /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F23CBB6E1BC2AB6E00BB8C0A /* AssetsLibrary.framework */; };
 		F23CBB7C1BC2AB6E00BB8C0A /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F23CBB6F1BC2AB6E00BB8C0A /* AVFoundation.framework */; };
@@ -41,7 +41,6 @@
 		F23CBC041BC5105C00BB8C0A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F23CBC031BC5105C00BB8C0A /* LaunchScreen.storyboard */; settings = {ASSET_TAGS = (); }; };
 		F23CBC0A1BC51CBC00BB8C0A /* TarttChannelManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F23CBC091BC51CBC00BB8C0A /* TarttChannelManagerTests.m */; settings = {ASSET_TAGS = (); }; };
 		F23CBC331BC677F300BB8C0A /* TarttChannelConfigRequestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F23CBC321BC677F300BB8C0A /* TarttChannelConfigRequestTests.m */; settings = {ASSET_TAGS = (); }; };
-		F23CBC391BC68CF100BB8C0A /* TarttChannelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F23CBC381BC68CF100BB8C0A /* TarttChannelTests.m */; settings = {ASSET_TAGS = (); }; };
 		F23CBC3F1BC697D300BB8C0A /* TarttChannelDownloaderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F23CBC3E1BC697D300BB8C0A /* TarttChannelDownloaderTests.m */; settings = {ASSET_TAGS = (); }; };
 		F26F37F71BC7A5B2002E49FA /* MainTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F26F37F61BC7A5B2002E49FA /* MainTableViewController.m */; settings = {ASSET_TAGS = (); }; };
 		F26F37FA1BC7B330002E49FA /* DefaultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F26F37F91BC7B330002E49FA /* DefaultViewController.m */; settings = {ASSET_TAGS = (); }; };
@@ -114,7 +113,6 @@
 		F23CBC031BC5105C00BB8C0A /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F23CBC091BC51CBC00BB8C0A /* TarttChannelManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TarttChannelManagerTests.m; sourceTree = "<group>"; };
 		F23CBC321BC677F300BB8C0A /* TarttChannelConfigRequestTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TarttChannelConfigRequestTests.m; sourceTree = "<group>"; };
-		F23CBC381BC68CF100BB8C0A /* TarttChannelTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TarttChannelTests.m; sourceTree = "<group>"; };
 		F23CBC3E1BC697D300BB8C0A /* TarttChannelDownloaderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TarttChannelDownloaderTests.m; sourceTree = "<group>"; };
 		F26F37F51BC7A5B2002E49FA /* MainTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainTableViewController.h; sourceTree = "<group>"; };
 		F26F37F61BC7A5B2002E49FA /* MainTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainTableViewController.m; sourceTree = "<group>"; };
@@ -288,7 +286,6 @@
 				6003F5B6195388D20070C39A /* Supporting Files */,
 				F23CBC091BC51CBC00BB8C0A /* TarttChannelManagerTests.m */,
 				F23CBC321BC677F300BB8C0A /* TarttChannelConfigRequestTests.m */,
-				F23CBC381BC68CF100BB8C0A /* TarttChannelTests.m */,
 				F23CBC3E1BC697D300BB8C0A /* TarttChannelDownloaderTests.m */,
 				F26F392A1BCF810C002E49FA /* ChannelManagerTests.m */,
 			);
@@ -653,7 +650,6 @@
 			files = (
 				F26F392B1BCF810C002E49FA /* ChannelManagerTests.m in Sources */,
 				F23CBC331BC677F300BB8C0A /* TarttChannelConfigRequestTests.m in Sources */,
-				F23CBC391BC68CF100BB8C0A /* TarttChannelTests.m in Sources */,
 				F23CBC3F1BC697D300BB8C0A /* TarttChannelDownloaderTests.m in Sources */,
 				F23CBC0A1BC51CBC00BB8C0A /* TarttChannelManagerTests.m in Sources */,
 			);

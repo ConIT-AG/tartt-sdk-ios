@@ -8,13 +8,29 @@
 
 #import <Foundation/Foundation.h>
 
+typedef NS_ENUM(NSInteger, TARTTStateType) {
+    TARTTStateInActive,
+    TARTTStateActive,
+    TARTTStateArchive,
+};
+
+typedef NS_ENUM(NSInteger, TARTTTargetType) {
+    TARTTTargetTypeMainAndDetail,
+    TARTTTargetTypeMain,
+};
+
+typedef NS_ENUM(NSInteger, TARTTEnvironment) {
+    TARTTEnvironmentTest,
+    TARTTEnvironmentProduction,
+};
+
 @interface TARTTRequestOptions : NSObject
 
 -(void)addLanguage:(NSString *)language;
--(void)addEnvironment:(NSString *)env;
+-(void)addEnvironment:(TARTTEnvironment)env;
 -(void)addTargetApi:(NSNumber *)api;
--(void)addTargetType:(NSString *)type;
--(void)changeState:(NSNumber *)state;
+-(void)addTargetType:(TARTTTargetType)type;
+-(void)changeState:(TARTTStateType) state;
 -(void)changeChannelKey:(NSString *)channelKey;
 
 -(NSArray *)getLanguage;

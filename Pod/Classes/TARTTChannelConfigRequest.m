@@ -23,6 +23,7 @@
     if (self) {
         [Parse setApplicationId:applicationID  clientKey:clientKey];
         self.options = options;
+        self.table = @"world"; // default Table
     }
     return self;
 }
@@ -45,7 +46,7 @@
     }
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];    
-    PFQuery *query = [PFQuery queryWithClassName:@"world"];
+    PFQuery *query = [PFQuery queryWithClassName:self.table];
     [query selectKeys:@[@"channelKey"]];
     query = [self addOptionsToQuery:query];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -83,7 +84,8 @@
 -(void)selectChannel:(NSString *)channelKey andDelegate:(id<TARTTChannelConfigRequestDelegate>)delegate{
     self.delegate = delegate; 
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    PFQuery *query = [PFQuery queryWithClassName:@"world"];
+    PFQuery *query = [PFQuery queryWithClassName:self.table];
+    //[query whereKey:@"channelKey" matchesRegex:[NSString stringWithFormat:@"(?i)ˆ%@$",channelKey] modifiers:@"i"];
     [query whereKey:@"channelKey" equalTo:channelKey];
     query = [self addOptionsToQuery:query];
     [query selectKeys:@[@"channelKey",@"content"]];
@@ -117,6 +119,7 @@
 {
     if(self.options == nil)
         return query;
+
     [query whereKey:@"language" containedIn:[self.options getLanguage]];                
     [query whereKey:@"envType" containedIn:[self.options getEnvironment]];
     [query whereKey:@"targetApi" containedIn:[self.options getTargetApi]];    

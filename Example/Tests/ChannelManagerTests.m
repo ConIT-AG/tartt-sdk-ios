@@ -9,7 +9,7 @@
 #import "Kiwi.h"
 #import "Tartt.h"
 
-SPEC_BEGIN(MathSpec)
+SPEC_BEGIN(ChannelManager)
 
 describe(@"ChannelManager", ^{
     TARTTChannelManager *manager = [TARTTChannelManager defaultManager];

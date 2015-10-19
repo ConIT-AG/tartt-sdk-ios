@@ -73,10 +73,9 @@
     
     TARTTRequestOptions *options = [TARTTRequestOptions new];
     [options addLanguage:@"de"];
-    [options addEnvironment:@"test"];
+    [options addEnvironment:TARTTEnvironmentProduction];
     [options addTargetApi:[NSNumber numberWithInt:3]];
-    [options addTargetType:@"mainanddetail"];
-    [options changeState:[NSNumber numberWithInt:1]];
+    [options addTargetType:TARTTTargetTypeMainAndDetail];
     
     self.configRequest = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey 
                                                                      andClientKey:kParseClientKey 

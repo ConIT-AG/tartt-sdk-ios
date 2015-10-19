@@ -36,11 +36,11 @@
     self.isMulti = NO;
     
     TARTTRequestOptions *options = [TARTTRequestOptions new];
-    [options addLanguage:@"de"];
-    [options addEnvironment:@"production"];
+    [options addLanguage:@"DE"];
+    [options addEnvironment:TARTTEnvironmentProduction];
     [options addTargetApi:[NSNumber numberWithInt:3]];
-    [options addTargetType:@"mainanddetail"];
-    [options changeState:[NSNumber numberWithInt:1]];
+    [options addTargetType:TARTTTargetTypeMainAndDetail];
+    [options changeState:TARTTStateActive];
     
     TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey andOptions:options];
     [request startRequestWithDelegate:self];    
@@ -59,10 +59,10 @@
 {
     TARTTRequestOptions *options = [TARTTRequestOptions new];
     [options addLanguage:@"de"];
-    [options addEnvironment:@"production"];
+    [options addEnvironment:TARTTEnvironmentProduction];
     [options addTargetApi:[NSNumber numberWithInt:3]];
-    [options addTargetType:@"mainanddetail"];
-    [options changeState:[NSNumber numberWithInt:1]];
+    [options addTargetType:TARTTTargetTypeMainAndDetail];
+    [options changeState:TARTTStateActive];
 
     TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey andOptions:options];
     self.isDone = NO;
@@ -77,10 +77,10 @@
 -(void)testParseConfigNoChannels{
     TARTTRequestOptions *options = [TARTTRequestOptions new];
     [options addLanguage:@"fr"];
-    [options addEnvironment:@"test"];
+    [options addEnvironment:TARTTEnvironmentTest];
     [options addTargetApi:[NSNumber numberWithInt:3]];
-    [options addTargetType:@"mainanddetail"];
-    [options changeState:[NSNumber numberWithInt:1]];
+    [options addTargetType:TARTTTargetTypeMainAndDetail];
+    [options changeState:TARTTStateActive];
     TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey andOptions:options];
     [request startRequestWithDelegate:self];
     
@@ -98,10 +98,10 @@
     
     TARTTRequestOptions *options = [TARTTRequestOptions new];
     [options addLanguage:@"de"];
-    [options addEnvironment:@"test"];
+    [options addEnvironment:TARTTEnvironmentTest];
     [options addTargetApi:[NSNumber numberWithInt:3]];
-    [options addTargetType:@"mainanddetail"];
-    [options changeState:[NSNumber numberWithInt:1]];
+    [options addTargetType:TARTTTargetTypeMainAndDetail];
+    [options changeState:TARTTStateActive];
     
     
     TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey 
@@ -119,7 +119,27 @@
     NSDictionary *content = [self.channel objectForKey:@"content"];
     XCTAssertNotNil(content);
     XCTAssertGreaterThan([[content objectForKey:@"files"] count], 2);
-
+}
+-(void)testSelectChannel
+{
+    TARTTRequestOptions *options = [TARTTRequestOptions new];
+    [options addLanguage:@"de"];
+    [options addEnvironment:TARTTEnvironmentProduction];
+    [options addTargetApi:[NSNumber numberWithInt:3]];
+    [options addTargetType:TARTTTargetTypeMainAndDetail];
+    [options changeState:TARTTStateActive];
+    
+    TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey andOptions:options];
+    self.isDone = NO;
+    self.isMulti = NO;
+    [request selectChannel:@"FlyerKw422" andDelegate:self];
+    NSDate *untilDate;
+    while(!self.isDone){
+        untilDate = [NSDate dateWithTimeIntervalSinceNow:1.0];
+        [[NSRunLoop currentRunLoop] runUntilDate:untilDate];
+    }
+    XCTAssertNotNil(self.channel);
+    XCTAssertEqual(self.isMulti, NO);
 }
 -(void)finishedConfigRequestWithSuccess:(TARTTConfig *)config{
     self.isDone = YES;

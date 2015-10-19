@@ -27,26 +27,34 @@
         self.environment = [NSMutableArray new];
         self.targetApi = [NSMutableArray new];
         self.targetType = [NSMutableArray new];
-        self.state = [NSNumber numberWithInt:1];
+        [self changeState:TARTTStateActive];
         self.channelKey = nil;
     }
     return self;
 }
 
 -(void)addLanguage:(NSString *)language{
-    [self.languages addObject:language];
+    [self.languages addObject:[language lowercaseString]];
 }
--(void)addEnvironment:(NSString *)env{
-    [self.environment addObject:env];
+-(void)addEnvironment:(TARTTEnvironment)env{
+    NSDictionary *envs = @{
+     @(TARTTEnvironmentTest) : @"test",
+     @(TARTTEnvironmentProduction) : @"production",
+    };
+    [self.environment addObject:[envs objectForKey:@(env)]];
 }
 -(void)addTargetApi:(NSNumber *)api{
     [self.targetApi addObject:api];
 }
--(void)addTargetType:(NSString *)type{
-    [self.targetType addObject:type];
+-(void)addTargetType:(TARTTTargetType)type{
+    NSDictionary *targetType = @{
+      @(TARTTTargetTypeMainAndDetail) : @"mainanddetail",
+      @(TARTTTargetTypeMain) : @"main",
+    };
+    [self.targetType addObject:[targetType objectForKey:@(type)]];
 }
--(void)changeState:(NSNumber *)state{
-    self.state = state;
+-(void)changeState:(TARTTStateType)state{
+    self.state = [NSNumber numberWithInteger:state];
 }
 -(void)changeChannelKey:(NSString *)channelKey{
     self.channelKey = channelKey;
