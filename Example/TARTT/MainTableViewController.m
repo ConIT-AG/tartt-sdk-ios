@@ -56,7 +56,7 @@
  
     if(indexPath.row == 0)
     {
-        [self performSegueWithIdentifier:@"simulator" sender:self];
+        [self performSegueWithIdentifier:@"simulator" sender:@"sim"];
     }else if(indexPath.row == 1)
     {
         [self performSegueWithIdentifier:@"default" sender:@"default"];

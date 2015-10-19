@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1843C3321BD4F95F005F017A /* WikitudeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843C3311BD4F95F005F017A /* WikitudeManager.m */; settings = {ASSET_TAGS = (); }; };
 		3E481AC7B3BBCD0E0B813134 /* Pods_TARTT_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D187124B061F98F0D837AA53 /* Pods_TARTT_Tests.framework */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
@@ -66,6 +67,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1843C3301BD4F95F005F017A /* WikitudeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WikitudeManager.h; sourceTree = "<group>"; };
+		1843C3311BD4F95F005F017A /* WikitudeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WikitudeManager.m; sourceTree = "<group>"; };
 		3FADBB2C9FF8F6F6DFB09C7F /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		55ED4CDBE15252A9655FA53D /* TARTT.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TARTT.podspec; path = ../TARTT.podspec; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* TARTT_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TARTT_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -389,6 +392,8 @@
 			children = (
 				F26F384B1BCBD3A6002E49FA /* Default */,
 				F26F384A1BCBD39D002E49FA /* Simulator */,
+				1843C3301BD4F95F005F017A /* WikitudeManager.h */,
+				1843C3311BD4F95F005F017A /* WikitudeManager.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -625,6 +630,7 @@
 				F26F37FA1BC7B330002E49FA /* DefaultViewController.m in Sources */,
 				6003F59E195388D20070C39A /* TarttAppDelegate.m in Sources */,
 				F26F37FD1BC8141D002E49FA /* BarcodePlugin.cpp in Sources */,
+				1843C3321BD4F95F005F017A /* WikitudeManager.m in Sources */,
 				6003F5A7195388D20070C39A /* SimulatorViewController.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
 			);

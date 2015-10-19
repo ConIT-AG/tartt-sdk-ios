@@ -9,6 +9,7 @@
 #import "DefaultViewController.h"
 #import "DefaultViewController+PluginLoading.h"
 #import "Constants.h"
+#import "WikitudeManager.h"
 
 @interface DefaultViewController ()
 
@@ -21,17 +22,6 @@
 @end
 
 @implementation DefaultViewController
-
-+ (WTArchitectView *)singleArchitectView
-{
-    static WTArchitectView *sharedInstance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedInstance = [[WTArchitectView alloc] init];
-    });
-    return sharedInstance;
-}
-
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -61,7 +51,7 @@
     {
         // Setup View after Download
 
-        self.architectView = [DefaultViewController singleArchitectView];
+        self.architectView = [WikitudeManager architectView];
         [self.architectView setFrame:self.view.bounds];
         self.architectView.delegate = self;
         self.architectView.debugDelegate = self;
@@ -93,6 +83,10 @@
         [alert show];
 
     }    
+}
+-(void)viewWillDisappear:(BOOL)animated{
+    [self.downloader cancel];
+    [self.configRequest cancel];
 }
 
 -(void)setGuiForState:(TARTTGuiStateType)state{
