@@ -12,7 +12,7 @@
 
 @interface DefaultViewController ()
 
-@property (nonatomic, weak) WTNavigation *architectWorldNavigation;
+@property (nonatomic) WTNavigation *architectWorldNavigation;
 
 @property (nonatomic, strong) TARTTChannel *channel;     
 @property (nonatomic, strong) TARTTChannelConfigRequest *configRequest;
@@ -21,6 +21,17 @@
 @end
 
 @implementation DefaultViewController
+
++ (WTArchitectView *)singleArchitectView
+{
+    static WTArchitectView *sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedInstance = [[WTArchitectView alloc] init];
+    });
+    return sharedInstance;
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -49,7 +60,9 @@
     if ( [WTArchitectView isDeviceSupportedForRequiredFeatures:WTFeature_Geo | WTFeature_2DTracking error:&deviceNotSupportedError] ) 
     {
         // Setup View after Download
-        //self.architectView = [[WTArchitectView alloc] initWithFrame:self.view.bounds motionManager:nil];
+
+        self.architectView = [DefaultViewController singleArchitectView];
+        [self.architectView setFrame:self.view.bounds];
         self.architectView.delegate = self;
         self.architectView.debugDelegate = self;
         [self.architectView setLicenseKey:@"otr/l3HJpaElIt8Bv36DNdxrVvywnXxhvMsMFReyvrL2Jlr54vetxIAYOi9V3PUgT7S9RaK0NC3fq+1Pkt+Twy6SjmQme9ginF30aixB+yDZLabipN3K421a3IzxP7f68pI76j+EbTz/B+O6fc1KKHJl8/CERXUScIEKhcp9XHBTYWx0ZWRfX0nZMIeLg6TgFJ4TrRDHDsuicw/ev3ghNBuwGKzJ1q29WCcOTv0dyKVFZDR2gE9lVULtncj3sckaZBayY6rbfO8oZMn1r/5lNFZjF1NjvuJlvp5q8GOS0siRRYs8tGzoAfR7X2xwNocrkmPMACMIsxWBYwn9IAa3vYCo+yRYeFprS9JAo6rkTdGmjB+tphyzmqr3vK8O/PBuWwhEecwNlkm1UFstX5ZEqd1QLbayWfCF8d33RuH5+LU4yDqead0z+9vhQ77nPGDrLJvO/k8ciIjUXl0Fc1tGlhL089fQ7Fwdl5hX1PTame58LpNrWtaPEtnYlZPdVbJNWTwEFXYc29NVZsNoTsNQ4tmKn4U8X2c4ml7FnzCiJpq2hHAMwLry57InRuyRTZbAIsvrOzUD8akU4vLti6igFUG1AK5/ivdcgObcOGxSEoWdMF/9AALI2A0LVJWKzK0k7etjtJ28vcpKJ2JyTFuEalzJYz63zJSUSmktW1R9/1vnSLTuymzFS5GRIC0EuJL3ct7B4YJOGu+0i3GmrNQ32BQmK3Wdk3uj3U2Xi+5iDXU="];             
@@ -60,8 +73,13 @@
         // Load Channel
         [self.architectView loadArchitectWorldFromURL:architectWorldURL withRequiredFeatures:WTFeature_2DTracking]; 
         
-      //  [self.view addSubview:self.architectView];
-        self.architectView.translatesAutoresizingMaskIntoConstraints = NO;                   
+        [self.view addSubview:self.architectView];
+        self.architectView.translatesAutoresizingMaskIntoConstraints = NO;
+        
+        // Constraints
+        NSDictionary *views = NSDictionaryOfVariableBindings(_architectView);
+        [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"|[_architectView]|" options:0 metrics:nil views:views] ];
+        [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_architectView]|" options:0 metrics:nil views:views] ];
         
         [self startWikitudeSDKRendering];
         [self startTARTT];
@@ -77,7 +95,8 @@
     }    
 }
 
--(void)setGuiForState:(TARTTGuiStateType)state{   
+-(void)setGuiForState:(TARTTGuiStateType)state{
+    [self.view sendSubviewToBack:self.architectView];
     switch (state) {
         case TARTTGuiStateHide:            
             self.progressBar.hidden = YES;
@@ -120,15 +139,10 @@
 -(void)startTARTT
 {
     [self setGuiForState:TARTTGuiStateLoading];
-    // START LOADING CHANNEL SETUP
-    TARTTRequestOptions *options = [TARTTRequestOptions new];
-    [options addLanguage:@"de"];
-    [options addEnvironment:TARTTEnvironmentProduction];
-    [options addTargetApi:[NSNumber numberWithInt:3]];
-    [options addTargetType:TARTTTargetTypeMainAndDetail];
+    // START LOADING CHANNEL SETUP   
     self.configRequest = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey 
                                                                      andClientKey:kParseClientKey 
-                                                                       andOptions:options];
+                                                                       andOptions:self.options];
     [self.configRequest startRequestWithDelegate:self];
 }
 
@@ -149,6 +163,7 @@
 }
 -(void)finishedConfigRequestWithError:(NSError *)error
 {
+     [self setGuiForState:TARTTGuiStateHide];
     NSLog(@"finishedConfigRequestWithError: %@", [error localizedDescription]);
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];    
     [alert show];
@@ -269,7 +284,9 @@
          NSLog(@"##EVENT:%@",URL);
         NSDictionary *worldConfig = @{ @"Key1": @"Val1" };
         NSString *json = [TARTTHelper convertToJson:worldConfig];
-        [self.architectView callJavaScript:[NSString stringWithFormat:@"startWorld('%@')",json]];
+        NSString *javascript = [NSString stringWithFormat:@"startWorld('%@');",json];
+        NSLog(@"Send Javascript: %@",javascript);
+        [self.architectView callJavaScript:javascript];
     }
 }
 - (void)architectView:(WTArchitectView *)architectView didFinishLoadArchitectWorldNavigation:(WTNavigation *)navigation {

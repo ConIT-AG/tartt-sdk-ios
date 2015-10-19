@@ -52,7 +52,6 @@
 		F26F38461BCBC7DA002E49FA /* zbar-help.html in Resources */ = {isa = PBXBuildFile; fileRef = F26F38411BCBC7DA002E49FA /* zbar-help.html */; settings = {ASSET_TAGS = (); }; };
 		F26F38471BCBC7DA002E49FA /* zbar-helpicons.png in Resources */ = {isa = PBXBuildFile; fileRef = F26F38421BCBC7DA002E49FA /* zbar-helpicons.png */; settings = {ASSET_TAGS = (); }; };
 		F26F38481BCBC7DA002E49FA /* zbar-samples.png in Resources */ = {isa = PBXBuildFile; fileRef = F26F38431BCBC7DA002E49FA /* zbar-samples.png */; settings = {ASSET_TAGS = (); }; };
-		F26F384F1BCBD7BF002E49FA /* MutlipleChannelsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F26F384E1BCBD7BF002E49FA /* MutlipleChannelsViewController.m */; settings = {ASSET_TAGS = (); }; };
 		F26F392B1BCF810C002E49FA /* ChannelManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26F392A1BCF810C002E49FA /* ChannelManagerTests.m */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
@@ -148,8 +147,6 @@
 		F26F38411BCBC7DA002E49FA /* zbar-help.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "zbar-help.html"; sourceTree = "<group>"; };
 		F26F38421BCBC7DA002E49FA /* zbar-helpicons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zbar-helpicons.png"; sourceTree = "<group>"; };
 		F26F38431BCBC7DA002E49FA /* zbar-samples.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zbar-samples.png"; sourceTree = "<group>"; };
-		F26F384D1BCBD7BF002E49FA /* MutlipleChannelsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MutlipleChannelsViewController.h; sourceTree = "<group>"; };
-		F26F384E1BCBD7BF002E49FA /* MutlipleChannelsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MutlipleChannelsViewController.m; sourceTree = "<group>"; };
 		F26F38501BCCF9B7002E49FA /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		F26F392A1BCF810C002E49FA /* ChannelManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChannelManagerTests.m; sourceTree = "<group>"; };
 		FA53FE949886E94A6EC3C58E /* Pods-TARTT_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TARTT_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TARTT_Example/Pods-TARTT_Example.debug.xcconfig"; sourceTree = "<group>"; };
@@ -390,7 +387,6 @@
 		F26F38491BCBD37F002E49FA /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				F26F384C1BCBD7A4002E49FA /* MultipleChannels */,
 				F26F384B1BCBD3A6002E49FA /* Default */,
 				F26F384A1BCBD39D002E49FA /* Simulator */,
 			);
@@ -417,15 +413,6 @@
 				F26F38241BC81923002E49FA /* DefaultViewController+PluginLoading.mm */,
 			);
 			name = Default;
-			sourceTree = "<group>";
-		};
-		F26F384C1BCBD7A4002E49FA /* MultipleChannels */ = {
-			isa = PBXGroup;
-			children = (
-				F26F384D1BCBD7BF002E49FA /* MutlipleChannelsViewController.h */,
-				F26F384E1BCBD7BF002E49FA /* MutlipleChannelsViewController.m */,
-			);
-			name = MultipleChannels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -637,7 +624,6 @@
 				F26F37F71BC7A5B2002E49FA /* MainTableViewController.m in Sources */,
 				F26F37FA1BC7B330002E49FA /* DefaultViewController.m in Sources */,
 				6003F59E195388D20070C39A /* TarttAppDelegate.m in Sources */,
-				F26F384F1BCBD7BF002E49FA /* MutlipleChannelsViewController.m in Sources */,
 				F26F37FD1BC8141D002E49FA /* BarcodePlugin.cpp in Sources */,
 				6003F5A7195388D20070C39A /* SimulatorViewController.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
@@ -764,6 +750,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -800,6 +787,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.takondi.tarttdev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -812,6 +800,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -848,6 +837,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.takondi.tarttdev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};

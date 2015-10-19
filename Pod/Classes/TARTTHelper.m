@@ -87,7 +87,7 @@
 {
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict
-                                                       options:(NSJSONWritingOptions)(NSJSONWritingPrettyPrinted)
+                                                       options:0
                                                          error:&error];
     if (! jsonData)
     {

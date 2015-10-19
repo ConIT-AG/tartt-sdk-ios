@@ -7,6 +7,7 @@
 //
 
 #import "MainTableViewController.h"
+#import "DefaultViewController.h"
 
 @interface MainTableViewController ()
 
@@ -25,7 +26,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 3;
+    return 4;
 }
 
 
@@ -38,12 +39,17 @@
     }
     else if(indexPath.row == 1)
     {
-        cell.textLabel.text = @"Default Setup Device";    
+        cell.textLabel.text = @"One Channel Available";
     }
     else if(indexPath.row == 2)
     {
-        cell.textLabel.text = @"QR-Reader Example";    
+        cell.textLabel.text = @"Two Channels Available";
     }
+    else if(indexPath.row == 3)
+    {
+        cell.textLabel.text = @"No Channels Available";
+    }
+
     return cell;
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -53,11 +59,50 @@
         [self performSegueWithIdentifier:@"simulator" sender:self];
     }else if(indexPath.row == 1)
     {
-        [self performSegueWithIdentifier:@"default" sender:self];
+        [self performSegueWithIdentifier:@"default" sender:@"default"];
     }
     else if(indexPath.row == 2)
     {
-        [self performSegueWithIdentifier:@"multiple" sender:self];
+        [self performSegueWithIdentifier:@"default" sender:@"mutli"];
+    }
+    else if(indexPath.row == 3)
+    {
+        [self performSegueWithIdentifier:@"default" sender:@"no"];
+    }
+
+}
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    NSString *key = (NSString *)sender;
+    if([key isEqualToString:@"default"])
+    {
+        DefaultViewController *controller = (DefaultViewController *)segue.destinationViewController;
+        TARTTRequestOptions *options = [TARTTRequestOptions new];
+        [options addLanguage:@"de"];
+        [options addEnvironment:TARTTEnvironmentTest];
+        [options addTargetApi:[NSNumber numberWithInt:3]];
+        [options addTargetType:TARTTTargetTypeMainAndDetail];
+        controller.options = options;
+    }
+    else if([key isEqualToString:@"mutli"])
+    {
+        DefaultViewController *controller = (DefaultViewController *)segue.destinationViewController;
+        TARTTRequestOptions *options = [TARTTRequestOptions new];
+        [options addLanguage:@"de"];
+        [options addEnvironment:TARTTEnvironmentProduction];
+        [options addTargetApi:[NSNumber numberWithInt:3]];
+        [options addTargetType:TARTTTargetTypeMainAndDetail];
+        controller.options = options;
+    }
+    else if([key isEqualToString:@"no"])
+    {
+        DefaultViewController *controller = (DefaultViewController *)segue.destinationViewController;
+        TARTTRequestOptions *options = [TARTTRequestOptions new];
+        [options addLanguage:@"fr"];
+        [options addEnvironment:TARTTEnvironmentProduction];
+        [options addTargetApi:[NSNumber numberWithInt:3]];
+        [options addTargetType:TARTTTargetTypeMainAndDetail];
+        controller.options = options;
     }
 
 }

@@ -145,7 +145,7 @@
         }        
         NSString *filePath = [self.channel.tempPath stringByAppendingPathComponent:[TARTTHelper getRelativePathOfItem:item]];  
         NSString *url = [item objectForKey:@"url"];        
-        DebugLog(@"%@",url);
+        //DebugLog(@"%@",url);
         NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];                
         AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];       
         operation.outputStream = [NSOutputStream outputStreamToFileAtPath:filePath append:NO];
