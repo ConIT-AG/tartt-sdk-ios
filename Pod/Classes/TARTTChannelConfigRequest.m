@@ -23,7 +23,6 @@
     if (self) {
         [Parse setApplicationId:applicationID  clientKey:clientKey];
         self.options = options;
-        self.table = @"world"; // default Table
     }
     return self;
 }
@@ -46,7 +45,7 @@
     }
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];    
-    PFQuery *query = [PFQuery queryWithClassName:self.table];
+    PFQuery *query = [PFQuery queryWithClassName:[self.options getTable]];
     [query selectKeys:@[@"channelKey"]];
     query = [self addOptionsToQuery:query];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -84,7 +83,7 @@
 -(void)selectChannel:(NSString *)channelKey andDelegate:(id<TARTTChannelConfigRequestDelegate>)delegate{
     self.delegate = delegate; 
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    PFQuery *query = [PFQuery queryWithClassName:self.table];
+    PFQuery *query = [PFQuery queryWithClassName:[self.options getTable]];
     //[query whereKey:@"channelKey" matchesRegex:[NSString stringWithFormat:@"(?i)ˆ%@$",channelKey] modifiers:@"i"];
     [query whereKey:@"channelKey" equalTo:channelKey];
     query = [self addOptionsToQuery:query];

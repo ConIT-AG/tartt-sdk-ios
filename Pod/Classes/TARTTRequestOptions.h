@@ -32,6 +32,7 @@ typedef NS_ENUM(NSInteger, TARTTEnvironment) {
 -(void)addTargetType:(TARTTTargetType)type;
 -(void)changeState:(TARTTStateType) state;
 -(void)changeChannelKey:(NSString *)channelKey;
+-(void)changeTable:(NSString *)table;
 
 -(NSArray *)getLanguage;
 -(NSArray *)getEnvironment;
@@ -39,6 +40,7 @@ typedef NS_ENUM(NSInteger, TARTTEnvironment) {
 -(NSArray *)getTargetType;
 -(NSNumber *)getState;
 -(NSString *)getChannelKey;
+-(NSString *)getTable;
 
 -(BOOL)isValid;
 @end

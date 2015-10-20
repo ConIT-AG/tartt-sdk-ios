@@ -16,6 +16,7 @@
 @property (nonatomic, strong) NSMutableArray *targetType;
 @property (nonatomic, strong) NSNumber *state;
 @property (nonatomic, strong) NSString *channelKey;
+@property (nonatomic, strong) NSString *table;
 @end
 
 @implementation TARTTRequestOptions
@@ -29,6 +30,7 @@
         self.targetType = [NSMutableArray new];
         [self changeState:TARTTStateActive];
         self.channelKey = nil;
+        self.table = @"world";
     }
     return self;
 }
@@ -59,6 +61,9 @@
 -(void)changeChannelKey:(NSString *)channelKey{
     self.channelKey = channelKey;
 }
+-(void)changeTable:(NSString *)table{
+    self.table = table;
+}
 -(NSArray *)getLanguage{
     return self.languages;
 }
@@ -76,6 +81,9 @@
 }
 -(NSString *)getChannelKey{
     return self.channelKey;
+}
+-(NSString *)getTable{
+    return self.table;
 }
 -(BOOL)isValid{
     return ([self.languages count] > 0 &&
