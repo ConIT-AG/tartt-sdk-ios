@@ -2,7 +2,6 @@
 //  TARTT.h
 //  Pods
 //
-//  Created by Thomas Opiolka on 14.10.15.
 //
 //
 

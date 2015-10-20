@@ -11,20 +11,64 @@
 #import "TARTTErrors.h"
 #import "TARTTRequestOptions.h"
 
+/*!
+ @protocol TARTTChannelConfigRequestDelegate
+ 
+ @abstract returning information of a config request
+ */
+
 @protocol TARTTChannelConfigRequestDelegate <NSObject>
 
+/*!
+ @abstract the config request did not make it or didn't find any available channel
+ @param error the error that happend while trying to make a config request
+ */
 -(void)finishedConfigRequestWithError:(NSError *)error;
+
+/*!
+ @abstract the config request received multiple channels and cant decide which one to show
+ */
 -(void)finishedConfigRequestWithMultipleChannels;
+/*!
+ @abstract the config request found just one channel which can be downloaded directly
+ @param config the information needed to create a channel and download the needed files
+ */
 -(void)finishedConfigRequestWithSuccess:(TARTTConfig *)config;
 @end
 
 
+/*!
+ @class TARTTChannelConfigRequest
+ 
+ @abstract the request that is used to get all available channels and the content to download all needed files
+ */
+
 @interface TARTTChannelConfigRequest : NSObject
 
+
+/*!
+ @abstract init with parse.com settings and options for filtering
+ @param applicationID parse application id
+ @param clientKey parse.com clientKey
+ @param options options that are used for filtering and selecting the right channel
+ */
 -(instancetype)initWithApplicationID:(NSString*)applicationID andClientKey:(NSString *)clientKey andOptions:(TARTTRequestOptions *)options;
 
+/*!
+ @abstract triggers the actual call to parse.com
+ @param delegate the delegate which implements TARTTChannelConfigRequestDelegate
+ */
 -(void)startRequestWithDelegate:(id<TARTTChannelConfigRequestDelegate>)delegate;
+
+/*!
+ @abstract if multiple channels are available this function is used to select the one scanned by a QR Scanner
+ @param channelKey the name of the channel to load
+ @param delegate the delegate which implements TARTTChannelConfigRequestDelegate
+ */
 -(void)selectChannel:(NSString *)channelKey andDelegate:(id<TARTTChannelConfigRequestDelegate>)delegate;
+/*!
+ @abstract cancels the request
+ */
 -(void)cancel;
 
 @end

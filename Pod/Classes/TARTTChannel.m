@@ -1,13 +1,9 @@
 //
 //  TARTTChannel.m
 //  Pods
-//
-//
-//
 
 #import "TARTTChannel.h"
-#import "Debug.h"
 
 @implementation TARTTChannel
-
+/// no implementation neede here yet
 @end

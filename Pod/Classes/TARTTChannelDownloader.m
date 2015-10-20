@@ -220,7 +220,8 @@
     [self.delegate channelDownloadFinishedForChannel:self.channel withError:error];
 }
 -(void)invokeChannelErrors{
-    [self.delegate channelDownloadFinishedForChannel:self.channel withErrors:self.errors];
+    if([self.delegate respondsToSelector:@selector(channelDownloadFinishedForChannel:withErrors:)])
+        [self.delegate channelDownloadFinishedForChannel:self.channel withErrors:self.errors];
 }
 
 @end
