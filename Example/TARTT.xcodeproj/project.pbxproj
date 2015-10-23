@@ -23,6 +23,8 @@
 		6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5B8195388D20070C39A /* InfoPlist.strings */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
 		8F12F4A568AF54436D088F81 /* Pods_TARTT_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5644D12CB6F8C2A3ED2ABD /* Pods_TARTT_Example.framework */; };
+		F20BF1DA1BD7858800E942BC /* Pods_TARTT_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5644D12CB6F8C2A3ED2ABD /* Pods_TARTT_Example.framework */; };
+		F20BF1DB1BD7858800E942BC /* Pods_TARTT_Example.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5644D12CB6F8C2A3ED2ABD /* Pods_TARTT_Example.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F23CBB7A1BC2AB6E00BB8C0A /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F23CBB6D1BC2AB6E00BB8C0A /* Accelerate.framework */; };
 		F23CBB7B1BC2AB6E00BB8C0A /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F23CBB6E1BC2AB6E00BB8C0A /* AssetsLibrary.framework */; };
 		F23CBB7C1BC2AB6E00BB8C0A /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F23CBB6F1BC2AB6E00BB8C0A /* AVFoundation.framework */; };
@@ -65,6 +67,20 @@
 			remoteInfo = TARTT;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F20BF1DC1BD7858800E942BC /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				F20BF1DB1BD7858800E942BC /* Pods_TARTT_Example.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1843C3301BD4F95F005F017A /* WikitudeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WikitudeManager.h; sourceTree = "<group>"; };
@@ -176,6 +192,7 @@
 				F23CBB831BC2AB6E00BB8C0A /* OpenGLES.framework in Frameworks */,
 				F23CBB841BC2AB6E00BB8C0A /* QuartzCore.framework in Frameworks */,
 				F23CBB851BC2AB6E00BB8C0A /* Security.framework in Frameworks */,
+				F20BF1DA1BD7858800E942BC /* Pods_TARTT_Example.framework in Frameworks */,
 				F23CBB861BC2AB6E00BB8C0A /* SystemConfiguration.framework in Frameworks */,
 				6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */,
 				6003F592195388D20070C39A /* UIKit.framework in Frameworks */,
@@ -433,6 +450,7 @@
 				6003F588195388D20070C39A /* Resources */,
 				652F817DABE00EDC4B88E76E /* Embed Pods Frameworks */,
 				C0CB97C76DAE6EEC0877F1C0 /* Copy Pods Resources */,
+				F20BF1DC1BD7858800E942BC /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -767,6 +785,7 @@
 				GCC_PREFIX_HEADER = "TARTT/TARTT-Prefix.pch";
 				INFOPLIST_FILE = "TARTT/TARTT-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/TARTT/ZBarSDK",
@@ -793,7 +812,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.takondi.tarttdev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "c35a07bc-75eb-48cd-a221-957bad17baae";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -817,6 +836,7 @@
 				GCC_PREFIX_HEADER = "TARTT/TARTT-Prefix.pch";
 				INFOPLIST_FILE = "TARTT/TARTT-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/TARTT/ZBarSDK",
@@ -843,7 +863,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.takondi.tarttdev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "c35a07bc-75eb-48cd-a221-957bad17baae";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};

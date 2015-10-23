@@ -146,7 +146,7 @@
         NSString *filePath = [self.channel.tempPath stringByAppendingPathComponent:[TARTTHelper getRelativePathOfItem:item]];  
         NSString *url = [item objectForKey:@"url"];        
         //DebugLog(@"%@",url);
-        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];                
+        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:10];                
         AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];       
         operation.outputStream = [NSOutputStream outputStreamToFileAtPath:filePath append:NO];
         [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
