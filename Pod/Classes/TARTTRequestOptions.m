@@ -36,6 +36,7 @@
 }
 
 -(void)addLanguage:(NSString *)language{
+    self.languages = [NSMutableArray new];
     [self.languages addObject:[language lowercaseString]];
 }
 -(void)addEnvironment:(TARTTEnvironment)env{
@@ -43,12 +44,15 @@
      @(TARTTEnvironmentTest) : @"test",
      @(TARTTEnvironmentProduction) : @"production",
     };
+    self.environment = [NSMutableArray new];
     [self.environment addObject:[envs objectForKey:@(env)]];
 }
 -(void)addTargetApi:(NSNumber *)api{
+    self.targetApi = [NSMutableArray new];
     [self.targetApi addObject:api];
 }
 -(void)addTargetType:(TARTTTargetType)type{
+    self.targetType = [NSMutableArray new];
     NSDictionary *targetType = @{
       @(TARTTTargetTypeMainAndDetail) : @"mainanddetail",
       @(TARTTTargetTypeMain) : @"main",
@@ -63,10 +67,6 @@
 }
 -(void)changeTable:(NSString *)table{
     self.table = table;
-}
--(void)overwriteLanguage:(NSString *)language{
-    self.languages = [NSMutableArray new];
-    [self addLanguage:language];
 }
 -(NSArray *)getLanguage{
     return self.languages;
