@@ -114,6 +114,9 @@
         }
     }];    
 }
+-(void)overwriteLanguage:(NSString *)language{
+    
+}
 -(PFQuery *)addOptionsToQuery:(PFQuery *)query
 {
     if(self.options == nil)

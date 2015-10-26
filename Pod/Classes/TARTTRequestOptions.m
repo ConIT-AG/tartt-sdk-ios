@@ -64,6 +64,10 @@
 -(void)changeTable:(NSString *)table{
     self.table = table;
 }
+-(void)overwriteLanguage:(NSString *)language{
+    self.languages = [NSMutableArray new];
+    [self addLanguage:language];
+}
 -(NSArray *)getLanguage{
     return self.languages;
 }

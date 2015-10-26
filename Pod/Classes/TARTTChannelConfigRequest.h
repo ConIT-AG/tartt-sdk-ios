@@ -66,6 +66,13 @@
  @param delegate the delegate which implements TARTTChannelConfigRequestDelegate
  */
 -(void)selectChannel:(NSString *)channelKey andDelegate:(id<TARTTChannelConfigRequestDelegate>)delegate;
+
+/*!
+ @abstract Possibility to overwrite the language setting
+ @param language the language we scanned from outside
+ */
+-(void)overwriteLanguage:(NSString *)language;
+
 /*!
  @abstract cancels the request
  */

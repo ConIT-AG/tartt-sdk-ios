@@ -91,6 +91,13 @@ typedef NS_ENUM(NSInteger, TARTTEnvironment) {
  */
 -(void)changeTable:(NSString *)table;
 
+
+/*!
+ @abstract overwrite the language if it was scanned from outside
+ @param language the language to replace
+ */
+-(void)overwriteLanguage:(NSString *)language;
+
 /// GETTER METHODS
 -(NSArray *)getLanguage;
 -(NSArray *)getEnvironment;
