@@ -59,6 +59,7 @@ typedef NS_ENUM(NSInteger, TARTTEnvironment) {
  @param env the environment that we are currenlty in
  */
 -(void)addEnvironment:(TARTTEnvironment)env;
+-(void)forceEnvironment:(NSString *)env;
 
 /*!
  @abstract add a api that we are currenlty running
@@ -72,12 +73,14 @@ typedef NS_ENUM(NSInteger, TARTTEnvironment) {
  @param type the current target type that is requested
  */
 -(void)addTargetType:(TARTTTargetType)type;
+-(void)forceTargetType:(NSString *)type;
 
 /*!
  @abstract set the current state that the channel should have
  @param state the state we want the channel to be in
  */
 -(void)changeState:(TARTTStateType) state;
+-(void)forceState:(NSNumber *)state;
 
 /*!
  @abstract set the channel Key if explicit if there are more than one available

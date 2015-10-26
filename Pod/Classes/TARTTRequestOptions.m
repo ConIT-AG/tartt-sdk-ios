@@ -47,6 +47,10 @@
     self.environment = [NSMutableArray new];
     [self.environment addObject:[envs objectForKey:@(env)]];
 }
+-(void)forceEnvironment:(NSString *)env{
+    self.environment = [NSMutableArray new];
+    [self.environment addObject:env];
+}
 -(void)addTargetApi:(NSNumber *)api{
     self.targetApi = [NSMutableArray new];
     [self.targetApi addObject:api];
@@ -59,8 +63,15 @@
     };
     [self.targetType addObject:[targetType objectForKey:@(type)]];
 }
+-(void)forceTargetType:(NSString *)type{
+    self.targetType = [NSMutableArray new];
+    [self.targetType addObject:type];
+}
 -(void)changeState:(TARTTStateType)state{
     self.state = [NSNumber numberWithInteger:state];
+}
+-(void)forceState:(NSNumber *)state{
+    self.state = state;
 }
 -(void)changeChannelKey:(NSString *)channelKey{
     self.channelKey = channelKey;
