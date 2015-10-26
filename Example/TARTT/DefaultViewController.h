@@ -17,6 +17,7 @@
 typedef NS_ENUM(NSInteger, TARTTGuiStateType) {
     TARTTGuiStateLoading,
     TARTTGuiStateProgress,
+    TARTTGuiStateLoadingTargets,
     TARTTGuiStateScan,
     TARTTGuiStateScanQR,
     TARTTGuiStateHide    

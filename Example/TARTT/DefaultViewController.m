@@ -25,6 +25,7 @@
 
 @implementation DefaultViewController
 
+#pragma mark ViewEvents
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.title = @"Default";    
@@ -100,6 +101,7 @@
         [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
 }
 
+#pragma mark GuiMethods
 - (IBAction)cancelClicked:(id)sender {
     [self.downloader cancel];
     [self.configRequest cancel];
@@ -138,6 +140,14 @@
             self.cancelButton.hidden = NO;
             [self.loadingIndicator startAnimating];
             break;
+        case TARTTGuiStateLoadingTargets:
+            self.alphaView.hidden = NO;
+            self.progressBar.hidden = YES; 
+            self.scanHint.hidden = YES;
+            self.loadingIndicator.hidden = NO; 
+            self.cancelButton.hidden = NO;
+            [self.loadingIndicator startAnimating];
+            break;    
         case TARTTGuiStateScan:
             self.progressBar.hidden = YES;
             self.loadingIndicator.hidden = YES;
@@ -159,7 +169,7 @@
     }
 }
 
-
+#pragma mark TARTT
 -(void)startTARTT
 {
     [self setGuiForState:TARTTGuiStateLoading];
@@ -284,20 +294,22 @@
     if ( [[URL absoluteString] hasPrefix:@"architectsdk://targetsLoaded"] )
     {
         NSLog(@"##EVENT:%@",URL);
-        [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
+       // [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
         [self setGuiForState:TARTTGuiStateScan];  
-    }else if ( [[URL absoluteString] hasPrefix:@"architectsdk://augmentationsOnEnterFieldOfVision"])
+    }
+    else if ( [[URL absoluteString] hasPrefix:@"architectsdk://augmentationsOnEnterFieldOfVision"])
     {
         NSLog(@"##EVENT:%@",URL);
         [self setGuiForState:TARTTGuiStateHide];  
-        [self stopNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
+        //[self stopNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
     }
     else if ( [[URL absoluteString] hasPrefix:@"architectsdk://augmentationsOnExitFieldOfVision"])
     {
         NSLog(@"##EVENT:%@",URL);
         [self setGuiForState:TARTTGuiStateScan];  
-        [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
-    }else if([[URL absoluteString] hasPrefix:@"architectsdk://qrCodeTrigger"])
+        //[self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
+    }
+    else if([[URL absoluteString] hasPrefix:@"architectsdk://qrCodeTrigger"])
     {        
         NSLog(@"##EVENT:%@",URL);        
         NSDictionary *parameters = [TARTTHelper URLParameterFromURL:URL];
@@ -340,15 +352,18 @@
         [self stopNamedPlugin:kWTPluginIdentifier_BarcodePlugin];        
         NSLog(@"Channel %@ selected", channelKey);
         [self.configRequest selectChannel:channelKey andDelegate:self];
-    }else if( [[URL absoluteString] hasPrefix:@"architectsdk://readyForExecution"])
+    }
+    else if( [[URL absoluteString] hasPrefix:@"architectsdk://readyForExecution"])
     {
          NSLog(@"##EVENT:%@",URL);
         NSDictionary *worldConfig = @{ @"Key1": @"Val1" };
         NSString *json = [TARTTHelper convertToJson:worldConfig];
         NSString *javascript = [NSString stringWithFormat:@"startExperience('%@');",json];
         NSLog(@"Send Javascript: %@",javascript);
+        [self setGuiForState:TARTTGuiStateLoadingTargets];
         [self.architectView callJavaScript:javascript];
-    }else if([[URL absoluteString] hasPrefix:@"architectsdk://handleException"])
+    }
+    else if([[URL absoluteString] hasPrefix:@"architectsdk://handleException"])
     {
         //architectsdk://handleException?code=404&message=Not+found
         NSDictionary *parameters = [TARTTHelper URLParameterFromURL:URL];
