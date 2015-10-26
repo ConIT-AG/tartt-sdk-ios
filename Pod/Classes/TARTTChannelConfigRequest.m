@@ -121,13 +121,18 @@
 {
     if(self.options == nil)
         return query;
-
     [query whereKey:@"language" containedIn:[self.options getLanguage]];                
     [query whereKey:@"envType" containedIn:[self.options getEnvironment]];
     [query whereKey:@"targetApi" containedIn:[self.options getTargetApi]];    
     [query whereKey:@"targetType" containedIn:[self.options getTargetType]];  
     [query whereKey:@"state" equalTo:[self.options getState]];                 
     [query orderByDescending:@"updatedAt"];
+    
+    DebugLog(@"*** Query Parse with Parameters: Language:%@ Env:%@ TargetApi:%@ TargetType:%@ State:%@", [self.options getLanguage], 
+             [self.options getEnvironment], 
+             [self.options getTargetApi], 
+             [self.options getTargetType], 
+             [self.options getState]);
     return query;
 }
 
