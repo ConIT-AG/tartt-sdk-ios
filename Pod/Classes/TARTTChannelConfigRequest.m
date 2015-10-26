@@ -33,6 +33,7 @@
 
 
 -(void)startRequestWithDelegate:(id<TARTTChannelConfigRequestDelegate>)delegate{
+    self.canceled = NO;
     self.delegate = delegate; 
     if(![self.options isValid])
     {
@@ -82,6 +83,7 @@
 
 -(void)selectChannel:(NSString *)channelKey andDelegate:(id<TARTTChannelConfigRequestDelegate>)delegate{
     self.delegate = delegate; 
+    self.canceled = NO;
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     PFQuery *query = [PFQuery queryWithClassName:[self.options getTable]];
     //[query whereKey:@"channelKey" matchesRegex:[NSString stringWithFormat:@"(?i)ˆ%@$",channelKey] modifiers:@"i"];

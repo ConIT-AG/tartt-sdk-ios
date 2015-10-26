@@ -108,25 +108,39 @@
                                 <color key="textColor" white="0.89496527777777779" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u0E-pl-Qnq">
+                                <rect key="frame" x="190" y="350" width="221" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Cancel">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="cancelClicked:" destination="wdx-ez-57d" eventType="touchUpInside" id="kTe-fj-t3I"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="JZE-Jg-gbE" firstAttribute="top" secondItem="c7u-CL-rZ8" secondAttribute="bottom" constant="23" id="1LD-yh-ezk"/>
-                            <constraint firstItem="c7u-CL-rZ8" firstAttribute="centerX" secondItem="68C-yQ-3xz" secondAttribute="centerX" id="Lgs-hA-45k"/>
+                            <constraint firstItem="zsU-bX-Hqf" firstAttribute="leading" secondItem="68C-yQ-3xz" secondAttribute="leadingMargin" id="FB8-sQ-f27"/>
+                            <constraint firstAttribute="trailing" secondItem="vOl-YI-Aom" secondAttribute="trailing" id="Fvv-8g-wfS"/>
+                            <constraint firstItem="c7u-CL-rZ8" firstAttribute="centerY" secondItem="68C-yQ-3xz" secondAttribute="centerY" id="Kq9-ro-6QK"/>
                             <constraint firstItem="vOl-YI-Aom" firstAttribute="centerX" secondItem="JZE-Jg-gbE" secondAttribute="centerX" id="M1u-fT-5my"/>
                             <constraint firstItem="zsU-bX-Hqf" firstAttribute="centerY" secondItem="vOl-YI-Aom" secondAttribute="centerY" id="Mcf-7e-S58"/>
+                            <constraint firstItem="u0E-pl-Qnq" firstAttribute="leading" secondItem="JZE-Jg-gbE" secondAttribute="leading" id="NBp-q4-L3c"/>
+                            <constraint firstItem="u0E-pl-Qnq" firstAttribute="trailing" secondItem="JZE-Jg-gbE" secondAttribute="trailing" id="OIu-Q3-DaF"/>
                             <constraint firstItem="vOl-YI-Aom" firstAttribute="top" secondItem="FuP-0K-8fa" secondAttribute="bottom" id="P93-aJ-YWR"/>
                             <constraint firstItem="JZE-Jg-gbE" firstAttribute="centerX" secondItem="c7u-CL-rZ8" secondAttribute="centerX" id="UcR-gF-5n1"/>
                             <constraint firstItem="vOl-YI-Aom" firstAttribute="bottom" secondItem="QMU-oz-zf8" secondAttribute="top" id="e1U-sa-2XX"/>
                             <constraint firstItem="zsU-bX-Hqf" firstAttribute="centerX" secondItem="JZE-Jg-gbE" secondAttribute="centerX" id="efi-Za-vWP"/>
-                            <constraint firstItem="zsU-bX-Hqf" firstAttribute="leading" secondItem="68C-yQ-3xz" secondAttribute="leadingMargin" id="fXZ-c5-Cik"/>
-                            <constraint firstItem="c7u-CL-rZ8" firstAttribute="centerY" secondItem="68C-yQ-3xz" secondAttribute="centerY" id="nWX-X3-OlV"/>
-                            <constraint firstItem="vOl-YI-Aom" firstAttribute="leading" secondItem="68C-yQ-3xz" secondAttribute="leading" id="sXI-m4-xeu"/>
+                            <constraint firstItem="vOl-YI-Aom" firstAttribute="leading" secondItem="68C-yQ-3xz" secondAttribute="leading" id="n2W-jm-2my"/>
+                            <constraint firstItem="u0E-pl-Qnq" firstAttribute="top" secondItem="zsU-bX-Hqf" secondAttribute="bottom" constant="8" symbolic="YES" id="xXi-pa-O7r"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="alphaView" destination="vOl-YI-Aom" id="s6O-Hm-bBt"/>
+                        <outlet property="cancelButton" destination="u0E-pl-Qnq" id="H6P-YE-Kzq"/>
                         <outlet property="loadingIndicator" destination="c7u-CL-rZ8" id="Q0h-RY-Gnj"/>
                         <outlet property="progressBar" destination="JZE-Jg-gbE" id="xMe-Ib-bFU"/>
                         <outlet property="scanHint" destination="zsU-bX-Hqf" id="om4-9F-IYc"/>

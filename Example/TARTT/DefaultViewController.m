@@ -18,6 +18,8 @@
 @property (nonatomic, strong) TARTTChannel *channel;     
 @property (nonatomic, strong) TARTTChannelConfigRequest *configRequest;
 @property (nonatomic, strong) TARTTChannelDownloader *downloader;
+@property (nonatomic) BOOL multipleWorldsAvailable;
+@property (nonatomic) BOOL qrScannerShouldRun;
 
 @end
 
@@ -85,24 +87,47 @@
     }    
 }
 -(void)viewWillDisappear:(BOOL)animated{
+    NSLog(@"viewWillDisappear");
     [self.downloader cancel];
     [self.configRequest cancel];
+    [self stopNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
+    [self stopWikitudeSDKRendering];
+}
+-(void)viewDidAppear:(BOOL)animated{
+    NSLog(@"viewDidAppear");
+    [self startWikitudeSDKRendering];
+    if(self.qrScannerShouldRun)
+        [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
 }
 
+- (IBAction)cancelClicked:(id)sender {
+    [self.downloader cancel];
+    [self.configRequest cancel];
+    NSURL *architectWorldURL = [NSURL URLWithString:[TARTTHelper getDummyChannelPath]];
+    [self.architectView loadArchitectWorldFromURL:architectWorldURL withRequiredFeatures:WTFeature_2DTracking]; 
+    self.channel = nil;
+    if(self.multipleWorldsAvailable)
+        [self startTARTT];
+    else
+        [self setGuiForState:TARTTGuiStateHide];
+}
 -(void)setGuiForState:(TARTTGuiStateType)state{
     [self.view sendSubviewToBack:self.architectView];
+    self.qrScannerShouldRun = NO;
     switch (state) {
         case TARTTGuiStateHide:            
             self.progressBar.hidden = YES;
             self.alphaView.hidden = YES;
             self.scanHint.hidden = YES;
             self.loadingIndicator.hidden = YES;
+            self.cancelButton.hidden = YES;
             break;            
         case TARTTGuiStateLoading:
             self.alphaView.hidden = NO;
             self.progressBar.hidden = YES; 
             self.scanHint.hidden = YES;
             self.loadingIndicator.hidden = NO; 
+            self.cancelButton.hidden = NO;
             [self.loadingIndicator startAnimating];
             break;
         case TARTTGuiStateProgress:
@@ -110,6 +135,7 @@
             self.progressBar.hidden = NO;
             self.loadingIndicator.hidden = NO; 
             self.scanHint.hidden = YES;
+            self.cancelButton.hidden = NO;
             [self.loadingIndicator startAnimating];
             break;
         case TARTTGuiStateScan:
@@ -117,14 +143,18 @@
             self.loadingIndicator.hidden = YES;
             self.alphaView.hidden = NO;
             self.scanHint.hidden =  NO;
+            self.cancelButton.hidden = YES;
             self.scanHint.text = @"Bitte Seite scannen";
+            self.qrScannerShouldRun = YES;
             break;
         case TARTTGuiStateScanQR:
             self.progressBar.hidden = YES;
             self.loadingIndicator.hidden = YES;
             self.alphaView.hidden = NO;
             self.scanHint.hidden =  NO;
+            self.cancelButton.hidden = YES;
             self.scanHint.text = @"Bitte QR Code scannen";
+            self.qrScannerShouldRun = YES;
             break;    
     }
 }
@@ -152,15 +182,26 @@
 }
 -(void)finishedConfigRequestWithMultipleChannels
 {
+    self.multipleWorldsAvailable = YES;
     [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
     [self setGuiForState:TARTTGuiStateScanQR];
 }
 -(void)finishedConfigRequestWithError:(NSError *)error
 {
-     [self setGuiForState:TARTTGuiStateHide];
-    NSLog(@"finishedConfigRequestWithError: %@", [error localizedDescription]);
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];    
-    [alert show];
+    if(error.code == TARTTErrorNoChannelsAvailable)
+    {     
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:error.localizedDescription delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];    
+        [alert show];        
+       
+    }else{
+        NSLog(@"finishedConfigRequestWithError: %@", [error localizedDescription]);
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];    
+        [alert show];
+    }     
+}
+-(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
+    [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
+    [self setGuiForState:TARTTGuiStateScanQR];
 }
 
 #pragma mark TARTTChannelDelegate
@@ -257,13 +298,39 @@
         [self setGuiForState:TARTTGuiStateScan];  
         [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
     }else if([[URL absoluteString] hasPrefix:@"architectsdk://qrCodeTrigger"])
-    {
-        NSLog(@"##EVENT:%@",URL);
+    {        
+        NSLog(@"##EVENT:%@",URL);        
         NSDictionary *parameters = [TARTTHelper URLParameterFromURL:URL];
         NSString *code = [parameters objectForKey:@"code"];
         NSString *decoded = [code stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         parameters = [TARTTHelper URLParameterFromURL:[NSURL URLWithString:decoded]];        
-        NSString *channelKey = [parameters objectForKey:@"channelKey"];        
+        NSString *channelKey = [parameters objectForKey:@"channelKey"];
+        NSString *language = [parameters objectForKey:@"language"];
+        NSString *targetType = [parameters objectForKey:@"targetType"];
+        NSString *envType = [parameters objectForKey:@"envType"];
+        NSString *state = [parameters objectForKey:@"state"];
+        NSString *targetApi = [parameters objectForKey:@"targetApi"];
+        if(language != nil){
+            NSLog(@"Overwriting Language to %@", language);
+            [self.options addLanguage:language];
+        }
+        if(targetType != nil){
+            NSLog(@"Overwriting targetType to %@", targetType);
+            [self.options forceTargetType:targetType];
+        }
+        if(envType != nil){
+            NSLog(@"Overwriting Environment to %@", envType);
+            [self.options forceEnvironment:envType];
+        }
+        if(state != nil){
+            NSLog(@"Overwriting State to %@", state);
+            [self.options forceState:[NSNumber numberWithInteger:[state integerValue]]];
+        }
+        if(targetApi != nil){
+            NSLog(@"Overwriting Target API to %@", targetApi);
+            [self.options addTargetApi:[NSNumber numberWithInteger:[targetApi integerValue]]];
+        }
+        
         if([channelKey isEqualToString:self.channel.config.channelKey])
         {
             NSLog(@"Ignoring QR-Code because its already loaded or still loading");
@@ -278,10 +345,38 @@
          NSLog(@"##EVENT:%@",URL);
         NSDictionary *worldConfig = @{ @"Key1": @"Val1" };
         NSString *json = [TARTTHelper convertToJson:worldConfig];
-        NSString *javascript = [NSString stringWithFormat:@"startWorld('%@');",json];
+        NSString *javascript = [NSString stringWithFormat:@"startExperience('%@');",json];
         NSLog(@"Send Javascript: %@",javascript);
         [self.architectView callJavaScript:javascript];
+    }else if([[URL absoluteString] hasPrefix:@"architectsdk://handleException"])
+    {
+        //architectsdk://handleException?code=404&message=Not+found
+        NSDictionary *parameters = [TARTTHelper URLParameterFromURL:URL];
+        NSLog(@"Error from within the AR - World: Code:%@ Message:%@",[parameters objectForKey:@"code"], [parameters objectForKey:@"message"]);
+        
     }
+    
+    //////////////////////
+    // SAMPLE GOOGLE ANALYTICS IMPL
+    /////////////////////////
+    /*
+    if([[URL absoluteString] hasPrefix:@"architectsdk://trackEvent"])
+    {
+        //architectsdk://trackEvent?ga_action=loadDetailTargets&ga_label=true
+        NSDictionary *parameters = [TARTTHelper URLParameterFromURL:URL];
+        NSNumber *val = [NSNumber numberWithInteger:[[parameters objectForKey:@"ga_value"] integerValue]];
+        [[GAI sharedInstance].defaultTracker send:[[GAIDictionaryBuilder createEventWithCategory:@"category"
+                                                                                          action:[parameters objectForKey:@"ga_action"]
+                                                                                           label:[parameters objectForKey:@"ga_label"]
+                                                                                           value:val] build]];
+    }else{
+        NSDictionary *parameters = [TARTTHelper URLParameterFromURL:URL];
+        [[GAI sharedInstance].defaultTracker send:[[GAIDictionaryBuilder createEventWithCategory:@"category"
+                                                                                          action:[URL host]
+                                                                                           label:[parameters description]
+                                                                                           value:[NSNumber numberWithInt:1]] build]];
+    }*/   
+
 }
 - (void)architectView:(WTArchitectView *)architectView didFinishLoadArchitectWorldNavigation:(WTNavigation *)navigation {
     /* Architect World did finish loading */

@@ -20,11 +20,11 @@ PODS:
   - AFNetworking/UIKit (2.6.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - Bolts/Tasks (1.3.0)
+  - Bolts/Tasks (1.4.0)
   - Kiwi (2.4.0)
-  - Parse (1.9.0):
-    - Bolts/Tasks (>= 1.3.0)
-  - TARTT (0.1.0):
+  - Parse (1.9.1):
+    - Bolts/Tasks (>= 1.4.0)
+  - TARTT (1.0.0):
     - AFNetworking (~> 2.0)
     - Parse
 
@@ -38,9 +38,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: 8e4e60500beb8bec644cf575beee72990a76d399
-  Bolts: 805a4a87413e49d4a0c2b7d469084cbc46b09342
+  Bolts: 0e9bce58b9b9f5e8a7a4d47b16d2fabec289072b
   Kiwi: f49c9d54b28917df5928fe44968a39ed198cb8a8
-  Parse: 712efbc476d4f47b0f96b70db7e53101575753aa
-  TARTT: 20636be1d443d94a00821a53c49e5e9d5445bebf
+  Parse: 54a965c8c19a6dde90284ab654dbcc77ef8c001b
+  TARTT: 00b190b9d86208aff39cadcb8000fcbc7af04158
 
 COCOAPODS: 0.38.2

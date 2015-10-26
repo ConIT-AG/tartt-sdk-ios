@@ -26,14 +26,17 @@ typedef NS_ENUM(NSInteger, TARTTGuiStateType) {
 @interface DefaultViewController : UIViewController<TARTTChannelDownloaderDelegate, 
                                                         TARTTChannelConfigRequestDelegate, 
                                                         WTArchitectViewDelegate, 
-                                                        WTArchitectViewDebugDelegate>
+                                                        WTArchitectViewDebugDelegate,
+                                                        UIAlertViewDelegate>
 
 @property (nonatomic) WTArchitectView *architectView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;
 @property (weak, nonatomic) IBOutlet UIProgressView *progressBar;
 @property (weak, nonatomic) IBOutlet UIView *alphaView;
 @property (weak, nonatomic) IBOutlet UILabel *scanHint;
+@property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 
 @property (nonatomic) TARTTRequestOptions *options;
+- (IBAction)cancelClicked:(id)sender;
 
 @end
