@@ -54,7 +54,7 @@ Then download the Wikitude Javascript API SDK from `http://www.wikitude.com/down
         TARTTChannelConfigRequest *configRequest = [[TARTTChannelConfigRequest alloc] initWithApplicationID:@"*** PARSE APPLICATION KEY ***" andClientKey:@"***PARSE CLIENT KEY ***" andOptions:options];
         [configRequest startRequestWithDelegate:self];
 
-7. **Start Downloading Channel Files**
+7. **TARTTChannelConfigRequestDelegate**
     
     The delegation method `finishedConfigRequestWithSuccess` delivers a `TARTTConfig` object which is needed to start the download of the actual needed files
 
@@ -67,6 +67,27 @@ Then download the Wikitude Javascript API SDK from `http://www.wikitude.com/down
             [downloader startDownloadWithDelegate:self];
         }
 
+8. **Download Events**
+    
+    While TARTT is downloading there a several delegation methods to show loading and a progress
+    
+    * 'channelDownloadStarted' only fires if there is really something to download
+    * 'channelDownloadProgress:(long)bytesLoaded ofTotal:(long)bytesTotal' for progress information
+    * 'channelDownloadFinishedWithSuccess:(TARTTChannel *)channel' as soon as the world is downloaded completly
+
+9. **TARTTChannelDownloaderDelegate**
+    
+    When the download is finished you are ready to let wikitude know about it and start the AR-World
+
+        -(void)channelDownloadFinishedWithSuccess:(TARTTChannel *)channel
+        {    
+            NSError *error;
+            [[TARTTChannelManager defaultManager] cleanUpChannel:channel error:&error];   
+            // Path to Channel Data
+            NSURL *architectWorldURL = [NSURL URLWithString:[channel.currentPath stringByAppendingPathComponent:@"index.html"]];
+            // Load Channel
+            self.architectWorldNavigation =  [self.architectView loadArchitectWorldFromURL:architectWorldURL withRequiredFeatures:WTFeature_2DTracking];     
+        }
 
 
 ## Author
