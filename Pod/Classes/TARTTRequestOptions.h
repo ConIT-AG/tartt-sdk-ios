@@ -83,6 +83,13 @@ typedef NS_ENUM(NSInteger, TARTTEnvironment) {
 -(void)forceState:(NSNumber *)state;
 
 /*!
+ @abstract set if the request should ignore multiple available Channels for a setting
+ and download the latest one directly witout QR-Code Scanning options
+ @param shouldIgnore Yes if multi channels should be ignored... Default is NO
+ */
+-(void)changeIgnoreMultiChannels:(BOOL)shouldIgnore;
+
+/*!
  @abstract set the channel Key if explicit if there are more than one available
  @param channelKey the identiefier of the channel
  */
@@ -103,7 +110,7 @@ typedef NS_ENUM(NSInteger, TARTTEnvironment) {
 -(NSNumber *)getState;
 -(NSString *)getChannelKey;
 -(NSString *)getTable;
-
+-(BOOL)shouldIgnoreMultiChannels;
 
 /*!
  @abstract is the options object in a valid state

@@ -17,6 +17,7 @@
 @property (nonatomic, strong) NSNumber *state;
 @property (nonatomic, strong) NSString *channelKey;
 @property (nonatomic, strong) NSString *table;
+@property (nonatomic, assign) BOOL shouldIgnoreMultiChannel;
 @end
 
 @implementation TARTTRequestOptions
@@ -30,6 +31,7 @@
         self.targetType = [NSMutableArray new];
         [self changeState:TARTTStateActive];
         self.channelKey = nil;
+        self.shouldIgnoreMultiChannel = NO;
         self.table = @"world";
     }
     return self;
@@ -79,6 +81,9 @@
 -(void)changeTable:(NSString *)table{
     self.table = table;
 }
+-(void)changeIgnoreMultiChannels:(BOOL)shouldIgnore{
+    self.shouldIgnoreMultiChannel = shouldIgnore;
+}
 -(NSArray *)getLanguage{
     return self.languages;
 }
@@ -99,6 +104,9 @@
 }
 -(NSString *)getTable{
     return self.table;
+}
+-(BOOL)shouldIgnoreMultiChannels{
+    return self.shouldIgnoreMultiChannel;
 }
 -(BOOL)isValid{
     return ([self.languages count] > 0 &&

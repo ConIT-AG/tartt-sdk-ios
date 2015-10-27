@@ -82,7 +82,7 @@
                                                                      andClientKey:kParseClientKey 
                                                                        andOptions:options];   
    
-    [self.configRequest startRequestWithDelegate:self  ignoreMultipleChannels:NO];
+    [self.configRequest startRequestWithDelegate:self];
     self.status.text = @"Request startet";
 }
 

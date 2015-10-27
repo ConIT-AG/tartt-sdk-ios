@@ -177,7 +177,7 @@
     self.configRequest = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey 
                                                                      andClientKey:kParseClientKey 
                                                                        andOptions:self.options];
-    [self.configRequest startRequestWithDelegate:self  ignoreMultipleChannels:YES];
+    [self.configRequest startRequestWithDelegate:self];
 }
 
 
@@ -358,7 +358,7 @@
          NSLog(@"##EVENT:%@",URL);
         NSDictionary *worldConfig = @{ @"Key1": @"Val1" };
         NSString *json = [TARTTHelper convertToJson:worldConfig];
-        NSString *javascript = [NSString stringWithFormat:@"startExperience('%@');",json];
+        NSString *javascript = [NSString stringWithFormat:@"startWorld('%@');",json];
         NSLog(@"Send Javascript: %@",javascript);
         [self setGuiForState:TARTTGuiStateLoadingTargets];
         [self.architectView callJavaScript:javascript];

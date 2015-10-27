@@ -26,7 +26,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 4;
+    return 5;
 }
 
 
@@ -47,6 +47,10 @@
     }
     else if(indexPath.row == 3)
     {
+        cell.textLabel.text = @"Ignore Multiple Channels";
+    }
+    else if(indexPath.row == 4)
+    {
         cell.textLabel.text = @"No Channels Available";
     }
 
@@ -66,6 +70,10 @@
         [self performSegueWithIdentifier:@"default" sender:@"mutli"];
     }
     else if(indexPath.row == 3)
+    {
+        [self performSegueWithIdentifier:@"default" sender:@"ignore"];
+    }
+    else if(indexPath.row == 4)
     {
         [self performSegueWithIdentifier:@"default" sender:@"no"];
     }
@@ -92,6 +100,17 @@
         [options addEnvironment:TARTTEnvironmentProduction];
         [options addTargetApi:[NSNumber numberWithInt:3]];
         [options addTargetType:TARTTTargetTypeMainAndDetail];
+        controller.options = options;
+    }
+    else if([key isEqualToString:@"ignore"])
+    {
+        DefaultViewController *controller = (DefaultViewController *)segue.destinationViewController;
+        TARTTRequestOptions *options = [TARTTRequestOptions new];
+        [options addLanguage:@"de"];
+        [options addEnvironment:TARTTEnvironmentProduction];
+        [options addTargetApi:[NSNumber numberWithInt:3]];
+        [options addTargetType:TARTTTargetTypeMainAndDetail];
+        [options changeIgnoreMultiChannels:YES];
         controller.options = options;
     }
     else if([key isEqualToString:@"no"])

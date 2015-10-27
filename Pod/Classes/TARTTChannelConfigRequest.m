@@ -32,7 +32,7 @@
 }
 
 
--(void)startRequestWithDelegate:(id<TARTTChannelConfigRequestDelegate>)delegate ignoreMultipleChannels:(BOOL)ignoreMulti
+-(void)startRequestWithDelegate:(id<TARTTChannelConfigRequestDelegate>)delegate
 {
     self.canceled = NO;
     self.delegate = delegate; 
@@ -64,11 +64,13 @@
                                                                   userInfo:@{NSLocalizedDescriptionKey: @"No Channels available"}] 
                                     waitUntilDone:YES];
                 
-            }else if([objects count] > 1 && !ignoreMulti)
+            }else if([objects count] > 1 && ![self.options shouldIgnoreMultiChannels])
             {
                 [self performSelectorOnMainThread:@selector(invokeFinishedConfigRequestMultipleChannels) withObject:nil waitUntilDone:YES];
             }
             else{
+                if([objects count] > 1)
+                    DebugLog(@"*** ignoring mutliple Channels and start download the latest");
                 PFObject *channel = [objects firstObject];
                 [self selectChannel:[channel objectForKey:@"channelKey"] andDelegate:self.delegate];
             }
@@ -130,10 +132,10 @@
     [query whereKey:@"state" equalTo:[self.options getState]];                 
     [query orderByDescending:@"updatedAt"];
     
-    DebugLog(@"*** Query Parse with Parameters: Language:%@ Env:%@ TargetApi:%@ TargetType:%@ State:%@", [self.options getLanguage], 
-             [self.options getEnvironment], 
-             [self.options getTargetApi], 
-             [self.options getTargetType], 
+    DebugLog(@"*** Query Parse with Parameters: Language:%@ Env:%@ TargetApi:%@ TargetType:%@ State:%@", [[self.options getLanguage] firstObject], 
+             [[self.options getEnvironment] firstObject], 
+             [[self.options getTargetApi] firstObject], 
+             [[self.options getTargetType] firstObject], 
              [self.options getState]);
     return query;
 }

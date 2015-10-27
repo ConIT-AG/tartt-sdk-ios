@@ -43,7 +43,7 @@
     [options changeState:TARTTStateActive];
     
     TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey andOptions:options];
-    [request startRequestWithDelegate:self ignoreMultipleChannels:NO];    
+    [request startRequestWithDelegate:self];    
    
      NSDate *untilDate;
     while(!self.isDone){
@@ -64,9 +64,10 @@
     [options addTargetApi:[NSNumber numberWithInt:3]];
     [options addTargetType:TARTTTargetTypeMainAndDetail];
     [options changeState:TARTTStateActive];
+    [options changeIgnoreMultiChannels:YES];
     
     TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey andOptions:options];
-    [request startRequestWithDelegate:self ignoreMultipleChannels:YES];    
+    [request startRequestWithDelegate:self];    
     
     NSDate *untilDate;
     while(!self.isDone){
@@ -96,7 +97,7 @@
     TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey andOptions:options];
     self.isDone = NO;
     self.isMulti = NO;
-    [request startRequestWithDelegate:self ignoreMultipleChannels:NO];
+    [request startRequestWithDelegate:self];
     [request cancel];
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.5]];
     XCTAssertNil(self.channel);
@@ -111,7 +112,7 @@
     [options addTargetType:TARTTTargetTypeMainAndDetail];
     [options changeState:TARTTStateActive];
     TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey andOptions:options];
-    [request startRequestWithDelegate:self ignoreMultipleChannels:NO];
+    [request startRequestWithDelegate:self];
     
     self.isDone = NO;
     NSDate *untilDate;
@@ -136,7 +137,7 @@
     TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey 
                                                                                      andClientKey:kParseClientKey 
                                                                                        andOptions:options];  
-   [request startRequestWithDelegate:self ignoreMultipleChannels:NO];
+   [request startRequestWithDelegate:self];
     
     self.isDone = NO;
     NSDate *untilDate;

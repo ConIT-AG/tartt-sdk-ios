@@ -59,7 +59,7 @@
  @param delegate the delegate that gets informed 
  @param ignoreMulti directly starts the download of the latest channel if set to YES
  */
--(void)startRequestWithDelegate:(id<TARTTChannelConfigRequestDelegate>)delegate ignoreMultipleChannels:(BOOL)ignoreMulti;
+-(void)startRequestWithDelegate:(id<TARTTChannelConfigRequestDelegate>)delegate;
 
 /*!
  @abstract if multiple channels are available this function is used to select the one scanned by a QR Scanner
