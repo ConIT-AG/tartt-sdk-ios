@@ -54,7 +54,7 @@ Then download the Wikitude Javascript API SDK from `http://www.wikitude.com/down
         TARTTChannelConfigRequest *configRequest = [[TARTTChannelConfigRequest alloc] initWithApplicationID:@"*** PARSE APPLICATION KEY ***" andClientKey:@"***PARSE CLIENT KEY ***" andOptions:options];
         [configRequest startRequestWithDelegate:self];
 
-7. **TARTTChannelConfigRequestDelegate**
+7. **Request Finished**
     
     The delegation method `finishedConfigRequestWithSuccess` delivers a `TARTTConfig` object which is needed to start the download of the actual needed files
 
@@ -71,11 +71,11 @@ Then download the Wikitude Javascript API SDK from `http://www.wikitude.com/down
     
     While TARTT is downloading there a several delegation methods to show loading and a progress
     
-    * 'channelDownloadStarted' only fires if there is really something to download
-    * 'channelDownloadProgress:(long)bytesLoaded ofTotal:(long)bytesTotal' for progress information
-    * 'channelDownloadFinishedWithSuccess:(TARTTChannel *)channel' as soon as the world is downloaded completly
+    * `channelDownloadStarted` only fires if there is really something to download
+    * `channelDownloadProgress:(long)bytesLoaded ofTotal:(long)bytesTotal` for progress information
+    * `channelDownloadFinishedWithSuccess:(TARTTChannel *)channel` as soon as the world is downloaded completly
 
-9. **TARTTChannelDownloaderDelegate**
+9. **Download Finished**
     
     When the download is finished you are ready to let wikitude know about it and start the AR-World
 
@@ -89,6 +89,40 @@ Then download the Wikitude Javascript API SDK from `http://www.wikitude.com/down
             self.architectWorldNavigation =  [self.architectView loadArchitectWorldFromURL:architectWorldURL withRequiredFeatures:WTFeature_2DTracking];     
         }
 
+10. **Initialising the World**
+    
+    Wikitude lets you know about events from within the world over the `-(void)architectView:(WTArchitectView *)architectView invokedURL:(NSURL *)URL` method.
+    In here you have to listen to 'readyForExecution' and then start the experience manually by sending a javascript snippet back to wikitude like so:
+
+        if( [[URL absoluteString] hasPrefix:@"architectsdk://readyForExecution"])
+        {            
+            NSDictionary *worldConfig = @{ @"Example Key1": @"Example Val1" };
+            NSString *json = [TARTTHelper convertToJson:worldConfig];
+            NSString *javascript = [NSString stringWithFormat:@"startExperience('%@');",json];
+            [self.architectView callJavaScript:javascript];
+        }
+    
+    After the targets in the world are loaded you get the `targetsLoaded` event in the same method as above.
+    Now you are all set and should hide any loading indicators and progress bars.
+
+        if ( [[URL absoluteString] hasPrefix:@"architectsdk://targetsLoaded"] )
+        {
+            // Now Loading is completed and that should be refelcted in your GUI
+        }
+    
+11. **Communicating with the World**
+    
+    Wikitude informs you about pages that have been found in the camarea or if the page lost its focus. 
+    You can reflect this to the GUI by showing appropriate message like 'Please scan page'. Hide this hint again as soon as a page is found.
+
+        if ( [[URL absoluteString] hasPrefix:@"architectsdk://augmentationsOnEnterFieldOfVision"])
+        {
+            // we entered a page. So hide any overlay 
+        }
+        else if ( [[URL absoluteString] hasPrefix:@"architectsdk://augmentationsOnExitFieldOfVision"])
+        {
+            // we lost focus of a page. So show an overlay with a hint for the user 
+        }
 
 ## Author
 
