@@ -32,7 +32,8 @@
 }
 
 
--(void)startRequestWithDelegate:(id<TARTTChannelConfigRequestDelegate>)delegate{
+-(void)startRequestWithDelegate:(id<TARTTChannelConfigRequestDelegate>)delegate ignoreMultipleChannels:(BOOL)ignoreMulti
+{
     self.canceled = NO;
     self.delegate = delegate; 
     if(![self.options isValid])
@@ -63,7 +64,7 @@
                                                                   userInfo:@{NSLocalizedDescriptionKey: @"No Channels available"}] 
                                     waitUntilDone:YES];
                 
-            }else if([objects count] > 1)
+            }else if([objects count] > 1 && !ignoreMulti)
             {
                 [self performSelectorOnMainThread:@selector(invokeFinishedConfigRequestMultipleChannels) withObject:nil waitUntilDone:YES];
             }
@@ -86,7 +87,6 @@
     self.canceled = NO;
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     PFQuery *query = [PFQuery queryWithClassName:[self.options getTable]];
-    //[query whereKey:@"channelKey" matchesRegex:[NSString stringWithFormat:@"(?i)ˆ%@$",channelKey] modifiers:@"i"];
     [query whereKey:@"channelKey" equalTo:channelKey];
     query = [self addOptionsToQuery:query];
     [query selectKeys:@[@"channelKey",@"content"]];

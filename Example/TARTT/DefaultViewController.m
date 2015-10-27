@@ -177,7 +177,7 @@
     self.configRequest = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey 
                                                                      andClientKey:kParseClientKey 
                                                                        andOptions:self.options];
-    [self.configRequest startRequestWithDelegate:self];
+    [self.configRequest startRequestWithDelegate:self  ignoreMultipleChannels:YES];
 }
 
 

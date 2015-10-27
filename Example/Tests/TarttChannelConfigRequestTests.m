@@ -43,7 +43,7 @@
     [options changeState:TARTTStateActive];
     
     TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey andOptions:options];
-    [request startRequestWithDelegate:self];    
+    [request startRequestWithDelegate:self ignoreMultipleChannels:NO];    
    
      NSDate *untilDate;
     while(!self.isDone){
@@ -52,6 +52,35 @@
     }
     XCTAssertNil(self.channel);
     XCTAssertEqual(self.isMulti, YES);
+}
+-(void)testParseLatestConfigOfSetting
+{
+    self.isDone = NO;
+    self.isMulti = NO;
+    
+    TARTTRequestOptions *options = [TARTTRequestOptions new];
+    [options addLanguage:@"DE"];
+    [options addEnvironment:TARTTEnvironmentProduction];
+    [options addTargetApi:[NSNumber numberWithInt:3]];
+    [options addTargetType:TARTTTargetTypeMainAndDetail];
+    [options changeState:TARTTStateActive];
+    
+    TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey andOptions:options];
+    [request startRequestWithDelegate:self ignoreMultipleChannels:YES];    
+    
+    NSDate *untilDate;
+    while(!self.isDone){
+        untilDate = [NSDate dateWithTimeIntervalSinceNow:1.0];
+        [[NSRunLoop currentRunLoop] runUntilDate:untilDate];
+    }
+    XCTAssertEqual(self.isMulti, NO);
+    
+    XCTAssertNotNil(self.channel);
+    NSDictionary *content = [self.channel objectForKey:@"content"];
+    XCTAssertNotNil(content);
+    XCTAssertGreaterThan([[content objectForKey:@"files"] count], 2);
+
+
 }
 
 
@@ -67,7 +96,7 @@
     TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey andOptions:options];
     self.isDone = NO;
     self.isMulti = NO;
-    [request startRequestWithDelegate:self];
+    [request startRequestWithDelegate:self ignoreMultipleChannels:NO];
     [request cancel];
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.5]];
     XCTAssertNil(self.channel);
@@ -82,7 +111,7 @@
     [options addTargetType:TARTTTargetTypeMainAndDetail];
     [options changeState:TARTTStateActive];
     TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey andClientKey:kParseClientKey andOptions:options];
-    [request startRequestWithDelegate:self];
+    [request startRequestWithDelegate:self ignoreMultipleChannels:NO];
     
     self.isDone = NO;
     NSDate *untilDate;
@@ -107,7 +136,7 @@
     TARTTChannelConfigRequest *request = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey 
                                                                                      andClientKey:kParseClientKey 
                                                                                        andOptions:options];  
-   [request startRequestWithDelegate:self];
+   [request startRequestWithDelegate:self ignoreMultipleChannels:NO];
     
     self.isDone = NO;
     NSDate *untilDate;

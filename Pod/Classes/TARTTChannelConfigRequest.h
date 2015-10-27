@@ -55,10 +55,11 @@
 -(instancetype)initWithApplicationID:(NSString*)applicationID andClientKey:(NSString *)clientKey andOptions:(TARTTRequestOptions *)options;
 
 /*!
- @abstract triggers the actual call to parse.com
- @param delegate the delegate which implements TARTTChannelConfigRequestDelegate
+ @abstract request the latest Channel from parse.com with given options
+ @param delegate the delegate that gets informed 
+ @param ignoreMulti directly starts the download of the latest channel if set to YES
  */
--(void)startRequestWithDelegate:(id<TARTTChannelConfigRequestDelegate>)delegate;
+-(void)startRequestWithDelegate:(id<TARTTChannelConfigRequestDelegate>)delegate ignoreMultipleChannels:(BOOL)ignoreMulti;
 
 /*!
  @abstract if multiple channels are available this function is used to select the one scanned by a QR Scanner
