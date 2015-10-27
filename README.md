@@ -35,20 +35,37 @@ Then download the Wikitude Javascript API SDK from `http://www.wikitude.com/down
     
 
         NSURL *architectWorldURL = [NSURL URLWithString:[TARTTHelper getDummyChannelPath]];
-        [self.architectView loadArchitectWorldFromURL:architectWorldURL withRequiredFeatures:WTFeature_2DTracking]; 
+        [architectView loadArchitectWorldFromURL:architectWorldURL withRequiredFeatures:WTFeature_2DTracking]; 
 
 
 5. **Prepare Request Options**
-    To get the right channel information TARTT will connect to parse.com and retrieve the needed information. Her
+    To get the right channel information TARTT will connect to parse.com and retrieve the needed information. 
+        
+        TARTTRequestOptions *options = [TARTTRequestOptions new];
+        [options addLanguage:@"de"];
+        [options addEnvironment:TARTTEnvironmentProduction];
+        [options addTargetApi:[NSNumber numberWithInt:3]];
+        [options addTargetType:TARTTTargetTypeMainAndDetail];
 
 6. **Start Config Request**
     
     To get the available Channel information we use the following lines. Make sure your viewcontroller implementes the `TARTTChannelConfigRequestDelegate` protocol.
 
-        self.configRequest = [[TARTTChannelConfigRequest alloc] initWithApplicationID:@"*** PARSE APPLICATION KEY ***" andClientKey:@"***PARSE CLIENT KEY ***" andOptions:self.options];
-        [self.configRequest startRequestWithDelegate:self];
+        TARTTChannelConfigRequest *configRequest = [[TARTTChannelConfigRequest alloc] initWithApplicationID:@"*** PARSE APPLICATION KEY ***" andClientKey:@"***PARSE CLIENT KEY ***" andOptions:options];
+        [configRequest startRequestWithDelegate:self];
 
+7. **Start Downloading Channel Files**
+    
+    The delegation method `finishedConfigRequestWithSuccess` delivers a `TARTTConfig` object which is needed to start the download of the actual needed files
 
+        -(void)finishedConfigRequestWithSuccess:(TARTTConfig *)config
+        {   
+            NSError *error;
+            // prepares all folders and old version that might have been downloaded before
+            TARTTChannel *channel = [[TARTTChannelManager defaultManager] prepareChannelWithConfig:config error:&error];   
+            TARTTChannelDownloader *downloader = [[TARTTChannelDownloader alloc] initWithChannel:self.channel];
+            [downloader startDownloadWithDelegate:self];
+        }
 
 
 
