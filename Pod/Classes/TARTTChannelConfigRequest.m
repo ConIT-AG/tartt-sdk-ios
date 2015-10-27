@@ -102,8 +102,8 @@
             if([objects count] == 0){
                 [self performSelectorOnMainThread:@selector(invokeFinishedConfigRequestWithError:) 
                                        withObject:[NSError errorWithDomain:TARTTErrorDomain
-                                                                      code:TARTTErrorNoChannelsAvailable
-                                                                  userInfo:@{NSLocalizedDescriptionKey: @"No Channels available"}] 
+                                                                      code:TARTTErrorCouldNotSelectChannel
+                                                                  userInfo:@{NSLocalizedDescriptionKey: @"Channel could not be selected"}] 
                                     waitUntilDone:YES];
             }
             else{

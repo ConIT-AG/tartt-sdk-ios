@@ -124,10 +124,6 @@ Then download the Wikitude Javascript API SDK from `http://www.wikitude.com/down
             // we lost focus of a page. So show an overlay with a hint for the user 
         }
 
-## Author
-
-Takondi.com
-
 ## License
 
 TARTT is available under the MIT license. See the LICENSE file for more info.

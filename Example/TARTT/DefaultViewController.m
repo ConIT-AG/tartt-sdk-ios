@@ -220,11 +220,18 @@
 -(void)finishedConfigRequestWithError:(NSError *)error
 {
     if(error.code == TARTTErrorNoChannelsAvailable)
-    {     
+    {   
+        NSLog(@"TARTTErrorNoChannelsAvailable: %@", [error localizedDescription]);
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:error.localizedDescription delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];    
         [alert show];        
        
-    }else{
+    }else if(error.code == TARTTErrorCouldNotSelectChannel)
+    {
+        NSLog(@"TARTTErrorCouldNotSelectChannel: %@", [error localizedDescription]);
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:error.localizedDescription delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];    
+        [alert show];         
+    }
+    else{
         NSLog(@"finishedConfigRequestWithError: %@", [error localizedDescription]);
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];    
         [alert show];
@@ -379,7 +386,7 @@
          NSLog(@"##EVENT:%@",URL);
         NSDictionary *worldConfig = @{ @"Key1": @"Val1" };
         NSString *json = [TARTTHelper convertToJson:worldConfig];
-        NSString *javascript = [NSString stringWithFormat:@"startWorld('%@');",json];
+        NSString *javascript = [NSString stringWithFormat:@"startExperience('%@');",json];
         NSLog(@"Send Javascript: %@",javascript);
         [self setGuiForState:TARTTGuiStateLoadingTargets];
         [self.architectView callJavaScript:javascript];

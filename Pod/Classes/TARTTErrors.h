@@ -24,5 +24,7 @@ typedef NS_ENUM(NSInteger, TARTTErrorType) {
     /* error while trying to create, move or copy files/dirs */
     TARTTErrorCache,
     /* missing arguments in the parse config request */
-    TARTTErrorMissingArguments
+    TARTTErrorMissingArguments,
+    /* the channel that was selected could not be loaded */
+    TARTTErrorCouldNotSelectChannel,
 };
