@@ -31,12 +31,24 @@ Then download the Wikitude Javascript API SDK from `http://www.wikitude.com/down
 
 4. **Loading Dummy Architect World**
     
-    Wikitude needs a world to start rendering properly. To show the camera even before the world is downloaded we can send a simple dummy world to wikitude like this
+    Wikitude needs a world to start rendering properly. To show the camera even before the world is downloaded we use a simple dummy world like this
     
-    ```
-    NSURL *architectWorldURL = [NSURL URLWithString:[TARTTHelper getDummyChannelPath]];
-    [self.architectView loadArchitectWorldFromURL:architectWorldURL withRequiredFeatures:WTFeature_2DTracking]; 
-    ```
+
+        NSURL *architectWorldURL = [NSURL URLWithString:[TARTTHelper getDummyChannelPath]];
+        [self.architectView loadArchitectWorldFromURL:architectWorldURL withRequiredFeatures:WTFeature_2DTracking]; 
+
+
+5. **Prepare Request Options**
+    To get the right channel information TARTT will connect to parse.com and retrieve the needed information. Her
+
+6. **Start Config Request**
+    
+    To get the available Channel information we use the following lines. Make sure your viewcontroller implementes the `TARTTChannelConfigRequestDelegate` protocol.
+
+        self.configRequest = [[TARTTChannelConfigRequest alloc] initWithApplicationID:@"*** PARSE APPLICATION KEY ***" andClientKey:@"***PARSE CLIENT KEY ***" andOptions:self.options];
+        [self.configRequest startRequestWithDelegate:self];
+
+
 
 
 
