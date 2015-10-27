@@ -6,6 +6,7 @@
 //  Copyright © 2015 wh33ler. All rights reserved.
 //
 
+#import <AVFoundation/AVFoundation.h>
 #import "DefaultViewController.h"
 #import "DefaultViewController+PluginLoading.h"
 #import "Constants.h"
@@ -28,19 +29,45 @@
 #pragma mark ViewEvents
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationItem.title = @"Default";    
+    self.navigationItem.title = @"Default";       
     
+    NSError *deviceNotSupportedError = nil;
+    if ( [WTArchitectView isDeviceSupportedForRequiredFeatures:WTFeature_Geo | WTFeature_2DTracking error:&deviceNotSupportedError] ) 
+    {
+        AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+        if(authStatus == AVAuthorizationStatusAuthorized) 
+        {
+            [self setUpWikitude];
+        }
+        else if(authStatus == AVAuthorizationStatusDenied)
+        {
+            [self cameraAccessDenied];
+        } 
+        else if(authStatus == AVAuthorizationStatusNotDetermined)
+        {
+            // Ask the user
+            [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+                if(granted){
+                    [self performSelectorOnMainThread:@selector(setUpWikitude) withObject:nil waitUntilDone:NO];
+                } else {
+                    [self performSelectorOnMainThread:@selector(cameraAccessDenied) withObject:nil waitUntilDone:NO];
+                }
+            }];
+        }       
+    } else {
+        NSLog(@"device is not supported - reason: %@", [deviceNotSupportedError localizedDescription]);
+        
+        [self setGuiForState:TARTTGuiStateHide];       
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:deviceNotSupportedError.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];    
+        [alert show];
+
+    }    
+    // register Notifications
     [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) 
      {        
-         /* When the application starts for the first time, several UIAlert's might be shown to ask the user for camera and/or GPS access.
-          Because the WTArchitectView is paused when the application resigns active (See line 86), also Architect JavaScript evaluation is interrupted.
-          To resume properly from the inactive state, the Architect World has to be reloaded if and only if an active Architect World load request was active at the time the application resigned active.
-          This loading state/interruption can be detected using the navigation object that was returned from the -loadArchitectWorldFromURL:withRequiredFeatures method.
-          */
          if (self.architectWorldNavigation.wasInterrupted) {
              [self.architectView reloadArchitectWorld];
-         }        
-         /* Standard WTArchitectView rendering resuming after the application becomes active again */
+         }                 
          [self startWikitudeSDKRendering];
      }];
     [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillResignActiveNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
@@ -48,44 +75,7 @@
         /* Standard WTArchitectView rendering suspension when the application resignes active */
         [self stopWikitudeSDKRendering];
     }];
-    
-    NSError *deviceNotSupportedError = nil;
-    if ( [WTArchitectView isDeviceSupportedForRequiredFeatures:WTFeature_Geo | WTFeature_2DTracking error:&deviceNotSupportedError] ) 
-    {
-        // Setup View after Download
 
-        self.architectView = [WikitudeManager architectView];
-        [self.architectView setFrame:self.view.bounds];
-        self.architectView.delegate = self;
-        self.architectView.debugDelegate = self;
-        [self.architectView setLicenseKey:@"otr/l3HJpaElIt8Bv36DNdxrVvywnXxhvMsMFReyvrL2Jlr54vetxIAYOi9V3PUgT7S9RaK0NC3fq+1Pkt+Twy6SjmQme9ginF30aixB+yDZLabipN3K421a3IzxP7f68pI76j+EbTz/B+O6fc1KKHJl8/CERXUScIEKhcp9XHBTYWx0ZWRfX0nZMIeLg6TgFJ4TrRDHDsuicw/ev3ghNBuwGKzJ1q29WCcOTv0dyKVFZDR2gE9lVULtncj3sckaZBayY6rbfO8oZMn1r/5lNFZjF1NjvuJlvp5q8GOS0siRRYs8tGzoAfR7X2xwNocrkmPMACMIsxWBYwn9IAa3vYCo+yRYeFprS9JAo6rkTdGmjB+tphyzmqr3vK8O/PBuWwhEecwNlkm1UFstX5ZEqd1QLbayWfCF8d33RuH5+LU4yDqead0z+9vhQ77nPGDrLJvO/k8ciIjUXl0Fc1tGlhL089fQ7Fwdl5hX1PTame58LpNrWtaPEtnYlZPdVbJNWTwEFXYc29NVZsNoTsNQ4tmKn4U8X2c4ml7FnzCiJpq2hHAMwLry57InRuyRTZbAIsvrOzUD8akU4vLti6igFUG1AK5/ivdcgObcOGxSEoWdMF/9AALI2A0LVJWKzK0k7etjtJ28vcpKJ2JyTFuEalzJYz63zJSUSmktW1R9/1vnSLTuymzFS5GRIC0EuJL3ct7B4YJOGu+0i3GmrNQ32BQmK3Wdk3uj3U2Xi+5iDXU="];             
-        
-        // Path to Channel Data
-        NSURL *architectWorldURL = [NSURL URLWithString:[TARTTHelper getDummyChannelPath]];
-        
-        // Load Channel
-        [self.architectView loadArchitectWorldFromURL:architectWorldURL withRequiredFeatures:WTFeature_2DTracking]; 
-        
-        [self.view addSubview:self.architectView];
-        self.architectView.translatesAutoresizingMaskIntoConstraints = NO;
-        
-        // Constraints
-        NSDictionary *views = NSDictionaryOfVariableBindings(_architectView);
-        [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"|[_architectView]|" options:0 metrics:nil views:views] ];
-        [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_architectView]|" options:0 metrics:nil views:views] ];
-        
-        [self startWikitudeSDKRendering];
-        [self startTARTT];
-        
-    } else {
-        NSLog(@"device is not supported - reason: %@", [deviceNotSupportedError localizedDescription]);
-        
-        [self setGuiForState:TARTTGuiStateHide];        
-        
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:deviceNotSupportedError.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];    
-        [alert show];
-
-    }    
 }
 -(void)viewWillDisappear:(BOOL)animated{
     NSLog(@"viewWillDisappear");
@@ -100,6 +90,37 @@
     if(self.qrScannerShouldRun)
         [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
 }
+#pragma mark Wikitude Setup
+-(void)setUpWikitude{
+    self.architectView = [WikitudeManager architectView];
+    [self.architectView setFrame:self.view.bounds];
+    self.architectView.delegate = self;
+    self.architectView.debugDelegate = self;
+    [self.architectView setLicenseKey:@"otr/l3HJpaElIt8Bv36DNdxrVvywnXxhvMsMFReyvrL2Jlr54vetxIAYOi9V3PUgT7S9RaK0NC3fq+1Pkt+Twy6SjmQme9ginF30aixB+yDZLabipN3K421a3IzxP7f68pI76j+EbTz/B+O6fc1KKHJl8/CERXUScIEKhcp9XHBTYWx0ZWRfX0nZMIeLg6TgFJ4TrRDHDsuicw/ev3ghNBuwGKzJ1q29WCcOTv0dyKVFZDR2gE9lVULtncj3sckaZBayY6rbfO8oZMn1r/5lNFZjF1NjvuJlvp5q8GOS0siRRYs8tGzoAfR7X2xwNocrkmPMACMIsxWBYwn9IAa3vYCo+yRYeFprS9JAo6rkTdGmjB+tphyzmqr3vK8O/PBuWwhEecwNlkm1UFstX5ZEqd1QLbayWfCF8d33RuH5+LU4yDqead0z+9vhQ77nPGDrLJvO/k8ciIjUXl0Fc1tGlhL089fQ7Fwdl5hX1PTame58LpNrWtaPEtnYlZPdVbJNWTwEFXYc29NVZsNoTsNQ4tmKn4U8X2c4ml7FnzCiJpq2hHAMwLry57InRuyRTZbAIsvrOzUD8akU4vLti6igFUG1AK5/ivdcgObcOGxSEoWdMF/9AALI2A0LVJWKzK0k7etjtJ28vcpKJ2JyTFuEalzJYz63zJSUSmktW1R9/1vnSLTuymzFS5GRIC0EuJL3ct7B4YJOGu+0i3GmrNQ32BQmK3Wdk3uj3U2Xi+5iDXU="];             
+    
+    // Path to Channel Data
+    NSURL *architectWorldURL = [NSURL URLWithString:[TARTTHelper getDummyChannelPath]];
+    
+    // Load Channel
+    [self.architectView loadArchitectWorldFromURL:architectWorldURL withRequiredFeatures:WTFeature_2DTracking]; 
+    
+    [self.view addSubview:self.architectView];
+    self.architectView.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    // Constraints
+    NSDictionary *views = NSDictionaryOfVariableBindings(_architectView);
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"|[_architectView]|" options:0 metrics:nil views:views] ];
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_architectView]|" options:0 metrics:nil views:views] ];
+    
+    [self startWikitudeSDKRendering];
+    [self startTARTT];
+}
+-(void)cameraAccessDenied{
+    [self setGuiForState:TARTTGuiStateHide];       
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please allow Camera access in the settings" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];    
+    [alert show];
+}
+
 
 #pragma mark GuiMethods
 - (IBAction)cancelClicked:(id)sender {
