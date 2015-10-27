@@ -34,6 +34,7 @@
     NSError *deviceNotSupportedError = nil;
     if ( [WTArchitectView isDeviceSupportedForRequiredFeatures:WTFeature_Geo | WTFeature_2DTracking error:&deviceNotSupportedError] ) 
     {
+        // Check for Camera access
         AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
         if(authStatus == AVAuthorizationStatusAuthorized) 
         {
@@ -60,9 +61,9 @@
         [self setGuiForState:TARTTGuiStateHide];       
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:deviceNotSupportedError.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];    
         [alert show];
-
     }    
-    // register Notifications
+    
+    // register Notifications so wikitude can reorganize if interrupted
     [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) 
      {        
          if (self.architectWorldNavigation.wasInterrupted) {
@@ -78,19 +79,22 @@
 
 }
 -(void)viewWillDisappear:(BOOL)animated{
-    NSLog(@"viewWillDisappear");
+    // cancel request/download and stop barcode plugin
     [self.downloader cancel];
     [self.configRequest cancel];
+    // IMPORTANT 
     [self stopNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
     [self stopWikitudeSDKRendering];
 }
 -(void)viewDidAppear:(BOOL)animated{
-    NSLog(@"viewDidAppear");
     [self startWikitudeSDKRendering];
     if(self.qrScannerShouldRun)
         [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
 }
 #pragma mark Wikitude Setup
+
+// Setup the Wikitude View with a Dummy World so we have time to start the download 
+// The Cam will be shown while downloading
 -(void)setUpWikitude{
     self.architectView = [WikitudeManager architectView];
     [self.architectView setFrame:self.view.bounds];
@@ -115,6 +119,7 @@
     [self startWikitudeSDKRendering];
     [self startTARTT];
 }
+// Cam access was denied so we show a hint to the user 
 -(void)cameraAccessDenied{
     [self setGuiForState:TARTTGuiStateHide];       
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please allow Camera access in the settings" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];    
@@ -123,7 +128,9 @@
 
 
 #pragma mark GuiMethods
-- (IBAction)cancelClicked:(id)sender {
+- (IBAction)cancelClicked:(id)sender 
+{
+    // Cancel and reset with Dummy World
     [self.downloader cancel];
     [self.configRequest cancel];
     NSURL *architectWorldURL = [NSURL URLWithString:[TARTTHelper getDummyChannelPath]];
@@ -134,6 +141,9 @@
     else
         [self setGuiForState:TARTTGuiStateHide];
 }
+/*
+    Here we handle the GUI Elements for every State we can be in 
+ */
 -(void)setGuiForState:(TARTTGuiStateType)state{
     [self.view sendSubviewToBack:self.architectView];
     self.qrScannerShouldRun = NO;
@@ -192,9 +202,10 @@
 
 #pragma mark TARTT
 -(void)startTARTT
-{
+{    
     [self setGuiForState:TARTTGuiStateLoading];
-    // START LOADING CHANNEL SETUP   
+ 
+    // start loading config settings with the options defined in the MainTableViewController 
     self.configRequest = [[TARTTChannelConfigRequest alloc] initWithApplicationID:kParseApplicationKey 
                                                                      andClientKey:kParseClientKey 
                                                                        andOptions:self.options];
@@ -203,6 +214,8 @@
 
 
 #pragma mark TARTTChannelConfigRequestDelegate
+
+/* Config was received so we are able to download all the needed files into cache directory */
 -(void)finishedConfigRequestWithSuccess:(TARTTConfig *)config
 {   
     NSError *error;
@@ -211,21 +224,26 @@
     [self.downloader startDownloadWithDelegate:self];
         
 }
+/* Multiple Channels are available. Will not be called if ignoreMultiChannels is set to YES in the options */
 -(void)finishedConfigRequestWithMultipleChannels
 {
     self.multipleWorldsAvailable = YES;
     [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
     [self setGuiForState:TARTTGuiStateScanQR];
 }
+/* Error handling */
 -(void)finishedConfigRequestWithError:(NSError *)error
 {
+    /* No Channels availalbe for options in Parse */
     if(error.code == TARTTErrorNoChannelsAvailable)
     {   
         NSLog(@"TARTTErrorNoChannelsAvailable: %@", [error localizedDescription]);
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:error.localizedDescription delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];    
         [alert show];        
        
-    }else if(error.code == TARTTErrorCouldNotSelectChannel)
+    }
+    /* Selected Channel isn't available in Parse */
+    else if(error.code == TARTTErrorCouldNotSelectChannel)
     {
         NSLog(@"TARTTErrorCouldNotSelectChannel: %@", [error localizedDescription]);
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:error.localizedDescription delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];    
@@ -233,17 +251,20 @@
     }
     else{
         NSLog(@"finishedConfigRequestWithError: %@", [error localizedDescription]);
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];    
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:error.localizedDescription delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];    
         [alert show];
     }     
 }
--(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
+-(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    // go back to SCAN GQ Code mode so the user still has options
     [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
     [self setGuiForState:TARTTGuiStateScanQR];
 }
 
 #pragma mark TARTTChannelDelegate
 
+/* Download started. Only called if there is at least one file to download */
 -(void)channelDownloadStarted
 {
     [self setGuiForState:TARTTGuiStateProgress];
@@ -256,6 +277,7 @@
 -(void)channelDownloadFinishedWithSuccess:(TARTTChannel *)channel
 {    
     NSError *error;
+    /* This deleted old version of a channel and cleansup temp folders */
    [[TARTTChannelManager defaultManager] cleanUpChannel:channel error:&error];   
     [self setGuiForState:TARTTGuiStateLoading];
     
@@ -265,52 +287,33 @@
     self.architectWorldNavigation =  [self.architectView loadArchitectWorldFromURL:architectWorldURL withRequiredFeatures:WTFeature_2DTracking];     
 }
 -(void)channelDownloadFinishedForChannel:(TARTTChannel *)channel withError:(NSError *)error
-{    
-    [self setGuiForState:TARTTGuiStateHide];   
-    
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];    
-    [alert show];
+{   
+    /* Error downloading at least on file */
+    if(error.code == TARTTErrorDownloadIncomplete)
+    {
+        NSLog(@"TARTTErrorDownloadIncomplete: %@", [error localizedDescription]);
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:error.localizedDescription delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];    
+        [alert show];         
+    }
+    /* Error while trying to move files or create folder in cache */
+    else if(error.code == TARTTErrorCache)
+    {
+        NSLog(@"TARTTErrorCache: %@", [error localizedDescription]);
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:error.localizedDescription delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];    
+        [alert show];         
+    }
+    else{   
+        [self setGuiForState:TARTTGuiStateHide];           
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:error.localizedDescription delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];    
+        [alert show];
+    }
 }
+
+/* Debug option. If more than one file has an error it can be logged in here */
 -(void)channelDownloadFinishedForChannel:(TARTTChannel *)channel withErrors:(NSArray *)errors
 {
     for (NSError *error  in errors) {
         NSLog(@"Error: %@",error);
-    }
-}
-
-#pragma mark - Private Methods
-/* Convenience methods to manage WTArchitectView rendering. */
-- (void)startWikitudeSDKRendering
-{    
-    /* To check if the WTArchitectView is currently rendering, the isRunning property can be used */
-    if ( ![self.architectView isRunning] ) {
-        
-        /* To start WTArchitectView rendering and control the startup phase, the -start:completion method can be used */
-        [self.architectView start:^(WTStartupConfiguration *configuration) {
-            
-            /* Use the configuration object to take control about the WTArchitectView startup phase */
-            /* You can e.g. start with an active front camera instead of the default back camera */            
-            // configuration.captureDevicePosition = AVCaptureDevicePositionFront;
-            
-        } completion:^(BOOL isRunning, NSError *error) {
-            
-            /* The completion block is called right after the internal start method returns.
-             
-             NOTE: In case some requirements are not given, the WTArchitectView might not be started and returns NO for isRunning.
-             To determine what caused the problem, the localized error description can be used.
-             */
-            if ( !isRunning ) {
-                NSLog(@"WTArchitectView could not be started. Reason: %@", [error localizedDescription]);
-            }
-        }];
-    }
-}
-
-- (void)stopWikitudeSDKRendering {
-    
-    /* The stop method is blocking until the rendering and camera access is stopped */
-    if ( [self.architectView isRunning] ) {
-        [self.architectView stop];
     }
 }
 
@@ -430,6 +433,43 @@
     
     NSLog(@"Architect World from URL '%@' could not be loaded. Reason: %@", @"URL", [error localizedDescription]);
 }
+
+#pragma mark - Private Methods
+/* Convenience methods to manage WTArchitectView rendering. */
+- (void)startWikitudeSDKRendering
+{    
+    /* To check if the WTArchitectView is currently rendering, the isRunning property can be used */
+    if ( ![self.architectView isRunning] ) {
+        
+        /* To start WTArchitectView rendering and control the startup phase, the -start:completion method can be used */
+        [self.architectView start:^(WTStartupConfiguration *configuration) {
+            
+            /* Use the configuration object to take control about the WTArchitectView startup phase */
+            /* You can e.g. start with an active front camera instead of the default back camera */            
+            // configuration.captureDevicePosition = AVCaptureDevicePositionFront;
+            
+        } completion:^(BOOL isRunning, NSError *error) {
+            
+            /* The completion block is called right after the internal start method returns.
+             
+             NOTE: In case some requirements are not given, the WTArchitectView might not be started and returns NO for isRunning.
+             To determine what caused the problem, the localized error description can be used.
+             */
+            if ( !isRunning ) {
+                NSLog(@"WTArchitectView could not be started. Reason: %@", [error localizedDescription]);
+            }
+        }];
+    }
+}
+
+- (void)stopWikitudeSDKRendering {
+    
+    /* The stop method is blocking until the rendering and camera access is stopped */
+    if ( [self.architectView isRunning] ) {
+        [self.architectView stop];
+    }
+}
+
 
 #pragma mark - View Rotation
 - (BOOL)shouldAutorotate {    

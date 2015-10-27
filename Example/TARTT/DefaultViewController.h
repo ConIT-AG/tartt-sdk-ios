@@ -15,11 +15,17 @@
 #import <WikitudeSDK/WTArchitectViewDebugDelegate.h>
 
 typedef NS_ENUM(NSInteger, TARTTGuiStateType) {
+    /* Loading starts */
     TARTTGuiStateLoading,
+    /* Loading with progress bar visible */
     TARTTGuiStateProgress,
+    /* Loading targets in world after download already finished */
     TARTTGuiStateLoadingTargets,
+    /* World loaded. Advise the user to scan a page */
     TARTTGuiStateScan,
+    /* Multiple Worlds available. Advise the user to scan a QR-Code */
     TARTTGuiStateScanQR,
+    /* Hide the Overlay */
     TARTTGuiStateHide    
 };
 
