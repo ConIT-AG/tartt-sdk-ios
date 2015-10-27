@@ -23,7 +23,13 @@ Then download the Wikitude Javascript API SDK from `http://www.wikitude.com/down
 
     Follow the Wikitude Installation Guide on [Wikitude Installation Guide][wikitude-guide-link] except for the paragraph 'LOADING AN ARCHITECT WORLD'
 
-3. **Loading Dummy Architect World**
+3. **Import TARTT**
+    
+    Add the following line to your viewcontroller
+    
+        #import <TARTT/TARTT.h>
+
+4. **Loading Dummy Architect World**
     
     Wikitude needs a world to start rendering properly. To show the camera even before the world is downloaded we can send a simple dummy world to wikitude like this
     
