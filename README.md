@@ -269,7 +269,7 @@ We will answer frequently asked questions here.
 TARTT SDK for iOS is available under the MIT license. See the LICENSE file for more info.
 
 
-[wikitude-guide-qr] : http://www.wikitude.com/external/doc/documentation/latest/ios/pluginsapi.html#barcode
+[wikitude-guide-qr]: http://www.wikitude.com/external/doc/documentation/latest/ios/pluginsapi.html#barcode
 [wikitude-guide-link]: http://www.wikitude.com/external/doc/documentation/latest/ios/setupguideios.html#setup-guide-ios
 [wikitude-download-link]: http://www.wikitude.com/download
 [wikitude-link]: http://www.wikitude.com
