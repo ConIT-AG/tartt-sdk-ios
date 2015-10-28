@@ -19,7 +19,7 @@ Then download the Wikitude Javascript API SDK from `http://www.wikitude.com/down
 
 2. **Wikitude SDK**
     
-    Download the Wikitude Javascript API SDK for iOS from [Wikitude SDK][wikitude-download-link]
+    Download the Wikitude SDK - JavaScript API (not Native API!) for iOS from [Wikitude SDK][wikitude-download-link]. Please make sure to use Version 5.0 of the Wikitude SDK.
 
     Follow the Wikitude Installation Guide on [Wikitude Installation Guide][wikitude-guide-link] except for the paragraph 'LOADING AN ARCHITECT WORLD'
 
@@ -46,6 +46,12 @@ Then download the Wikitude Javascript API SDK from `http://www.wikitude.com/down
         [options addEnvironment:TARTTEnvironmentProduction];
         [options addTargetApi:[NSNumber numberWithInt:3]];
         [options addTargetType:TARTTTargetTypeMainAndDetail];
+
+    These are the following options in detail:
+    * **language**: is the two-letter language of the AR-World. If you only have AR-Channels with AR-Worlds in one language (i.e. *de*), then you should also only use this language de for the requests - no matter what the device language is. If you have AR-Channels that have AR-Worlds in several languages, you can use the device language to decide which language version of the AR-World to request
+    * **envType**: is the environment type and can be *TARTTEnvironmentTest* or *TARTTEnvironmentProduction*. This means that one time you request the AR-World that was created for testing purpose and the other time you request the production AR-World. In genereal you would rewuest the production AR-World only in the production version of your app.
+    * **targetType**: is the target image typs and can be *TARTTTargetTypeMainAndDetail* or *TARTTTargetTypeMain*. This means that in the first case you would request to have main and detail target images of a page and in the second case you would get only main target images. Main and detail target images would mean better image recognition quality but also more performance needed from the device.
+    * **targetApi**: is the API that was used for creating the target images. Each version of the Wikitude SDK only works with certain target API versions. In case of Wikitude SDK 5.0, please use the version 3
 
 6. **Start Config Request**
     
@@ -110,10 +116,10 @@ Then download the Wikitude Javascript API SDK from `http://www.wikitude.com/down
             // Now Loading is completed and that should be refelcted in your GUI
         }
     
-11. **Communicating with the World**
+11. **Receiving communication requests from the AR-World**
     
     Wikitude informs you about pages that have been found in the camarea or if the page lost its focus. 
-    You can reflect this to the GUI by showing appropriate message like 'Please scan page'. Hide this hint again as soon as a page is found.
+    You can reflect this to the GUI by showing appropriate message like 'Please scan page'. Hide this hint again as soon as a page is found. You might also get custom requests from the world if your app supports them (like 'Add a product to basket' or 'Open products detail page').
 
         if ( [[URL absoluteString] hasPrefix:@"architectsdk://augmentationsOnEnterFieldOfVision"])
         {
@@ -124,9 +130,22 @@ Then download the Wikitude Javascript API SDK from `http://www.wikitude.com/down
             // we lost focus of a page. So show an overlay with a hint for the user 
         }
 
+12. **Sending a communication request to the AR-World**
+
+    Sometimes you might want to communicate with the AR-World. This is the case with responding with 'startExperience' to the AR-World request 'readyForExperience'. But you might also want to send additional requests to the AR-World like providing product information data when the AR-World has requested them before. You can make a call to a AR-World Javascript Method lie that: 
+    
+        NSDictionary *worldConfig = @{ @"Example Key1": @"Example Val1" };
+        NSString *json = [TARTTHelper convertToJson:worldConfig];
+        NSString *javascript = [NSString stringWithFormat:@"startExperience('%@');",json];
+        [self.architectView callJavaScript:javascript];
+
+## FAQ
+
+We will answer frequently asked questions here.
+
 ## License
 
-TARTT is available under the MIT license. See the LICENSE file for more info.
+TARTT SDK for iOS is available under the MIT license. See the LICENSE file for more info.
 
 
 
