@@ -20,7 +20,7 @@ The example application shows all the components working together. Most of the i
 ![alt tag](https://raw.githubusercontent.com/takondi/tartt-sdk-ios/master/sequence_one_channel.png)
 
 ## Use Case - Mutliple available channels
-![alt tag](https://raw.githubusercontent.com/takondi/tartt-sdk-ios/master/sequence_multiple_channel.png)
+![alt tag](https://raw.githubusercontent.com/takondi/tartt-sdk-ios/master/sequence_multiple_channels.png)
 
 ## Use Case - Communication 
 ![alt tag](https://raw.githubusercontent.com/takondi/tartt-sdk-ios/master/sequence_communication.png)
