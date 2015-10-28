@@ -1,5 +1,7 @@
 # TARTT
 
+## Overview
+![alt tag](https://raw.githubusercontent.com/takondi/tartt-sdk-ios/master/SDK_overview.png)
 
 ## Example Application
 
