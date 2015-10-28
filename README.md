@@ -16,6 +16,15 @@ After that a AR Experience with Wikitude SDK can be started with these files.
 
 The example application shows all the components working together. Most of the implementation happens in `DefaultViewController` and `MainTableViewController`. These two files are a good starting point.
 
+## Use Case - One available channel
+![alt tag](https://raw.githubusercontent.com/takondi/tartt-sdk-ios/master/sequence_one_channel.png)
+
+## Use Case - Mutliple available channels
+![alt tag](https://raw.githubusercontent.com/takondi/tartt-sdk-ios/master/sequence_multiple_channel.png)
+
+## Use Case - Communication 
+![alt tag](https://raw.githubusercontent.com/takondi/tartt-sdk-ios/master/sequence_communication.png)
+
 ## Example Application
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
