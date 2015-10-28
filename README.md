@@ -165,11 +165,14 @@ Have a look at the following files for a better understanding:
 
 2. **Start/Stop the Scanner**
     Import the category files with the plugin logic into your Viewcontroller
+
         #import "MyViewController+PluginLoading.h"
     Start and stop the plugin now with these lines where you need them
+
         [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
         [self stopNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
     Keep in mind that a plugin like this will use up a lot of your system resources and should not be running while your AR-World is activly on a page. You can accomplish this like so:
+
         if ( [[URL absoluteString] hasPrefix:@"architectsdk://augmentationsOnEnterFieldOfVision"])
         {        
             [self stopNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
@@ -207,8 +210,10 @@ This can be accomplished by following the next steps
         }
 2. **Setting up a Code**
     To work with TARTT the used QR-Code code should look like this where `%%key%%` is the channel identifier
+
         tartt://channelCode?channelKey=%%key%%
     You can use this code also to overwrite other options for the `Parse` call
+
         tartt://channelCode?channelKey=%%key%%&language=de&targetType=mainanddetail&envType=test&targetApi=3
 
 3. **QR-Code-Channel Trigger**
