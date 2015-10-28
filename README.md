@@ -1,7 +1,17 @@
 # TARTT
 
-## Overview
+TARTT removes the need of integrating AR-worlds directly into your XCode Project when Working with Wikitude.
+
+## Components
 ![alt tag](https://raw.githubusercontent.com/takondi/tartt-sdk-ios/master/SDK_overview.png)
+    
+* **Wikitude SDK**: [AR SDK][wikitude-link]
+* **TARTT SDK**: Dynamic AR World Download System
+* **Parse**: Cloud Database for channel settings
+* **S3**: Cloud Storage for channel files
+
+In the App a `TARTTConfigRequest` is started to receive channel informations from `PARSE`. The `TARTTChannelDownload` needs this information to download the available files from the S3 Cloud Storage.
+The downloaded files will then be stored in a local cache directory and can now be used to start a AR Experience with Wikitude SDK.
 
 ## Example Application
 
@@ -153,3 +163,4 @@ TARTT SDK for iOS is available under the MIT license. See the LICENSE file for m
 
 [wikitude-guide-link]: http://www.wikitude.com/external/doc/documentation/latest/ios/setupguideios.html#setup-guide-ios
 [wikitude-download-link]: http://www.wikitude.com/download
+[wikitude-link]: http://www.wikitude.com
