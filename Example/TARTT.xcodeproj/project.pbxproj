@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1843C3321BD4F95F005F017A /* WikitudeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843C3311BD4F95F005F017A /* WikitudeManager.m */; settings = {ASSET_TAGS = (); }; };
+		1843C3321BD4F95F005F017A /* WikitudeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843C3311BD4F95F005F017A /* WikitudeManager.m */; };
 		3E481AC7B3BBCD0E0B813134 /* Pods_TARTT_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D187124B061F98F0D837AA53 /* Pods_TARTT_Tests.framework */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
@@ -40,22 +40,22 @@
 		F23CBB861BC2AB6E00BB8C0A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F23CBB791BC2AB6E00BB8C0A /* SystemConfiguration.framework */; };
 		F23CBB881BC2ABC600BB8C0A /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F23CBB871BC2ABC600BB8C0A /* libz.tbd */; };
 		F23CBB8A1BC2ABCE00BB8C0A /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F23CBB891BC2ABCE00BB8C0A /* libc++.tbd */; };
-		F23CBBF61BC3B7F300BB8C0A /* WikitudeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F23CBBF51BC3B7F300BB8C0A /* WikitudeSDK.framework */; settings = {ASSET_TAGS = (); }; };
-		F23CBC041BC5105C00BB8C0A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F23CBC031BC5105C00BB8C0A /* LaunchScreen.storyboard */; settings = {ASSET_TAGS = (); }; };
-		F23CBC0A1BC51CBC00BB8C0A /* TarttChannelManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F23CBC091BC51CBC00BB8C0A /* TarttChannelManagerTests.m */; settings = {ASSET_TAGS = (); }; };
-		F23CBC331BC677F300BB8C0A /* TarttChannelConfigRequestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F23CBC321BC677F300BB8C0A /* TarttChannelConfigRequestTests.m */; settings = {ASSET_TAGS = (); }; };
-		F23CBC3F1BC697D300BB8C0A /* TarttChannelDownloaderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F23CBC3E1BC697D300BB8C0A /* TarttChannelDownloaderTests.m */; settings = {ASSET_TAGS = (); }; };
-		F26F37F71BC7A5B2002E49FA /* MainTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F26F37F61BC7A5B2002E49FA /* MainTableViewController.m */; settings = {ASSET_TAGS = (); }; };
-		F26F37FA1BC7B330002E49FA /* DefaultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F26F37F91BC7B330002E49FA /* DefaultViewController.m */; settings = {ASSET_TAGS = (); }; };
-		F26F37FD1BC8141D002E49FA /* BarcodePlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F26F37FB1BC8141D002E49FA /* BarcodePlugin.cpp */; settings = {ASSET_TAGS = (); }; };
+		F23CBBF61BC3B7F300BB8C0A /* WikitudeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F23CBBF51BC3B7F300BB8C0A /* WikitudeSDK.framework */; };
+		F23CBC041BC5105C00BB8C0A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F23CBC031BC5105C00BB8C0A /* LaunchScreen.storyboard */; };
+		F23CBC0A1BC51CBC00BB8C0A /* TarttChannelManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F23CBC091BC51CBC00BB8C0A /* TarttChannelManagerTests.m */; };
+		F23CBC331BC677F300BB8C0A /* TarttChannelConfigRequestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F23CBC321BC677F300BB8C0A /* TarttChannelConfigRequestTests.m */; };
+		F23CBC3F1BC697D300BB8C0A /* TarttChannelDownloaderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F23CBC3E1BC697D300BB8C0A /* TarttChannelDownloaderTests.m */; };
+		F26F37F71BC7A5B2002E49FA /* MainTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F26F37F61BC7A5B2002E49FA /* MainTableViewController.m */; };
+		F26F37FA1BC7B330002E49FA /* DefaultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F26F37F91BC7B330002E49FA /* DefaultViewController.m */; };
+		F26F37FD1BC8141D002E49FA /* BarcodePlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F26F37FB1BC8141D002E49FA /* BarcodePlugin.cpp */; };
 		F26F38221BC815E4002E49FA /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F26F38211BC815E4002E49FA /* libiconv.tbd */; };
-		F26F38251BC81923002E49FA /* DefaultViewController+PluginLoading.mm in Sources */ = {isa = PBXBuildFile; fileRef = F26F38241BC81923002E49FA /* DefaultViewController+PluginLoading.mm */; settings = {ASSET_TAGS = (); }; };
-		F26F38441BCBC7DA002E49FA /* libzbar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F26F383E1BCBC7DA002E49FA /* libzbar.a */; settings = {ASSET_TAGS = (); }; };
-		F26F38451BCBC7DA002E49FA /* zbar-back.png in Resources */ = {isa = PBXBuildFile; fileRef = F26F38401BCBC7DA002E49FA /* zbar-back.png */; settings = {ASSET_TAGS = (); }; };
-		F26F38461BCBC7DA002E49FA /* zbar-help.html in Resources */ = {isa = PBXBuildFile; fileRef = F26F38411BCBC7DA002E49FA /* zbar-help.html */; settings = {ASSET_TAGS = (); }; };
-		F26F38471BCBC7DA002E49FA /* zbar-helpicons.png in Resources */ = {isa = PBXBuildFile; fileRef = F26F38421BCBC7DA002E49FA /* zbar-helpicons.png */; settings = {ASSET_TAGS = (); }; };
-		F26F38481BCBC7DA002E49FA /* zbar-samples.png in Resources */ = {isa = PBXBuildFile; fileRef = F26F38431BCBC7DA002E49FA /* zbar-samples.png */; settings = {ASSET_TAGS = (); }; };
-		F26F392B1BCF810C002E49FA /* ChannelManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26F392A1BCF810C002E49FA /* ChannelManagerTests.m */; settings = {ASSET_TAGS = (); }; };
+		F26F38251BC81923002E49FA /* DefaultViewController+PluginLoading.mm in Sources */ = {isa = PBXBuildFile; fileRef = F26F38241BC81923002E49FA /* DefaultViewController+PluginLoading.mm */; };
+		F26F38441BCBC7DA002E49FA /* libzbar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F26F383E1BCBC7DA002E49FA /* libzbar.a */; };
+		F26F38451BCBC7DA002E49FA /* zbar-back.png in Resources */ = {isa = PBXBuildFile; fileRef = F26F38401BCBC7DA002E49FA /* zbar-back.png */; };
+		F26F38461BCBC7DA002E49FA /* zbar-help.html in Resources */ = {isa = PBXBuildFile; fileRef = F26F38411BCBC7DA002E49FA /* zbar-help.html */; };
+		F26F38471BCBC7DA002E49FA /* zbar-helpicons.png in Resources */ = {isa = PBXBuildFile; fileRef = F26F38421BCBC7DA002E49FA /* zbar-helpicons.png */; };
+		F26F38481BCBC7DA002E49FA /* zbar-samples.png in Resources */ = {isa = PBXBuildFile; fileRef = F26F38431BCBC7DA002E49FA /* zbar-samples.png */; };
+		F26F392B1BCF810C002E49FA /* ChannelManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26F392A1BCF810C002E49FA /* ChannelManagerTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -493,7 +493,7 @@
 				ORGANIZATIONNAME = wh33ler;
 				TargetAttributes = {
 					6003F589195388D20070C39A = {
-						DevelopmentTeam = KY7SYK96X8;
+						DevelopmentTeam = 575T2635UE;
 					};
 					6003F5AD195388D20070C39A = {
 						TestTargetID = 6003F589195388D20070C39A;
@@ -812,7 +812,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.takondi.tarttdev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "c35a07bc-75eb-48cd-a221-957bad17baae";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -863,7 +863,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.takondi.tarttdev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "c35a07bc-75eb-48cd-a221-957bad17baae";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
