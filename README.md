@@ -3,15 +3,18 @@
 TARTT removes the need of integrating AR-worlds directly into your XCode Project when Working with Wikitude.
 
 ## Components
-![alt tag](https://raw.githubusercontent.com/takondi/tartt-sdk-ios/master/SDK_overview.png)
-    
+![alt tag](https://raw.githubusercontent.com/takondi/tartt-sdk-ios/master/SDK_overview.png)    
 * **Wikitude SDK**: [AR SDK][wikitude-link]
 * **TARTT SDK**: Dynamic AR World Download System
 * **Parse**: Cloud Database for channel settings
 * **S3**: Cloud Storage for channel files
 
 In the App a `TARTTConfigRequest` is started to receive channel informations from `PARSE`. The `TARTTChannelDownload` needs this information to download the available files from the S3 Cloud Storage.
-The downloaded files will then be stored in a local cache directory and can now be used to start a AR Experience with Wikitude SDK.
+The downloaded files will then be stored in a local cache directory.
+
+After that a AR Experience with Wikitude SDK can be started with these files.
+
+The example application shows all the components working together. Most of the implementation happens in `DefaultViewController` and `MainTableViewController`. These two files are a good starting point.
 
 ## Example Application
 
@@ -61,8 +64,8 @@ Then download the Wikitude Javascript API SDK from `http://www.wikitude.com/down
 
     These are the following options in detail:
     * **language**: is the two-letter language of the AR-World. If you only have AR-Channels with AR-Worlds in one language (i.e. *de*), then you should also only use this language de for the requests - no matter what the device language is. If you have AR-Channels that have AR-Worlds in several languages, you can use the device language to decide which language version of the AR-World to request
-    * **envType**: is the environment type and can be *TARTTEnvTypeTest* or *TARTTEnvTypeProduction*. This means that one time you request the AR-World that was created for testing purpose and the other time you request the production AR-World. In genereal you would rewuest the production AR-World only in the production version of your app.
-    * **targetType**: is the target image typs and can be *TARTTTargetTypeMainAndDetail* or *TARTTTargetTypeMain*. This means that in the first case you would request to have main and detail target images of a page and in the second case you would get only main target images. Main and detail target images would mean better image recognition quality but also more performance needed from the device.
+    * **envType**: is the environment type and can be *TARTTEnvTypeTest* or *TARTTEnvTypeProduction*. This means that one time you request the AR-World that was created for testing purpose and the other time you request the production AR-World. In genereal you would review the production AR-World only in the production version of your app.
+    * **targetType**: is the target image types and can be *TARTTTargetTypeMainAndDetail* or *TARTTTargetTypeMain*. This means that in the first case you would request to have main and detail target images of a page and in the second case you would get only main target images. Main and detail target images would mean better image recognition quality but also more performance needed from the device.
     * **targetApi**: is the API that was used for creating the target images. Each version of the Wikitude SDK only works with certain target API versions. In case of Wikitude SDK 5.0, please use the version 3
 
 6. **Start Config Request**
@@ -87,11 +90,11 @@ Then download the Wikitude Javascript API SDK from `http://www.wikitude.com/down
 
 8. **Download Events**
     
-    While TARTT is downloading there a several delegation methods to show loading and a progress
+    While TARTT is downloading there a several delegation methods to show a loading indicator and a progress bar
     
-    * `channelDownloadStarted` only fires if there is really something to download
+    * `channelDownloadStarted` only fires if there is at least one file to download
     * `channelDownloadProgress:(long)bytesLoaded ofTotal:(long)bytesTotal` for progress information
-    * `channelDownloadFinishedWithSuccess:(TARTTChannel *)channel` as soon as the world is downloaded completly
+    * `channelDownloadFinishedWithSuccess:(TARTTChannel *)channel` will trigger when the world download has completed
 
 9. **Download Finished**
     
@@ -150,6 +153,15 @@ Then download the Wikitude Javascript API SDK from `http://www.wikitude.com/down
         NSString *json = [TARTTHelper convertToJson:worldConfig];
         NSString *javascript = [NSString stringWithFormat:@"startExperience('%@');",json];
         [self.architectView callJavaScript:javascript];
+
+## QR-Code Scanner Integration
+
+1. **Plugin integration**
+2. **Start/Stop the Scanner**
+3. **QR-Code Triggers**
+
+4. **Special TARTT QR-Channel-Code**
+
 
 ## FAQ
 
