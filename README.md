@@ -21,6 +21,10 @@ The example application shows all the components working together. Most of the i
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 Then download the Wikitude Javascript API SDK from `http://www.wikitude.com/download` and add the framwork into to the example directory.
 
+Have a look at the following files for a better understanding:
+    `DefaultViewController` main implementation
+    `MainTableViewController` different parse options
+    `DefaultViewController+PluginLoading` + `BarcodePlugin.cpp` for Plugin usage
 
 ## Installation 
 
@@ -157,10 +161,98 @@ Then download the Wikitude Javascript API SDK from `http://www.wikitude.com/down
 ## QR-Code Scanner Integration
 
 1. **Plugin integration**
-2. **Start/Stop the Scanner**
-3. **QR-Code Triggers**
+    Follow the Wikitude Plugin Guide on [Barcode and QR Code Reader][wikitude-guide-qr] and have a look at their example application which has copyable files
 
-4. **Special TARTT QR-Channel-Code**
+2. **Start/Stop the Scanner**
+    Import the category files with the plugin logic into your Viewcontroller
+        #import "MyViewController+PluginLoading.h"
+    Start and stop the plugin now with these lines where you need them
+        [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
+        [self stopNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
+    Keep in mind that a plugin like this will use up a lot of your system resources and should not be running while your AR-World is activly on a page. You can accomplish this like so:
+        if ( [[URL absoluteString] hasPrefix:@"architectsdk://augmentationsOnEnterFieldOfVision"])
+        {        
+            [self stopNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
+        }
+        else if ( [[URL absoluteString] hasPrefix:@"architectsdk://augmentationsOnExitFieldOfVision"])
+        {
+            [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
+        }
+    
+3. **QR-Code Triggers**
+    If the scanner scans a QR-Code the world will trigger an event which you can react to as follows
+        if([[URL absoluteString] hasPrefix:@"architectsdk://qrCodeTrigger"])
+        {       
+            // parse the url
+            NSDictionary *parameters = [TARTTHelper URLParameterFromURL:URL];
+            // parameter code holds the content url encoded
+            NSString *code = [parameters objectForKey:@"code"];
+            // decode for your final qr code content
+            NSString *contentOfQRCode = [code stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            // dont forget to stop the scanner or the event will be triggered very often
+            [self stopNamedPlugin:kWTPluginIdentifier_BarcodePlugin]; 
+        }
+
+## TARTT Mutliple Channels available
+if your options for the `TARTTConfigRequest` result in multiple channels the use has to decide which channel he wants to select.
+This can be accomplished by following the next steps
+
+1. **Config Request delegation**
+    In this case the config request will trigger the `finishedConfigRequestWithMultipleChannels` delegate instead of `finishedConfigRequestWithSuccess`
+
+        -(void)finishedConfigRequestWithMultipleChannels
+        {        
+            [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
+            // show the user a hint that he has to scan a QR-Code now
+        }
+2. **Setting up a Code**
+    To work with TARTT the used QR-Code code should look like this where `%%key%%` is the channel identifier
+        tartt://channelCode?channelKey=%%key%%
+    You can use this code also to overwrite other options for the `Parse` call
+        tartt://channelCode?channelKey=%%key%%&language=de&targetType=mainanddetail&envType=test&targetApi=3
+
+3. **QR-Code-Channel Trigger**
+    In the following code you see an example of using this code to overwrite options and trigger a channel download
+    
+        if([[URL absoluteString] hasPrefix:@"architectsdk://qrCodeTrigger"])
+        {          
+            NSDictionary *parameters = [TARTTHelper URLParameterFromURL:URL];
+            NSString *code = [parameters objectForKey:@"code"];
+            NSString *decoded = [code stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            parameters = [TARTTHelper URLParameterFromURL:[NSURL URLWithString:decoded]];        
+
+            NSString *channelKey = [parameters objectForKey:@"channelKey"];
+            NSString *language = [parameters objectForKey:@"language"];
+            NSString *targetType = [parameters objectForKey:@"targetType"];
+            NSString *envType = [parameters objectForKey:@"envType"];
+            NSString *state = [parameters objectForKey:@"state"];
+            NSString *targetApi = [parameters objectForKey:@"targetApi"];
+            if(language != nil){
+                [self.options addLanguage:language];
+            }
+            if(targetType != nil){
+                [self.options forceTargetType:targetType];
+            }
+            if(envType != nil){
+                [self.options forceEnvType:envType];
+            }
+            if(state != nil){   
+                [self.options forceState:[NSNumber numberWithInteger:[state integerValue]]];
+            }
+            if(targetApi != nil){
+                [self.options addTargetApi:[NSNumber numberWithInteger:[targetApi integerValue]]];
+            }
+
+            if([channelKey isEqualToString:self.channel.config.channelKey])
+            {
+                NSLog(@"Ignoring QR-Code because its already loaded or still loading");
+                return;
+            }                
+
+            [self stopNamedPlugin:kWTPluginIdentifier_BarcodePlugin];        
+            [self.configRequest selectChannel:channelKey andDelegate:self];
+        }
+
 
 
 ## FAQ
@@ -172,7 +264,7 @@ We will answer frequently asked questions here.
 TARTT SDK for iOS is available under the MIT license. See the LICENSE file for more info.
 
 
-
+[wikitude-guide-qr] : http://www.wikitude.com/external/doc/documentation/latest/ios/pluginsapi.html#barcode
 [wikitude-guide-link]: http://www.wikitude.com/external/doc/documentation/latest/ios/setupguideios.html#setup-guide-ios
 [wikitude-download-link]: http://www.wikitude.com/download
 [wikitude-link]: http://www.wikitude.com
