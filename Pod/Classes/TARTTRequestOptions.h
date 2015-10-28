@@ -34,9 +34,9 @@ typedef NS_ENUM(NSInteger, TARTTTargetType) {
  @typedef TARTTEnvironment
  @abstract Tartt channel environments 
  */
-typedef NS_ENUM(NSInteger, TARTTEnvironment) {
-    TARTTEnvironmentTest,
-    TARTTEnvironmentProduction,
+typedef NS_ENUM(NSInteger, TARTTEnvType) {
+    TARTTEnvTypeTest,
+    TARTTEnvTypeProduction,
 };
 
 /*!
@@ -58,8 +58,8 @@ typedef NS_ENUM(NSInteger, TARTTEnvironment) {
  can handle multiple
  @param env the environment that we are currenlty in
  */
--(void)addEnvironment:(TARTTEnvironment)env;
--(void)forceEnvironment:(NSString *)env;
+-(void)addEnvType:(TARTTEnvType)env;
+-(void)forceEnvType:(NSString *)env;
 
 /*!
  @abstract add a api that we are currenlty running
@@ -104,7 +104,7 @@ typedef NS_ENUM(NSInteger, TARTTEnvironment) {
 
 /// GETTER METHODS
 -(NSArray *)getLanguage;
--(NSArray *)getEnvironment;
+-(NSArray *)getEnvType;
 -(NSArray *)getTargetApi;
 -(NSArray *)getTargetType;
 -(NSNumber *)getState;

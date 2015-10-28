@@ -363,7 +363,7 @@
         }
         if(envType != nil){
             NSLog(@"Overwriting Environment to %@", envType);
-            [self.options forceEnvironment:envType];
+            [self.options forceEnvType:envType];
         }
         if(state != nil){
             NSLog(@"Overwriting State to %@", state);

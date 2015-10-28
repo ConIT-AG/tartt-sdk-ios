@@ -41,15 +41,15 @@
     self.languages = [NSMutableArray new];
     [self.languages addObject:[language lowercaseString]];
 }
--(void)addEnvironment:(TARTTEnvironment)env{
+-(void)addEnvType:(TARTTEnvType)env{
     NSDictionary *envs = @{
-     @(TARTTEnvironmentTest) : @"test",
-     @(TARTTEnvironmentProduction) : @"production",
+     @(TARTTEnvTypeTest) : @"test",
+     @(TARTTEnvTypeProduction) : @"production",
     };
     self.environment = [NSMutableArray new];
     [self.environment addObject:[envs objectForKey:@(env)]];
 }
--(void)forceEnvironment:(NSString *)env{
+-(void)forceEnvType:(NSString *)env{
     self.environment = [NSMutableArray new];
     [self.environment addObject:env];
 }
@@ -87,7 +87,7 @@
 -(NSArray *)getLanguage{
     return self.languages;
 }
--(NSArray *)getEnvironment{
+-(NSArray *)getEnvType{
     return self.environment;
 }
 -(NSArray *)getTargetApi{

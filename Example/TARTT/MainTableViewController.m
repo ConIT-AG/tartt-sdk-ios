@@ -87,7 +87,7 @@
         DefaultViewController *controller = (DefaultViewController *)segue.destinationViewController;
         TARTTRequestOptions *options = [TARTTRequestOptions new];
         [options addLanguage:@"de"];
-        [options addEnvironment:TARTTEnvironmentTest];
+        [options addEnvType:TARTTEnvTypeTest];
         [options addTargetApi:[NSNumber numberWithInt:3]];
         [options addTargetType:TARTTTargetTypeMainAndDetail];
         controller.options = options;
@@ -97,7 +97,7 @@
         DefaultViewController *controller = (DefaultViewController *)segue.destinationViewController;
         TARTTRequestOptions *options = [TARTTRequestOptions new];
         [options addLanguage:@"de"];
-        [options addEnvironment:TARTTEnvironmentProduction];
+        [options addEnvType:TARTTEnvTypeProduction];
         [options addTargetApi:[NSNumber numberWithInt:3]];
         [options addTargetType:TARTTTargetTypeMainAndDetail];
         controller.options = options;
@@ -107,7 +107,7 @@
         DefaultViewController *controller = (DefaultViewController *)segue.destinationViewController;
         TARTTRequestOptions *options = [TARTTRequestOptions new];
         [options addLanguage:@"de"];
-        [options addEnvironment:TARTTEnvironmentProduction];
+        [options addEnvType:TARTTEnvTypeProduction];
         [options addTargetApi:[NSNumber numberWithInt:3]];
         [options addTargetType:TARTTTargetTypeMainAndDetail];
         [options changeIgnoreMultiChannels:YES];
@@ -118,7 +118,7 @@
         DefaultViewController *controller = (DefaultViewController *)segue.destinationViewController;
         TARTTRequestOptions *options = [TARTTRequestOptions new];
         [options addLanguage:@"fr"];
-        [options addEnvironment:TARTTEnvironmentProduction];
+        [options addEnvType:TARTTEnvTypeProduction];
         [options addTargetApi:[NSNumber numberWithInt:3]];
         [options addTargetType:TARTTTargetTypeMainAndDetail];
         controller.options = options;
