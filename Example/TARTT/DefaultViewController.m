@@ -434,7 +434,7 @@
     NSLog(@"Architect World from URL '%@' could not be loaded. Reason: %@", @"URL", [error localizedDescription]);
 }
 
-#pragma mark - Private Methods
+#pragma mark Wikitude Rendering
 /* Convenience methods to manage WTArchitectView rendering. */
 - (void)startWikitudeSDKRendering
 {    
@@ -471,7 +471,7 @@
 }
 
 
-#pragma mark - View Rotation
+#pragma mark  View Rotation
 - (BOOL)shouldAutorotate {    
     return YES;
 }
