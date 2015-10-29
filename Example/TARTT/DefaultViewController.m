@@ -325,14 +325,14 @@
     if ( [[URL absoluteString] hasPrefix:@"architectsdk://targetsLoaded"] )
     {
         NSLog(@"##EVENT:%@",URL);
-       // [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
+        [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
         [self setGuiForState:TARTTGuiStateScan];  
     }
     else if ( [[URL absoluteString] hasPrefix:@"architectsdk://augmentationsOnEnterFieldOfVision"])
     {
         NSLog(@"##EVENT:%@",URL);
         [self setGuiForState:TARTTGuiStateHide];  
-        //[self stopNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
+        [self stopNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
     }
     else if ( [[URL absoluteString] hasPrefix:@"architectsdk://augmentationsOnExitFieldOfVision"])
     {
@@ -363,7 +363,7 @@
         }
         if(envType != nil){
             NSLog(@"Overwriting Environment to %@", envType);
-            [self.options forceEnvironment:envType];
+            [self.options forceEnvType:envType];
         }
         if(state != nil){
             NSLog(@"Overwriting State to %@", state);
@@ -491,15 +491,11 @@
  */
 #pragma mark WTArchitectViewDebugDelegate
 - (void)architectView:(WTArchitectView *)architectView didEncounterInternalWarning:(WTWarning *)warning {
-    
     /* Intentionally Left Blank */
 }
-
 - (void)architectView:(WTArchitectView *)architectView didEncounterInternalError:(NSError *)error {
-    
     NSLog(@"WTArchitectView encountered an internal error '%@'", [error localizedDescription]);
 }
-
 - (void)dealloc
 {
     /* Remove this view controller from the default Notification Center so that it can be released properly */

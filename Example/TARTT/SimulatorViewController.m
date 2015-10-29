@@ -74,7 +74,7 @@
     
     TARTTRequestOptions *options = [TARTTRequestOptions new];
     [options addLanguage:@"de"];
-    [options addEnvironment:TARTTEnvironmentTest];
+    [options addEnvType:TARTTEnvTypeTest];
     [options addTargetApi:[NSNumber numberWithInt:3]];
     [options addTargetType:TARTTTargetTypeMainAndDetail];
     
