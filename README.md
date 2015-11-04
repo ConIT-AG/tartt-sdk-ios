@@ -70,12 +70,14 @@ Have a look at the following files for a better understanding:
         [options addLanguage:@"de"];
         [options addTargetType:TARTTTargetTypeMainAndDetail];
         [options addTargetApi:[NSNumber numberWithInt:3]];
+        [options changeState:TARTTStateActive]
 
     These are the following options in detail:
     * **addEnvType**: is the environment type and can be *TARTTEnvTypeTest* or *TARTTEnvTypeProduction*. This means that one time you request the AR-World that was created for testing purpose and the other time you request the production AR-World. In genereal you would review the production AR-World only in the production version of your app.
     * **addLanguage**: is the two-letter language of the AR-World. If you only have AR-Channels with AR-Worlds in one language (i.e. *de*), then you should also only use this language de for the requests - no matter what the device language is. If you have AR-Channels that have AR-Worlds in several languages, you can use the device language to decide which language version of the AR-World to request
     * **addTargetType**: is the target image types and can be *TARTTTargetTypeMainAndDetail* or *TARTTTargetTypeMain*. This means that in the first case you would request to have main and detail target images of a page and in the second case you would get only main target images. Main and detail target images would mean better image recognition quality but also more performance needed from the device.
     * **addTargetApi**: is the API that was used for creating the target images. Each version of the Wikitude SDK only works with certain target API versions. In case of Wikitude SDK 5.0, please use the version 3
+    * **changeState**: is the state of the channel you request. It can be *TARTTStateInActive*, *TARTTStateActive* or *TARTTStateArchive* 
     
     There is an additional possible option:
     
