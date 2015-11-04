@@ -4,7 +4,7 @@ TARTT removes the need of integrating AR-worlds directly into your XCode Project
 
 ## Components
 ![alt tag](https://raw.githubusercontent.com/takondi/tartt-sdk-ios/master/SDK_overview.png)    
-* **Wikitude SDK**: [AR SDK][wikitude-link]
+* **Wikitude SDK**: [Augmented Reality technology from Wikitude][wikitude-link]
 * **TARTT SDK**: Dynamic AR World Download System
 * **Parse**: Cloud Database for channel settings
 * **S3**: Cloud Storage for channel files
@@ -66,20 +66,26 @@ Have a look at the following files for a better understanding:
     To get the right channel information TARTT will connect to parse.com and retrieve the needed information. 
         
         TARTTRequestOptions *options = [TARTTRequestOptions new];
-        [options addLanguage:@"de"];
         [options addEnvType:TARTTEnvTypeProduction];
-        [options addTargetApi:[NSNumber numberWithInt:3]];
+        [options addLanguage:@"de"];
         [options addTargetType:TARTTTargetTypeMainAndDetail];
+        [options addTargetApi:[NSNumber numberWithInt:3]];
 
     These are the following options in detail:
-    * **language**: is the two-letter language of the AR-World. If you only have AR-Channels with AR-Worlds in one language (i.e. *de*), then you should also only use this language de for the requests - no matter what the device language is. If you have AR-Channels that have AR-Worlds in several languages, you can use the device language to decide which language version of the AR-World to request
-    * **envType**: is the environment type and can be *TARTTEnvTypeTest* or *TARTTEnvTypeProduction*. This means that one time you request the AR-World that was created for testing purpose and the other time you request the production AR-World. In genereal you would review the production AR-World only in the production version of your app.
-    * **targetType**: is the target image types and can be *TARTTTargetTypeMainAndDetail* or *TARTTTargetTypeMain*. This means that in the first case you would request to have main and detail target images of a page and in the second case you would get only main target images. Main and detail target images would mean better image recognition quality but also more performance needed from the device.
-    * **targetApi**: is the API that was used for creating the target images. Each version of the Wikitude SDK only works with certain target API versions. In case of Wikitude SDK 5.0, please use the version 3
+    * **addEnvType**: is the environment type and can be *TARTTEnvTypeTest* or *TARTTEnvTypeProduction*. This means that one time you request the AR-World that was created for testing purpose and the other time you request the production AR-World. In genereal you would review the production AR-World only in the production version of your app.
+    * **addLanguage**: is the two-letter language of the AR-World. If you only have AR-Channels with AR-Worlds in one language (i.e. *de*), then you should also only use this language de for the requests - no matter what the device language is. If you have AR-Channels that have AR-Worlds in several languages, you can use the device language to decide which language version of the AR-World to request
+    * **addTargetType**: is the target image types and can be *TARTTTargetTypeMainAndDetail* or *TARTTTargetTypeMain*. This means that in the first case you would request to have main and detail target images of a page and in the second case you would get only main target images. Main and detail target images would mean better image recognition quality but also more performance needed from the device.
+    * **addTargetApi**: is the API that was used for creating the target images. Each version of the Wikitude SDK only works with certain target API versions. In case of Wikitude SDK 5.0, please use the version 3
+    
+    There is an additional possible option:
+    
+        [options changeIgnoreMultiChannels:YES];
+
+    * **changeIgnoreMultiChannels**: If not added, default is NO. If you force it to YES, you will always get the latest AR-World - regardless whether more then one active channel exists. This can be used if you expect to have multiple channels but don't want to make a channel selection
 
 6. **Start Config Request**
     
-    To get the available Channel information we use the following lines. Make sure your viewcontroller implementes the `TARTTChannelConfigRequestDelegate` protocol.
+    To get the available Channel information we use the following lines. Make sure your viewcontroller implementes the `TARTTChannelConfigRequestDelegate` protocol. You should also replace *** PARSE APPLICATION KEY *** and *** PARSE CLIENT KEY  *** with your keys.
 
         TARTTChannelConfigRequest *configRequest = [[TARTTChannelConfigRequest alloc] initWithApplicationID:@"*** PARSE APPLICATION KEY ***" andClientKey:@"***PARSE CLIENT KEY ***" andOptions:options];
         [configRequest startRequestWithDelegate:self];
@@ -99,7 +105,7 @@ Have a look at the following files for a better understanding:
 
 8. **Download Events**
     
-    While TARTT is downloading there a several delegation methods to show a loading indicator and a progress bar
+    While TARTT is downloading there a several delegation methods that you can use to show a loading activity indicator or a progress bar or whatever else you would like to do to give some visual feedback to the user.
     
     * `channelDownloadStarted` only fires if there is at least one file to download
     * `channelDownloadProgress:(long)bytesLoaded ofTotal:(long)bytesTotal` for progress information
@@ -122,7 +128,7 @@ Have a look at the following files for a better understanding:
 10. **Initialising the World**
     
     Wikitude lets you know about events from within the world over the `-(void)architectView:(WTArchitectView *)architectView invokedURL:(NSURL *)URL` method.
-    In here you have to listen to 'readyForExecution' and then start the experience manually by sending a javascript snippet back to wikitude like so:
+    In here you have to listen to 'readyForExecution' and then start the experience manually by sending a javascript snippet back to wikitude as the following code snippet shows:
 
         if( [[URL absoluteString] hasPrefix:@"architectsdk://readyForExecution"])
         {            
@@ -132,7 +138,7 @@ Have a look at the following files for a better understanding:
             [self.architectView callJavaScript:javascript];
         }
     
-    After the targets in the world are loaded you get the `targetsLoaded` event in the same method as above.
+    After having called startExperience, the AR-World will load the target images. You will get a 'loadTargets' event at the beginning of the loading process. A few seconds later, the targets are loaded and you will get the `targetsLoaded` event in the same method as above.
     Now you are all set and should hide any loading indicators and progress bars.
 
         if ( [[URL absoluteString] hasPrefix:@"architectsdk://targetsLoaded"] )
@@ -189,6 +195,7 @@ Have a look at the following files for a better understanding:
     
 3. **QR-Code Triggers**
     If the scanner scans a QR-Code the world will trigger an event which you can react to as follows
+
         if([[URL absoluteString] hasPrefix:@"architectsdk://qrCodeTrigger"])
         {       
             // parse the url
