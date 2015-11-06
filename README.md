@@ -271,11 +271,13 @@ This can be accomplished by following the next steps
             [self stopNamedPlugin:kWTPluginIdentifier_BarcodePlugin];        
             [self.configRequest selectChannel:channelKey andDelegate:self];
         }
+
+
 ## Changing the current loaded world to another one    
-    To change the current loaded world just call the `loadArchitectWorldFromURL:` method on the `architectView` with the new channel path.
-        
-        NSURL *architectWorldURL = [NSURL URLWithString:[channel.currentPath stringByAppendingPathComponent:@"index.html"]];        
-        self.architectWorldNavigation =  [self.architectView loadArchitectWorldFromURL:architectWorldURL withRequiredFeatures:WTFeature_2DTracking]; 
+To change the current loaded world just call the `loadArchitectWorldFromURL:` method on the `architectView` with the new channel path.
+    
+    NSURL *architectWorldURL = [NSURL URLWithString:[channel.currentPath stringByAppendingPathComponent:@"index.html"]];        
+    self.architectWorldNavigation =  [self.architectView loadArchitectWorldFromURL:architectWorldURL withRequiredFeatures:WTFeature_2DTracking]; 
 
 
 ## FAQ
