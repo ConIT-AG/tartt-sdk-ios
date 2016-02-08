@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1843C3321BD4F95F005F017A /* WikitudeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1843C3311BD4F95F005F017A /* WikitudeManager.m */; };
+		32D0DBD2124CF4E3A2C31CEF /* Pods_TARTT_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5644D12CB6F8C2A3ED2ABD /* Pods_TARTT_Example.framework */; };
 		3E481AC7B3BBCD0E0B813134 /* Pods_TARTT_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D187124B061F98F0D837AA53 /* Pods_TARTT_Tests.framework */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
@@ -22,9 +23,6 @@
 		6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
 		6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5B8195388D20070C39A /* InfoPlist.strings */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
-		8F12F4A568AF54436D088F81 /* Pods_TARTT_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5644D12CB6F8C2A3ED2ABD /* Pods_TARTT_Example.framework */; };
-		F20BF1DA1BD7858800E942BC /* Pods_TARTT_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5644D12CB6F8C2A3ED2ABD /* Pods_TARTT_Example.framework */; };
-		F20BF1DB1BD7858800E942BC /* Pods_TARTT_Example.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7D5644D12CB6F8C2A3ED2ABD /* Pods_TARTT_Example.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F23CBB7A1BC2AB6E00BB8C0A /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F23CBB6D1BC2AB6E00BB8C0A /* Accelerate.framework */; };
 		F23CBB7B1BC2AB6E00BB8C0A /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F23CBB6E1BC2AB6E00BB8C0A /* AssetsLibrary.framework */; };
 		F23CBB7C1BC2AB6E00BB8C0A /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F23CBB6F1BC2AB6E00BB8C0A /* AVFoundation.framework */; };
@@ -67,20 +65,6 @@
 			remoteInfo = TARTT;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		F20BF1DC1BD7858800E942BC /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				F20BF1DB1BD7858800E942BC /* Pods_TARTT_Example.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1843C3301BD4F95F005F017A /* WikitudeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WikitudeManager.h; sourceTree = "<group>"; };
@@ -192,13 +176,12 @@
 				F23CBB831BC2AB6E00BB8C0A /* OpenGLES.framework in Frameworks */,
 				F23CBB841BC2AB6E00BB8C0A /* QuartzCore.framework in Frameworks */,
 				F23CBB851BC2AB6E00BB8C0A /* Security.framework in Frameworks */,
-				F20BF1DA1BD7858800E942BC /* Pods_TARTT_Example.framework in Frameworks */,
 				F23CBB861BC2AB6E00BB8C0A /* SystemConfiguration.framework in Frameworks */,
 				6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */,
 				6003F592195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F58E195388D20070C39A /* Foundation.framework in Frameworks */,
 				F26F38441BCBC7DA002E49FA /* libzbar.a in Frameworks */,
-				8F12F4A568AF54436D088F81 /* Pods_TARTT_Example.framework in Frameworks */,
+				32D0DBD2124CF4E3A2C31CEF /* Pods_TARTT_Example.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -450,7 +433,6 @@
 				6003F588195388D20070C39A /* Resources */,
 				652F817DABE00EDC4B88E76E /* Embed Pods Frameworks */,
 				C0CB97C76DAE6EEC0877F1C0 /* Copy Pods Resources */,
-				F20BF1DC1BD7858800E942BC /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -493,7 +475,7 @@
 				ORGANIZATIONNAME = wh33ler;
 				TargetAttributes = {
 					6003F589195388D20070C39A = {
-						DevelopmentTeam = 575T2635UE;
+						DevelopmentTeam = 49EZKV4Z2X;
 					};
 					6003F5AD195388D20070C39A = {
 						TestTargetID = 6003F589195388D20070C39A;

@@ -15,7 +15,8 @@
 BarcodePlugin::BarcodePlugin(const std::string& pluginIdentifier, int cameraFrameWidth, int cameraFrameHeight)
 :
 Plugin(pluginIdentifier),
-_worldNeedsUpdate(0)
+_worldNeedsUpdate(0),
+_imageData(new unsigned char[cameraFrameWidth * cameraFrameHeight])
 #ifndef SIMULATOR_BUILD
 ,
 _image(cameraFrameWidth, cameraFrameHeight, "Y800", nullptr, 0)
@@ -25,7 +26,7 @@ _image(cameraFrameWidth, cameraFrameHeight, "Y800", nullptr, 0)
 
 BarcodePlugin::~BarcodePlugin()
 {
-    /* Intentionally Left Blank */
+    delete [] _imageData;
 }
 
 
@@ -48,9 +49,11 @@ void BarcodePlugin::cameraFrameAvailable(const wikitude::sdk::Frame& cameraFrame
 #ifndef SIMULATOR_BUILD
     int frameWidth = cameraFrame_.getSize().width;
     int frameHeight = cameraFrame_.getSize().height;    
-    _image.set_data(cameraFrame_.getLuminanceData(), frameWidth * frameHeight);
+    
+    memcpy(_imageData, cameraFrame_.getLuminanceData(), frameWidth * frameHeight);
+    _image.set_data(_imageData, frameWidth * frameHeight);
     int n = _imageScanner.scan(_image);
-
+    
     if ( n != _worldNeedsUpdate ) {
         if ( n ) {
             std::ostringstream javaScript;

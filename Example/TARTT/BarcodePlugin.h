@@ -29,6 +29,7 @@ public:
 
 protected:
     int                             _worldNeedsUpdate;
+    unsigned char*                  _imageData;
 
 #ifndef SIMULATOR_BUILD
     zbar::Image                     _image;

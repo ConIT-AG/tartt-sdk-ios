@@ -338,7 +338,7 @@
     {
         NSLog(@"##EVENT:%@",URL);
         [self setGuiForState:TARTTGuiStateScan];  
-        //[self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
+        [self startNamedPlugin:kWTPluginIdentifier_BarcodePlugin];
     }
     else if([[URL absoluteString] hasPrefix:@"architectsdk://qrCodeTrigger"])
     {        
