@@ -35,6 +35,6 @@ Pod::Spec.new do |s|
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   s.library = 'sqlite3','z'
-  s.dependency 'AFNetworking', '~> 2.0'
+  s.dependency 'AFNetworking'
   s.dependency 'Parse'
 end
