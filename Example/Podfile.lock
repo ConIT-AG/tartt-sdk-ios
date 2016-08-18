@@ -1,31 +1,25 @@
 PODS:
-  - AFNetworking (2.6.2):
-    - AFNetworking/NSURLConnection (= 2.6.2)
-    - AFNetworking/NSURLSession (= 2.6.2)
-    - AFNetworking/Reachability (= 2.6.2)
-    - AFNetworking/Security (= 2.6.2)
-    - AFNetworking/Serialization (= 2.6.2)
-    - AFNetworking/UIKit (= 2.6.2)
-  - AFNetworking/NSURLConnection (2.6.2):
+  - AFNetworking (3.1.0):
+    - AFNetworking/NSURLSession (= 3.1.0)
+    - AFNetworking/Reachability (= 3.1.0)
+    - AFNetworking/Security (= 3.1.0)
+    - AFNetworking/Serialization (= 3.1.0)
+    - AFNetworking/UIKit (= 3.1.0)
+  - AFNetworking/NSURLSession (3.1.0):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.6.2):
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.6.2)
-  - AFNetworking/Security (2.6.2)
-  - AFNetworking/Serialization (2.6.2)
-  - AFNetworking/UIKit (2.6.2):
-    - AFNetworking/NSURLConnection
+  - AFNetworking/Reachability (3.1.0)
+  - AFNetworking/Security (3.1.0)
+  - AFNetworking/Serialization (3.1.0)
+  - AFNetworking/UIKit (3.1.0):
     - AFNetworking/NSURLSession
-  - Bolts/Tasks (1.4.0)
+  - Bolts/Tasks (1.8.4)
   - Kiwi (2.4.0)
-  - Parse (1.9.1):
-    - Bolts/Tasks (>= 1.4.0)
+  - Parse (1.14.2):
+    - Bolts/Tasks (~> 1.8)
   - TARTT (1.0.0):
-    - AFNetworking (~> 2.0)
+    - AFNetworking
     - Parse
 
 DEPENDENCIES:
@@ -37,10 +31,12 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  AFNetworking: 7f317038a9710cabfa43ec56396b307b45df72ab
-  Bolts: 0e9bce58b9b9f5e8a7a4d47b16d2fabec289072b
+  AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
+  Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
   Kiwi: f49c9d54b28917df5928fe44968a39ed198cb8a8
-  Parse: 54a965c8c19a6dde90284ab654dbcc77ef8c001b
-  TARTT: 00b190b9d86208aff39cadcb8000fcbc7af04158
+  Parse: 4335d65f40cb3d43190d723144bbe1afb9c38230
+  TARTT: f7a5a122efd1296ddefc240364beeb70c76ec406
 
-COCOAPODS: 0.39.0
+PODFILE CHECKSUM: 4d72eb935a25c133dcb170f8966d010d4f475c9a
+
+COCOAPODS: 1.0.0

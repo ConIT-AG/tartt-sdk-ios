@@ -1,11 +1,13 @@
 source 'https://github.com/CocoaPods/Specs.git'
+
+xcodeproj 'TARTT'
 use_frameworks!
 
-target 'TARTT_Example', :exclusive => true do
+target 'TARTT_Example' do
   pod "TARTT", :path => "../"
 end
 
-target 'TARTT_Tests', :exclusive => true do
+target 'TARTT_Tests' do
   pod "TARTT", :path => "../"  
   pod "Kiwi"
 end
