@@ -27,6 +27,8 @@
 @property (atomic) BOOL canceled;
 @property (atomic) BOOL downloadError;
 
+@property (nonatomic, strong) NSProgress* downloadProgress;
+
 @end
 
 @implementation TARTTChannelDownloader
@@ -134,8 +136,10 @@
         [self performSelectorOnMainThread:@selector(invokeChannelDownloadStart) withObject:nil waitUntilDone:NO];
     
     self.errors = [NSMutableArray array];   
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    NSMutableArray *mutableOperations = [NSMutableArray array];
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];    
+    
+    dispatch_group_t downloadGroup = dispatch_group_create();
+    self.downloadProgress = [NSProgress progressWithTotalUnitCount:[self.downloadQueue count]];
     for (NSDictionary *item in self.downloadQueue) 
     {    
 
@@ -144,57 +148,63 @@
             continue;
         }        
         NSString *filePath = [self.channel.tempPath stringByAppendingPathComponent:[TARTTHelper getRelativePathOfItem:item]];  
-        NSString *url = [item objectForKey:@"url"];        
-        //DebugLog(@"%@",url);
-        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:10];                
-        AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];       
-        operation.outputStream = [NSOutputStream outputStreamToFileAtPath:filePath append:NO];
-        [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
-            self.bytesLoaded += bytesRead;            
-            if([self.delegate respondsToSelector:@selector(channelDownloadProgress:ofTotal:)]){
-                [self performSelectorOnMainThread:@selector(invokeChannelProgress) withObject:nil waitUntilDone:NO];
+        NSString *url = [item objectForKey:@"url"];
+        
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        configuration.requestCachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
+        configuration.URLCache = nil;
+        AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];        
+         
+        
+        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:10];        
+        
+        
+        NSURLSessionDownloadTask *downloadTask = [manager downloadTaskWithRequest:request progress:^(NSProgress * _Nonnull childProgress) {            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                //Update the progress view
+              
+                //self.bytesLoaded += downloadProgress.completedUnitCount;            
+                if([self.delegate respondsToSelector:@selector(channelDownloadProgress:ofTotal:)]){
+                    [self performSelectorOnMainThread:@selector(invokeChannelProgress) withObject:nil waitUntilDone:NO];
+                }
+                //[_myProgressView setProgress:downloadProgress.fractionCompleted];                
+            });
+        } destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {  
+            return [NSURL fileURLWithPath:filePath];
+        } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {      
+            if(error != nil){
+                NSLog(@"Error: %@", error);
+                self.downloadError = YES;
+                [self.errors addObject:error];
             }
-        }];        
-        [operation setCompletionBlockWithSuccess:nil failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
-            self.downloadError = YES;
-            [self.errors addObject:error];
+            dispatch_group_leave(downloadGroup);            
         }];
-        [mutableOperations addObject:operation];
+        NSProgress *childProgress = [manager downloadProgressForTask:downloadTask];
+        [self.downloadProgress addChild:childProgress withPendingUnitCount:1];
+        
+        
+        dispatch_group_enter(downloadGroup);
+        [downloadTask resume];        
     } 
-    if(!self.canceled)
-        [self startOperation:mutableOperations]; 
-    else
-        DebugLog(@"*** Download Canceled before download started");    
-}
-
--(void)startOperation:(NSArray *)requests
-{
-    NSArray *operations = [AFURLConnectionOperation batchOfRequestOperations:requests 
-                                                               progressBlock:^(NSUInteger numberOfFinishedOperations, NSUInteger totalNumberOfOperations){}    
     
-   completionBlock:^(NSArray *operations) 
-   {
-       if(self.canceled){
-           DebugLog(@"*** Download Canceled after batch complete");
-           return;
-       }
-       DebugLog(@"*** All operations in Batch completed");
-       if(self.downloadError)
-       {   
-           [self performSelectorOnMainThread:@selector(invokeChannelError:) 
-                                  withObject:[NSError errorWithDomain:TARTTErrorDomain
-                                                                 code:TARTTErrorDownloadIncomplete
-                                                             userInfo:@{NSLocalizedDescriptionKey: @"Download Incomplete"}] 
-                               waitUntilDone:NO];
-           [self performSelectorOnMainThread:@selector(invokeChannelErrors) withObject:nil  waitUntilDone:NO];            
-       }else
-       {          
-           [self moveDownloadedFilesToCurrent];
-       }
-   }];
-    self.operationQueue = [[NSOperationQueue alloc] init];
-    [self.operationQueue setMaxConcurrentOperationCount:3]; 
-    [self.operationQueue addOperations:operations waitUntilFinished:YES];  
+    dispatch_group_wait(downloadGroup, DISPATCH_TIME_FOREVER);
+    if(self.canceled){
+        DebugLog(@"*** Download Canceled after batch complete");
+        return;
+    }
+    DebugLog(@"*** All operations in Batch completed");
+    if(self.downloadError)
+    {   
+        [self performSelectorOnMainThread:@selector(invokeChannelError:) 
+                               withObject:[NSError errorWithDomain:TARTTErrorDomain
+                                                              code:TARTTErrorDownloadIncomplete
+                                                          userInfo:@{NSLocalizedDescriptionKey: @"Download Incomplete"}] 
+                            waitUntilDone:NO];
+        [self performSelectorOnMainThread:@selector(invokeChannelErrors) withObject:nil  waitUntilDone:NO];            
+    }else
+    {          
+        [self moveDownloadedFilesToCurrent];
+    }
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 }
 -(void)moveDownloadedFilesToCurrent{
@@ -211,7 +221,7 @@
     [self.delegate channelDownloadStarted];
 }
 -(void)invokeChannelProgress{
-    [self.delegate channelDownloadProgress:self.bytesLoaded ofTotal:self.bytesMax];
+    [self.delegate channelDownloadProgress:self.downloadProgress.completedUnitCount ofTotal:[self.downloadQueue count]];
 }
 -(void)invokeChannelFinishedSuccess{
     [self.delegate channelDownloadFinishedWithSuccess:self.channel];
