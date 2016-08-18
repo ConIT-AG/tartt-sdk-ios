@@ -26,7 +26,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 5;
+    return 6;
 }
 
 
@@ -53,6 +53,10 @@
     {
         cell.textLabel.text = @"No Channels Available";
     }
+    else if(indexPath.row == 5)
+    {
+        cell.textLabel.text = @"Custom Test";
+    }
 
     return cell;
 }
@@ -76,6 +80,10 @@
     else if(indexPath.row == 4)
     {
         [self performSegueWithIdentifier:@"default" sender:@"no"];
+    }
+    else if(indexPath.row == 5)
+    {
+        [self performSegueWithIdentifier:@"default" sender:@"custom"];
     }
 
 }
@@ -118,6 +126,16 @@
         DefaultViewController *controller = (DefaultViewController *)segue.destinationViewController;
         TARTTRequestOptions *options = [TARTTRequestOptions new];
         [options addLanguage:@"fr"];
+        [options addEnvType:TARTTEnvTypeProduction];
+        [options addTargetApi:[NSNumber numberWithInt:3]];
+        [options addTargetType:TARTTTargetTypeMainAndDetail];
+        controller.options = options;
+    }
+    else if([key isEqualToString:@"custom"])
+    {
+        DefaultViewController *controller = (DefaultViewController *)segue.destinationViewController;
+        TARTTRequestOptions *options = [TARTTRequestOptions new];
+        [options addLanguage:@"de"];
         [options addEnvType:TARTTEnvTypeProduction];
         [options addTargetApi:[NSNumber numberWithInt:3]];
         [options addTargetType:TARTTTargetTypeMainAndDetail];

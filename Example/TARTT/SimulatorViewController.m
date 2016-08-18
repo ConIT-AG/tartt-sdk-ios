@@ -74,7 +74,7 @@
     
     TARTTRequestOptions *options = [TARTTRequestOptions new];
     [options addLanguage:@"de"];
-    [options addEnvType:TARTTEnvTypeTest];
+    [options addEnvType:TARTTEnvTypeProduction];
     [options addTargetApi:[NSNumber numberWithInt:3]];
     [options addTargetType:TARTTTargetTypeMainAndDetail];
     
@@ -100,6 +100,7 @@
 }
 -(void)finishedConfigRequestWithMultipleChannels{
     self.status.text = @"Multiple Channels";
+    [self.configRequest selectChannel:@"tartt-app__demo_-_bofrost" andDelegate:self];
 }
 -(void)finishedConfigRequestWithError:(NSError *)error
 {
@@ -217,6 +218,16 @@
 #pragma mark WTArchitectViewDelegate
 -(void)architectView:(WTArchitectView *)architectView invokedURL:(NSURL *)URL{
     NSLog(@"InvokedURL from within the World: %@",URL);
+    if( [[URL absoluteString] hasPrefix:@"architectsdk://readyForExecution"])
+    {
+        NSLog(@"##EVENT:%@",URL);
+        NSDictionary *worldConfig = @{ @"Key1": @"Val1" };
+        NSString *json = [TARTTHelper convertToJson:worldConfig];
+        NSString *javascript = [NSString stringWithFormat:@"startExperience('%@');",json];
+        NSLog(@"Send Javascript: %@",javascript);
+       
+        [self.architectView callJavaScript:javascript];
+    }
 }
 - (void)architectView:(WTArchitectView *)architectView didFinishLoadArchitectWorldNavigation:(WTNavigation *)navigation {
     /* Architect World did finish loading */

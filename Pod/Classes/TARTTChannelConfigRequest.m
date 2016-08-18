@@ -18,10 +18,21 @@
 
 @implementation TARTTChannelConfigRequest
 
++ (NSNumber *)initialize:(NSString *)appID andClientKey:(NSString *)clientKey
+{
+    static NSNumber *sharedInstance = false;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedInstance = [NSNumber numberWithBool:YES];
+        [Parse setApplicationId:appID  clientKey:clientKey];
+    });
+    return sharedInstance;
+}
+
 -(instancetype)initWithApplicationID:(NSString*)applicationID andClientKey:(NSString *)clientKey andOptions:(TARTTRequestOptions *)options{
     self = [super init];
     if (self) {
-        [Parse setApplicationId:applicationID  clientKey:clientKey];
+        [TARTTChannelConfigRequest initialize:applicationID andClientKey:clientKey];        
         self.options = options;
     }
     return self;
